@@ -1,0 +1,114 @@
+/* ============================================================
+   LEGALIZAI · Coming Soon
+   Self-contained: token/base/botão/wait-form copiados de ../lp/styles.css
+   (projeto Vercel separado, sem acesso à pasta lp/ em produção).
+   ============================================================ */
+
+/* ---------- tokens (subset usado nesta página) ---------- */
+:root {
+  --coral-50:#FEF3EE; --coral-100:#FBDDD1; --coral-200:#F8C3B0; --coral-500:#F2643C;
+  --coral-600:#DD4E27; --coral-700:#B83D1C;
+
+  --ink-50:#FAF8F5; --ink-100:#F1EEE9; --ink-200:#E3DED7; --ink-400:#A19B92;
+  --ink-500:#736E67; --ink-600:#524E48; --ink-900:#1B1E24;
+
+  --success-700:#0B5E40;
+
+  --font: 'Sora', system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
+  --r-btn:16px;
+  --shadow-coral:0 8px 24px rgba(242,100,60,.28);
+  --ease-out:cubic-bezier(.22,1,.36,1);
+}
+
+/* ---------- base ---------- */
+*,*::before,*::after { box-sizing:border-box; }
+body {
+  margin:0; font-family:var(--font); color:var(--ink-900);
+  background:var(--ink-50); line-height:1.6;
+  -webkit-font-smoothing:antialiased; text-rendering:optimizeLegibility;
+}
+img,svg { display:block; max-width:100%; }
+a { color:inherit; }
+h1,p { margin:0; }
+button { font:inherit; cursor:pointer; }
+input { font:inherit; color:var(--ink-900); }
+::placeholder { color:var(--ink-500); }
+.hidden { display:none !important; }
+:focus-visible { outline:3px solid var(--coral-600); outline-offset:3px; border-radius:6px; }
+
+.eyebrow {
+  display:inline-flex; align-items:center; gap:6px;
+  font-size:.8rem; font-weight:600; letter-spacing:.02em;
+  color:var(--coral-700); background:var(--coral-50);
+  border:1px solid var(--coral-100); border-radius:999px;
+  padding:.45em 1em;
+}
+
+.btn {
+  display:inline-flex; align-items:center; justify-content:center; gap:8px;
+  border:0; border-radius:var(--r-btn); text-decoration:none;
+  font-weight:700; transition:transform .16s var(--ease-out), box-shadow .16s, background-color .16s;
+}
+.btn-primary {
+  background:var(--coral-600); color:#fff;
+  padding:15px 28px; font-size:1.2rem;
+  box-shadow:var(--shadow-coral);
+}
+.btn-primary:hover { background:var(--coral-700); transform:translateY(-2px); box-shadow:0 12px 30px rgba(242,100,60,.36); }
+.btn-primary:active { transform:translateY(0) scale(.99); }
+
+.wait-form { background:var(--ink-50); border:1px solid var(--ink-100); border-radius:18px; padding:18px; }
+.wait-form p { font-size:.95rem; }
+.wait-form small { color:var(--ink-500); font-size:.82rem; }
+.wait-done { margin-top:12px; font-size:.9rem; color:var(--success-700); font-weight:600; }
+
+/* ============================================================ LAYOUT (coming soon) */
+body.soon-body { min-height:100dvh; display:flex; flex-direction:column; }
+
+.soon-main {
+  flex:1; display:flex; align-items:center; justify-content:center;
+  padding:48px 20px;
+}
+
+.soon-card {
+  width:100%; max-width:480px; text-align:center;
+}
+
+.soon-logo { height:34px; width:auto; margin:0 auto 28px; }
+
+.soon-card .eyebrow { margin-bottom:18px; }
+
+.soon-card h1 {
+  font-size:clamp(1.7rem, 3.4vw + 1rem, 2.5rem);
+  font-weight:800; line-height:1.15; letter-spacing:-.02em;
+}
+
+.soon-sub { margin-top:14px; color:var(--ink-500); font-size:1.02rem; line-height:1.6; }
+
+.soon-form { margin-top:28px; text-align:left; }
+.soon-form .wait-form { background:var(--ink-100); }
+
+.soon-fields { display:flex; flex-direction:column; gap:10px; margin-top:14px; }
+.soon-field-row { display:flex; gap:10px; }
+.soon-fields input, .soon-field-row input {
+  flex:1; min-width:0; border:1.5px solid var(--ink-200); border-radius:14px;
+  padding:13px 16px; font-size:1rem; background:#fff; outline:0; /* ≥16px: evita zoom do iOS */
+  transition:border-color .18s, box-shadow .18s;
+}
+.soon-fields input:focus, .soon-field-row input:focus {
+  border-color:var(--coral-500); box-shadow:0 0 0 4px rgba(242,100,60,.12);
+}
+.soon-submit { width:100%; margin-top:12px; padding:13px 22px; }
+
+.soon-difs {
+  margin-top:36px; display:flex; flex-direction:column; gap:12px;
+  text-align:left; border-top:1px solid var(--ink-200); padding-top:24px;
+}
+.soon-dif { display:flex; align-items:flex-start; gap:12px; font-size:.92rem; color:var(--ink-600); }
+.soon-dif span { flex:none; font-size:1.1rem; line-height:1.3; }
+
+.soon-footer { padding:24px 20px 32px; text-align:center; }
+.soon-footer nav { display:flex; justify-content:center; flex-wrap:wrap; gap:16px; margin-bottom:10px; }
+.soon-footer nav a { font-size:.82rem; color:var(--ink-500); text-decoration:none; }
+.soon-footer nav a:hover { color:var(--ink-900); text-decoration:underline; }
+.soon-footer p { font-size:.76rem; color:var(--ink-400); }
