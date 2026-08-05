@@ -38,6 +38,10 @@
     if (!email.value || (email.validity && !email.validity.valid)) return;
     if (digits(whatsapp.value).length < 10) return;
 
+    /* conversão pro GTM — sem PII, só o sinal do evento */
+    window.dataLayer = window.dataLayer || [];
+    window.dataLayer.push({ event: 'waitlist_signup', form_id: 'soon-form' });
+
     nome.value = '';
     sobrenome.value = '';
     email.value = '';
