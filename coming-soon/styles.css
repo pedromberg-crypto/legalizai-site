@@ -102,7 +102,7 @@ body.soon-body { min-height:100dvh; display:flex; flex-direction:column; }
 .soon-fields input:focus, .soon-field-row input:focus {
   border-color:var(--coral-500); box-shadow:0 0 0 4px rgba(242,100,60,.12);
 }
-.soon-submit { width:100%; margin-top:12px; padding:13px 22px; }
+.soon-submit { width:100%; margin-top:22px; padding:13px 22px; }
 
 .soon-footer { padding:16px 20px 20px; text-align:center; flex:none; }
 .soon-footer nav { display:flex; justify-content:center; flex-wrap:wrap; gap:16px; margin-bottom:8px; }
@@ -148,58 +148,42 @@ body.soon-body { min-height:100dvh; display:flex; flex-direction:column; }
   }
 
   .phone-mock {
-    width:220px; aspect-ratio:220/440;
+    width:220px; aspect-ratio:1070/2176;
     transform-style:preserve-3d; position:relative; z-index:1;
     animation:phoneFloat 7s ease-in-out infinite;
   }
 
   @keyframes phoneFloat {
-    0%   { transform:translateY(0)    rotateY(-16deg) rotateX(6deg); }
-    50%  { transform:translateY(-18px) rotateY(10deg)  rotateX(-4deg); }
-    100% { transform:translateY(0)    rotateY(-16deg) rotateX(6deg); }
+    0%   { transform:translateY(0)    rotateY(-6deg) rotateX(2.5deg); }
+    50%  { transform:translateY(-18px) rotateY(4deg)  rotateX(-1.5deg); }
+    100% { transform:translateY(0)    rotateY(-6deg) rotateX(2.5deg); }
   }
 
-  /* corpo: titânio escovado (gradiente multi-stop), não um preto chapado */
+  /* corpo real: render fotográfico do iPhone 15 Pro (Figma/Uiscore, export 2x),
+     sem CSS a desenhar titânio/botões/ilha — tudo isso já vem na foto. */
   .phone-frame {
-    width:100%; height:100%; border-radius:34px;
-    background:
-      linear-gradient(155deg, #46494e 0%, #232629 10%, #131417 45%, #1c1f24 70%, #3d4045 100%);
-    padding:10px;
-    box-shadow:
-      0 48px 70px -24px rgba(27,30,36,.5),
-      0 14px 24px -10px rgba(27,30,36,.35),
-      inset 0 1.5px 1px rgba(255,255,255,.35),
-      inset 0 -1.5px 1px rgba(0,0,0,.6),
-      inset 0 0 0 1px rgba(0,0,0,.5);
-    position:relative;
+    width:100%; height:100%; position:relative;
+    background-image:url('assets/iphone-frame.png');
+    background-size:100% 100%; background-repeat:no-repeat;
+    filter:
+      drop-shadow(0 40px 60px rgba(27,30,36,.42))
+      drop-shadow(0 12px 20px rgba(27,30,36,.28));
   }
 
-  /* botões de volume (lateral esquerda), relevo sutil */
-  .phone-frame::before, .phone-frame::after {
-    content:""; position:absolute; width:2px; border-radius:2px 0 0 2px;
-    background:linear-gradient(90deg, #0a0b0d, #3a3d42);
-    box-shadow:-1px 0 1px rgba(255,255,255,.15);
-  }
-  .phone-frame::before { left:-2px; top:22%; height:9%; }
-  .phone-frame::after  { left:-2px; top:34%; height:14%; }
-
-  .phone-notch {
-    position:absolute; top:11px; left:50%; transform:translateX(-50%);
-    width:58px; height:15px; background:#0a0a0b;
-    border-radius:999px; z-index:3;
-    box-shadow:inset 0 0 0 1px rgba(255,255,255,.06);
-  }
-  /* olho da câmera, com reflexo azulado de vidro */
-  .phone-notch::after {
-    content:""; position:absolute; right:6px; top:50%; translate:0 -50%;
-    width:6px; height:6px; border-radius:50%;
-    background:radial-gradient(circle at 35% 35%, #4a6b8a, #05070a 70%);
-  }
-
+  /* tela: preenche o frame inteiro e usa MÁSCARA (screen-mask.png, recorte
+     exato do Screen.png real do Figma — mesmo crop do iphone-frame.png) pra
+     clipar no formato preciso da tela fotografada, ilha dinâmica incluída.
+     Zero frestinha: nada de border-radius aproximado tentando adivinhar a
+     curva do canto. */
   .phone-screen {
-    width:100%; height:100%; border-radius:26px; background:var(--ink-50);
+    position:absolute; inset:0;
+    background:var(--ink-50);
+    -webkit-mask-image:url('assets/screen-mask.png');
+    mask-image:url('assets/screen-mask.png');
+    -webkit-mask-size:100% 100%; mask-size:100% 100%;
+    -webkit-mask-repeat:no-repeat; mask-repeat:no-repeat;
     overflow:hidden; display:flex; flex-direction:column;
-    padding:30px 14px 12px; position:relative;
+    padding:36px 20px 18px;
   }
 
   .phone-statusbar {
@@ -261,7 +245,7 @@ body.soon-body { min-height:100dvh; display:flex; flex-direction:column; }
     display:flex; align-items:flex-start; gap:6px; text-align:left;
     font-family:inherit; cursor:default;
   }
-  .phone-card-primary { background:var(--coral-700); border-color:var(--coral-700); }
+  .phone-card-primary { background:var(--coral-600); border-color:var(--coral-600); }
 
   .phone-card-icon {
     flex:none; width:20px; height:20px; border-radius:5px;
@@ -405,7 +389,7 @@ body.soon-body { min-height:100dvh; display:flex; flex-direction:column; }
   .wait-form { padding:14px; }
   .soon-fields { gap:16px; margin-top:10px; }
   .soon-fields input, .soon-field-row input { padding:10px 14px; font-size:.92rem; }
-  .soon-submit { padding:11px 20px; margin-top:10px; }
+  .soon-submit { padding:11px 20px; margin-top:16px; }
 
   .soon-footer { flex:none; padding:10px 0 14px; }
   .soon-footer nav { gap:10px; margin-bottom:4px; }
