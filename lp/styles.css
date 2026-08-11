@@ -83,9 +83,9 @@ h2 { font-size:clamp(1.55rem, 2.4vw + .8rem, 2.4rem); font-weight:800; line-heig
 }
 .btn-primary:hover { background:var(--coral-700); transform:translateY(-2px); box-shadow:0 12px 30px rgba(242,100,60,.36); }
 .btn-primary:active { transform:translateY(0) scale(.99); }
-/* botão pequeno: texto <18.66px → fill coral-700 (5.6:1, AA em qualquer tamanho) */
-.btn-sm { padding:10px 18px; font-size:.9rem; border-radius:13px; background:var(--coral-700); }
-.btn-sm:hover { background:var(--coral-800); }
+/* botão pequeno: mesmo coral do logo, texto branco, sem sombra */
+.btn-sm { padding:10px 18px; font-size:.9rem; border-radius:13px; background:var(--coral-500); color:#fff; box-shadow:none; }
+.btn-sm:hover { background:var(--coral-600); box-shadow:none; }
 
 /* ---------- badges de loja ---------- */
 .store-row { display:flex; flex-wrap:wrap; gap:12px; }
@@ -147,21 +147,19 @@ h2 { font-size:clamp(1.55rem, 2.4vw + .8rem, 2.4rem); font-weight:800; line-heig
   background:radial-gradient(closest-side, rgba(242,100,60,.16), transparent 72%);
   pointer-events:none;
 }
-.hero-plane { position:absolute; top:-30px; right:max(2vw, calc(50% - 300px)); width:170px; opacity:.95; pointer-events:none; }
-
 /* ============================================================ MOCKUP DO PHONE (aprovado em coming-soon)
    Render fotográfico real do iPhone 15 Pro (Figma/Uiscore) + tela mascarada
    pixel-a-pixel (assets/iphone-frame.png + assets/screen-mask.png) + 3 cards
    flutuantes com dados reais do app. Escala responsiva via .phone-stage;
    cards só aparecem a partir de 1100px (larguras menores não têm espaço
    pros ~185px de overflow de cada card sem colidir com o hero-copy). */
-.phone-stage { perspective:1400px; transform:scale(1.31); position:relative; }
-@media (min-width:1000px) { .phone-stage { transform:scale(1.4); } }
+.phone-stage { perspective:1400px; transform:scale(1.08); position:relative; }
+@media (min-width:1000px) { .phone-stage { transform:scale(1.15); } }
 
 .phone-ground-shadow {
-  position:absolute; left:50%; bottom:-6%; transform:translateX(-50%);
+  position:absolute; left:50%; bottom:4%; transform:translateX(-50%);
   width:170px; height:34px; border-radius:50%;
-  background:radial-gradient(closest-side, rgba(27,30,36,.38), rgba(27,30,36,0) 72%);
+  background:radial-gradient(closest-side, rgba(27,30,36,.32), rgba(27,30,36,0) 72%);
   filter:blur(2px);
   animation:groundShadow 7s ease-in-out infinite;
   z-index:0;
@@ -188,8 +186,8 @@ h2 { font-size:clamp(1.55rem, 2.4vw + .8rem, 2.4rem); font-weight:800; line-heig
   background-image:url('assets/iphone-frame.png');
   background-size:100% 100%; background-repeat:no-repeat;
   filter:
-    drop-shadow(0 40px 60px rgba(27,30,36,.42))
-    drop-shadow(0 12px 20px rgba(27,30,36,.28));
+    drop-shadow(0 18px 26px rgba(27,30,36,.30))
+    drop-shadow(0 6px 10px rgba(27,30,36,.20));
 }
 
 .phone-screen {
@@ -294,7 +292,7 @@ h2 { font-size:clamp(1.55rem, 2.4vw + .8rem, 2.4rem); font-weight:800; line-heig
 
   .float-card-cnae {
     z-index:0;
-    top:-108px; left:-178px;
+    top:-108px; left:-160px;
     transform-origin:100% 100%;
     animation:floatCardA 8s ease-in-out infinite;
   }
@@ -304,7 +302,7 @@ h2 { font-size:clamp(1.55rem, 2.4vw + .8rem, 2.4rem); font-weight:800; line-heig
     animation:floatCardB 9s ease-in-out infinite;
   }
   .float-card-notas {
-    bottom:14%; left:-185px;
+    bottom:14%; left:-168px;
     transform-origin:100% 100%;
     animation:floatCardC 7.5s ease-in-out infinite;
   }
@@ -396,7 +394,7 @@ h2 { font-size:clamp(1.55rem, 2.4vw + .8rem, 2.4rem); font-weight:800; line-heig
 
 /* ============================================================ MARQUEE */
 .marquee-band {
-  margin-top:44px; padding:38px 0 42px;
+  margin-top:0; padding:38px 0 42px;
   background:var(--dark-glow); color:#fff;
 }
 .marquee-title { text-align:center; font-weight:700; font-size:clamp(1.05rem, 1.2vw + .8rem, 1.35rem); letter-spacing:-.01em; }
@@ -707,8 +705,6 @@ details[open] .faq-ico::after { transform:translate(-50%,-50%) rotate(90deg); }
   .store-row { justify-content:flex-start; }
   .store-row-center { justify-content:center; }
   .hero-visual { padding:30px 0; }
-  .hero-plane { top:-16px; right:8%; width:210px; }
-
   .difs-grid { grid-template-columns:repeat(4, 1fr); }
   .dif-card { padding:30px 24px; }
   .dif-anim { width:104px; height:104px; }
@@ -717,7 +713,7 @@ details[open] .faq-ico::after { transform:translate(-50%,-50%) rotate(90deg); }
   .prova-copy { text-align:left; }
   .prova-stats { grid-template-columns:1fr; max-width:420px; }
 
-  .marquee-band { margin-top:64px; }
+  .marquee-band { margin-top:0; }
 }
 
 /* ============================================================ MOTION OFF */
@@ -753,5 +749,5 @@ details[open] .faq-ico::after { transform:translate(-50%,-50%) rotate(90deg); }
   .cta-final, .marquee-band, .site-footer, .chat-head { background:none !important; color:var(--ink-900) !important; }
   .cta-sub, .cta-note, .marquee-note, .mq-chip, .footer-brand p, .footer-legal p, .chat-head small { color:var(--ink-600) !important; }
   .site-header { position:static; }
-  .hero-plane, .dif-anim, .mq-toggle { display:none; }
+  .dif-anim, .mq-toggle { display:none; }
 }
