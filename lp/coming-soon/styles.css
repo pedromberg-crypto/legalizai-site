@@ -120,8 +120,16 @@ body.soon-body { min-height:100dvh; display:flex; flex-direction:column; }
   }
 
   .soon-col-form {
-    display:flex; flex-direction:column;
-    padding:32px 48px 0; overflow:hidden; height:100%;
+    display:flex; flex-direction:column; justify-content:center;
+    padding:4vh 48px; overflow:hidden; height:100%;
+  }
+
+  /* mesma lógica de scale-to-fit do phone-stage: 585px = altura natural do
+     card (medida via getBoundingClientRect); em telas baixas encolhe pra
+     sempre sobrar respiro em vez de colar nas bordas. Nunca amplia (min c/ 1)
+     em monitores bem altos, mantém o tamanho de referência. */
+  .soon-card {
+    transform:scale(min(1, calc(0.8 * 100dvh / 585px)));
   }
 
   .soon-col-visual {
@@ -130,7 +138,17 @@ body.soon-body { min-height:100dvh; display:flex; flex-direction:column; }
     position:relative; overflow:hidden;
   }
 
-  .phone-stage { perspective:1400px; transform:scale(1.43); position:relative; }
+  /* escala responsiva: nunca deixa a composição (phone + cards flutuantes)
+     estourar a coluna, seja qual for a tela. 473x497 = bounding box real da
+     composição sem escala (medido via getBoundingClientRect); 1.43 é o teto
+     (tamanho "ideal" calibrado num monitor 24"). O fator 0.815 reserva ~18%
+     de respiro ao redor da composição (calibrado ~10% maior que antes num
+     note 1536x639). Encolhe suave em telas menores em vez de cortar. */
+  .phone-stage {
+    perspective:1400px;
+    transform:scale(min(1.43, calc(0.815 * 50vw / 473px), calc(0.815 * 100dvh / 497px)));
+    position:relative;
+  }
 
   /* sombra de chão: encolhe/dilui quando o phone sobe, ancora o objeto no espaço */
   .phone-ground-shadow {
