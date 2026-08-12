@@ -57,7 +57,7 @@
   function initLotties() {
     if (!window.lottie) return;
     [
-      { id: 'lot-plane',  data: window.PAPERPLANE },
+      { id: 'lot-phone-plane', data: window.PAPERPLANE },
       { id: 'lot-humano', data: window.CUSTOMER_NEED },
       { id: 'lot-chata',  data: window.CONTENT_MOD },
       { id: 'lot-claro',  data: window.MARKETING_MGMT }
