@@ -12,7 +12,7 @@
   --ink-50:#FAF8F5; --ink-100:#F1EEE9; --ink-200:#E3DED7; --ink-400:#A19B92;
   --ink-500:#736E67; --ink-600:#524E48; --ink-900:#1B1E24;
 
-  --success-700:#0B5E40;
+  --success-50:#E7F6EF; --success-500:#17A06A; --success-700:#0B5E40;
 
   --font: 'Sora', system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
   --r-btn:16px;
@@ -63,18 +63,21 @@ input { font:inherit; color:var(--ink-900); }
 .wait-done { margin-top:12px; font-size:.9rem; color:var(--success-700); font-weight:600; }
 
 /* ============================================================ LAYOUT (coming soon) */
+html.soon-html, body.soon-body { height:100%; }
 body.soon-body { min-height:100dvh; display:flex; flex-direction:column; }
 
 .soon-main {
-  flex:1; display:flex; align-items:center; justify-content:center;
-  padding:48px 20px;
+  flex:1; display:flex; flex-direction:column;
+  padding:32px 20px;
 }
+
+.soon-col-visual { display:none; }
 
 .soon-card {
-  width:100%; max-width:480px; text-align:center;
+  width:100%; max-width:480px; margin:0 auto; text-align:center;
 }
 
-.soon-logo { height:34px; width:auto; margin:0 auto 28px; }
+.soon-logo { height:30px; width:auto; margin:0 auto 20px; }
 
 .soon-card .eyebrow { margin-bottom:18px; }
 
@@ -82,14 +85,15 @@ body.soon-body { min-height:100dvh; display:flex; flex-direction:column; }
   font-size:clamp(1.7rem, 3.4vw + 1rem, 2.5rem);
   font-weight:800; line-height:1.15; letter-spacing:-.02em;
 }
+.h1-muted { color:var(--ink-400); }
 
 .soon-sub { margin-top:14px; color:var(--ink-500); font-size:1.02rem; line-height:1.6; }
 
 .soon-form { margin-top:28px; text-align:left; }
 .soon-form .wait-form { background:var(--ink-100); }
 
-.soon-fields { display:flex; flex-direction:column; gap:10px; margin-top:14px; }
-.soon-field-row { display:flex; gap:10px; }
+.soon-fields { display:flex; flex-direction:column; gap:22px; margin-top:14px; }
+.soon-field-row { display:flex; gap:22px; }
 .soon-fields input, .soon-field-row input {
   flex:1; min-width:0; border:1.5px solid var(--ink-200); border-radius:14px;
   padding:13px 16px; font-size:1rem; background:#fff; outline:0; /* ≥16px: evita zoom do iOS */
@@ -98,17 +102,297 @@ body.soon-body { min-height:100dvh; display:flex; flex-direction:column; }
 .soon-fields input:focus, .soon-field-row input:focus {
   border-color:var(--coral-500); box-shadow:0 0 0 4px rgba(242,100,60,.12);
 }
-.soon-submit { width:100%; margin-top:12px; padding:13px 22px; }
+.soon-submit { width:100%; margin-top:22px; padding:13px 22px; }
 
-.soon-difs {
-  margin-top:36px; display:flex; flex-direction:column; gap:12px;
-  text-align:left; border-top:1px solid var(--ink-200); padding-top:24px;
-}
-.soon-dif { display:flex; align-items:flex-start; gap:12px; font-size:.92rem; color:var(--ink-600); }
-.soon-dif span { flex:none; font-size:1.1rem; line-height:1.3; }
-
-.soon-footer { padding:24px 20px 32px; text-align:center; }
-.soon-footer nav { display:flex; justify-content:center; flex-wrap:wrap; gap:16px; margin-bottom:10px; }
+.soon-footer { padding:16px 20px 20px; text-align:center; flex:none; }
+.soon-footer nav { display:flex; justify-content:center; flex-wrap:wrap; gap:16px; margin-bottom:8px; }
 .soon-footer nav a { font-size:.82rem; color:var(--ink-500); text-decoration:none; }
 .soon-footer nav a:hover { color:var(--ink-900); text-decoration:underline; }
 .soon-footer p { font-size:.76rem; color:var(--ink-400); }
+
+/* ---------- desktop: 2 colunas, tudo cabe em 100dvh, sem scroll ---------- */
+@media (min-width:900px) and (min-height:600px) {
+  body.soon-body { height:100dvh; overflow:hidden; }
+
+  .soon-main {
+    display:grid; grid-template-columns:1fr 1fr; grid-template-rows:100%;
+    padding:0; overflow:hidden; height:100%;
+  }
+
+  .soon-col-form {
+    display:flex; flex-direction:column;
+    padding:32px 48px 0; overflow:hidden; height:100%;
+  }
+
+  .soon-col-visual {
+    display:flex; align-items:center; justify-content:center;
+    background:var(--coral-500);
+    position:relative; overflow:hidden;
+  }
+
+  .phone-stage { perspective:1400px; transform:scale(1.43); position:relative; }
+
+  /* sombra de chão: encolhe/dilui quando o phone sobe, ancora o objeto no espaço */
+  .phone-ground-shadow {
+    position:absolute; left:50%; bottom:-6%; transform:translateX(-50%);
+    width:170px; height:34px; border-radius:50%;
+    background:radial-gradient(closest-side, rgba(27,30,36,.38), rgba(27,30,36,0) 72%);
+    filter:blur(2px);
+    animation:groundShadow 7s ease-in-out infinite;
+    z-index:0;
+  }
+  @keyframes groundShadow {
+    0%   { transform:translateX(-50%) scale(1);    opacity:.75; }
+    50%  { transform:translateX(-50%) scale(.72);  opacity:.4; }
+    100% { transform:translateX(-50%) scale(1);    opacity:.75; }
+  }
+
+  .phone-mock {
+    width:220px; aspect-ratio:1070/2176;
+    transform-style:preserve-3d; position:relative; z-index:1;
+    animation:phoneFloat 7s ease-in-out infinite;
+  }
+
+  @keyframes phoneFloat {
+    0%   { transform:translateY(0)    rotateY(-6deg) rotateX(2.5deg); }
+    50%  { transform:translateY(-18px) rotateY(4deg)  rotateX(-1.5deg); }
+    100% { transform:translateY(0)    rotateY(-6deg) rotateX(2.5deg); }
+  }
+
+  /* corpo real: render fotográfico do iPhone 15 Pro (Figma/Uiscore, export 2x),
+     sem CSS a desenhar titânio/botões/ilha — tudo isso já vem na foto. */
+  .phone-frame {
+    width:100%; height:100%; position:relative;
+    background-image:url('assets/iphone-frame.png');
+    background-size:100% 100%; background-repeat:no-repeat;
+    filter:
+      drop-shadow(0 40px 60px rgba(27,30,36,.42))
+      drop-shadow(0 12px 20px rgba(27,30,36,.28));
+  }
+
+  /* tela: preenche o frame inteiro e usa MÁSCARA (screen-mask.png, recorte
+     exato do Screen.png real do Figma — mesmo crop do iphone-frame.png) pra
+     clipar no formato preciso da tela fotografada, ilha dinâmica incluída.
+     Zero frestinha: nada de border-radius aproximado tentando adivinhar a
+     curva do canto. */
+  .phone-screen {
+    position:absolute; inset:0;
+    background:var(--ink-50);
+    -webkit-mask-image:url('assets/screen-mask.png');
+    mask-image:url('assets/screen-mask.png');
+    -webkit-mask-size:100% 100%; mask-size:100% 100%;
+    -webkit-mask-repeat:no-repeat; mask-repeat:no-repeat;
+    overflow:hidden; display:flex; flex-direction:column;
+    padding:36px 20px 18px;
+  }
+
+  .phone-statusbar {
+    flex:none; display:flex; align-items:center; justify-content:space-between;
+    margin:-16px -3px 6px; color:var(--ink-900);
+  }
+  .phone-time { font-size:.62rem; font-weight:700; letter-spacing:-.01em; }
+  .phone-status-icons { display:flex; align-items:center; gap:3px; }
+  .phone-icon-signal { width:11px; height:auto; }
+  .phone-icon-wifi { width:11px; height:auto; }
+  .phone-icon-battery { width:15px; height:auto; opacity:.95; }
+
+  /* vidro: reflexo diagonal fixo + brilho de topo, dá sensação de superfície física */
+  .phone-screen::before {
+    content:""; position:absolute; inset:0; z-index:5; pointer-events:none;
+    background:linear-gradient(115deg,
+      rgba(255,255,255,.16) 0%, rgba(255,255,255,.05) 14%,
+      rgba(255,255,255,0) 28%, rgba(255,255,255,0) 62%,
+      rgba(255,255,255,.05) 80%, rgba(255,255,255,0) 100%);
+    mix-blend-mode:overlay;
+  }
+  .phone-screen::after {
+    content:""; position:absolute; inset:0 0 auto 0; height:40%; z-index:5; pointer-events:none;
+    background:linear-gradient(180deg, rgba(255,255,255,.22), rgba(255,255,255,0));
+    mix-blend-mode:soft-light;
+  }
+
+  .phone-brand { flex:none; height:16px; width:auto; align-self:flex-start; }
+
+  /* absorve o espaço sobrando (igual .app-main real): empurra texto+CTA pra base */
+  .phone-illustration {
+    flex:1; min-height:0; display:flex; align-items:center; justify-content:center;
+    padding:8px 0;
+  }
+  .phone-lottie { width:100%; max-width:150px; height:auto; }
+  .phone-lottie svg { display:block; }
+
+  .phone-text-block { flex:none; }
+
+  .phone-headline {
+    font-size:.68rem; font-weight:700; line-height:1.35;
+    color:var(--ink-900); text-align:left;
+  }
+  .phone-headline span { font-weight:700; color:var(--ink-400); }
+
+  .phone-pill {
+    display:flex; align-items:center; gap:5px;
+    margin-top:8px; font-size:.48rem; font-weight:600;
+    color:var(--ink-600); background:var(--coral-50); border:1px solid var(--ink-200);
+    border-radius:6px; padding:5px 7px; line-height:1.25;
+  }
+  .phone-pill-icon { width:11px; height:11px; flex:none; color:var(--coral-500); }
+
+  .phone-footer-cta { flex:none; margin-top:10px; }
+
+  .phone-card {
+    width:100%; margin-top:6px; padding:8px; border-radius:8px; border:0;
+    background:#fff; border:1px solid var(--ink-200);
+    display:flex; align-items:flex-start; gap:6px; text-align:left;
+    font-family:inherit; cursor:default;
+  }
+  .phone-card-primary { background:var(--coral-600); border-color:var(--coral-600); }
+
+  .phone-card-icon {
+    flex:none; width:20px; height:20px; border-radius:5px;
+    display:flex; align-items:center; justify-content:center;
+    background:var(--coral-50); color:var(--coral-500);
+  }
+  .phone-card-icon svg { width:12px; height:12px; }
+  .phone-card-icon-on { background:rgba(255,255,255,.2); color:#fff; }
+
+  .phone-card-text { flex:1; display:flex; flex-direction:column; gap:1px; min-width:0; }
+  .phone-card-text strong { font-size:.56rem; font-weight:700; color:var(--ink-900); }
+  .phone-card-text em { font-style:normal; font-size:.44rem; color:var(--ink-500); line-height:1.3; }
+  .phone-card-primary .phone-card-text strong,
+  .phone-card-primary .phone-card-text em { color:#fff; }
+
+  .phone-chevron { flex:none; width:11px; height:11px; margin-top:2px; opacity:.7; color:var(--ink-500); }
+  .phone-card-primary .phone-chevron { color:#fff; }
+
+  .phone-login { margin-top:10px; font-size:.46rem; color:var(--ink-400); text-align:center; }
+  .phone-login span { font-weight:700; color:var(--ink-900); text-decoration:underline; text-underline-offset:2px; }
+
+  /* ---------- cards flutuantes: prints reais de telas do app, soltos no espaço ---------- */
+  .float-card {
+    position:absolute; z-index:2; width:206px;
+    background:#fff; border:1px solid var(--ink-200); border-radius:18px;
+    padding:14px; box-shadow:0 24px 40px -16px rgba(27,30,36,.28), 0 6px 14px -6px rgba(27,30,36,.14);
+  }
+
+  /* canto superior esquerdo: âncora no canto inferior-direito do card (o que
+     toca o phone) — só ~10% da largura/altura do card (já escalado .7) entra
+     na tela, resto fica acima e à esquerda, fora do aparelho */
+  .float-card-cnae {
+    z-index:0;
+    top:-108px; left:-178px;
+    transform-origin:100% 100%;
+    animation:floatCardA 8s ease-in-out infinite;
+  }
+  /* mesma lógica do notas, espelhada: 10% do card entra na tela pela direita, resto pra fora */
+  .float-card-atalhos {
+    top:calc(38% - 100px); right:-185px;
+    transform-origin:0% 50%;
+    animation:floatCardB 9s ease-in-out infinite;
+  }
+  /* dentro do .phone-stage (mesmo espaço de coordenadas do phone, não da coluna):
+     só ~10% da largura do card entra por cima da tela, o resto fica pra fora à esquerda */
+  .float-card-notas {
+    bottom:14%; left:-185px;
+    transform-origin:100% 100%;
+    animation:floatCardC 7.5s ease-in-out infinite;
+  }
+
+  @keyframes floatCardA {
+    0%,100% { transform:translateY(0) rotate(-3deg) scale(.7); }
+    50%     { transform:translateY(-14px) rotate(-1deg) scale(.7); }
+  }
+  @keyframes floatCardB {
+    0%,100% { transform:translateY(0) rotate(2.5deg) scale(.7); }
+    50%     { transform:translateY(12px) rotate(1deg) scale(.7); }
+  }
+  @keyframes floatCardC {
+    0%,100% { transform:translateY(0) rotate(-2deg) scale(.7); }
+    50%     { transform:translateY(-10px) rotate(-3.5deg) scale(.7); }
+  }
+
+  .fc-row-between { display:flex; align-items:flex-start; justify-content:space-between; gap:8px; }
+  .fc-section-title { font-size:.72rem; font-weight:700; color:var(--ink-900); }
+  .fc-link { font-size:.6rem; font-weight:700; color:var(--coral-700); }
+
+  .fc-tag-success { display:block; font-size:.52rem; font-weight:700; color:var(--success-700); }
+  .fc-title { margin-top:2px; font-size:.68rem; font-weight:700; color:var(--ink-900); line-height:1.3; }
+  .fc-badge-success {
+    flex:none; font-size:.5rem; font-weight:800; color:var(--success-700);
+    background:var(--success-50); border-radius:999px; padding:3px 7px; margin-top:1px;
+  }
+  .fc-desc { margin-top:6px; font-size:.58rem; color:var(--ink-500); line-height:1.4; }
+
+  .fc-stats { margin-top:8px; display:flex; gap:6px; align-items:stretch; }
+  .fc-stat { flex:1; border-radius:12px; padding:7px 8px; background:var(--ink-50); }
+  .fc-stat-success { background:var(--success-50); }
+  .fc-stat-label { font-size:.46rem; color:var(--ink-400); line-height:1.25; }
+  .fc-stat-success .fc-stat-label { color:var(--success-700); }
+  .fc-stat-value { margin-top:1px; font-size:.6rem; font-weight:700; color:var(--ink-900); }
+  .fc-stat-success .fc-stat-value { color:var(--success-700); }
+  .fc-stat-sub { font-size:.44rem; color:var(--ink-500); }
+
+  .fc-subheading { margin-top:9px; font-size:.6rem; font-weight:700; color:var(--ink-900); }
+  .fc-check-item { margin-top:5px; display:flex; align-items:flex-start; gap:6px; }
+  .fc-check-icon {
+    flex:none; width:14px; height:14px; margin-top:.5px; border-radius:50%;
+    background:var(--success-50); color:var(--success-700);
+    display:flex; align-items:center; justify-content:center;
+  }
+  .fc-check-icon svg { width:8px; height:8px; }
+  .fc-check-item span:last-child { font-size:.54rem; color:var(--ink-500); line-height:1.35; }
+
+  .fc-grid2 { margin-top:10px; display:grid; grid-template-columns:1fr 1fr; gap:8px; }
+  .fc-action { border-radius:14px; padding:12px; border:1px solid var(--ink-200); background:#fff; }
+  .fc-action-primary { background:var(--coral-600); border-color:var(--coral-600); }
+  .fc-action-icon {
+    width:26px; height:26px; border-radius:8px; background:var(--ink-50); color:var(--coral-600);
+    display:flex; align-items:center; justify-content:center;
+  }
+  .fc-action-icon svg { width:13px; height:13px; }
+  .fc-action-icon-on { background:rgba(255,255,255,.22); color:#fff; }
+  .fc-action-title { margin-top:9px; font-size:.62rem; font-weight:700; color:var(--ink-900); line-height:1.25; }
+  .fc-action-sub { margin-top:1px; font-size:.46rem; color:var(--ink-500); line-height:1.3; }
+  .fc-action-primary .fc-action-title, .fc-action-primary .fc-action-sub { color:#fff; }
+  .fc-action-primary .fc-action-sub { opacity:.85; }
+
+  .fc-notas-list { margin-top:8px; display:flex; flex-direction:column; gap:6px; }
+  .fc-nota-row {
+    display:flex; align-items:center; gap:8px; border:1px solid var(--ink-200);
+    border-radius:12px; padding:7px 8px;
+  }
+  .fc-avatar {
+    position:relative; flex:none; width:26px; height:26px; border-radius:50%;
+    background:var(--ink-900); color:#fff; font-size:.44rem; font-weight:700;
+    display:flex; align-items:center; justify-content:center;
+  }
+  .fc-dot {
+    position:absolute; bottom:-1px; right:-1px; width:8px; height:8px; border-radius:50%;
+    background:var(--success-500); border:2px solid #fff;
+  }
+  .fc-nota-info { flex:1; min-width:0; }
+  .fc-nota-title { font-size:.54rem; font-weight:700; color:var(--ink-900); white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+  .fc-nota-date { margin-top:1px; font-size:.46rem; color:var(--ink-400); }
+  .fc-nota-valor { flex:none; font-size:.54rem; font-weight:700; color:var(--success-700); }
+
+  @media (prefers-reduced-motion: reduce) {
+    .phone-mock { animation:none; transform:rotateY(-12deg) rotateX(4deg); }
+    .float-card-cnae { animation:none; transform-origin:100% 100%; transform:rotate(-3deg) scale(.7); }
+    .float-card-atalhos { animation:none; transform:rotate(2.5deg) scale(.7); }
+    .float-card-notas { animation:none; transform:rotate(-2deg) scale(.7); }
+  }
+
+  .soon-card { max-width:500px; margin-top:auto; margin-bottom:auto; }
+  .soon-logo { height:31px; margin-bottom:46px; }
+  .soon-card h1 { font-size:clamp(1.4rem, 1.6vw + 1rem, 1.9rem); }
+  .soon-sub { margin-top:10px; font-size:.92rem; }
+  .soon-form { margin-top:18px; }
+  .wait-form { padding:14px; }
+  .soon-fields { gap:16px; margin-top:10px; }
+  .soon-fields input, .soon-field-row input { padding:10px 14px; font-size:.92rem; }
+  .soon-submit { padding:11px 20px; margin-top:16px; }
+
+  .soon-footer { flex:none; padding:10px 0 14px; }
+  .soon-footer nav { gap:10px; margin-bottom:4px; }
+  .soon-footer nav a { font-size:.66rem; }
+  .soon-footer p { font-size:.6rem; }
+}
