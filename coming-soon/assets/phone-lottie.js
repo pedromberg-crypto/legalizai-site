@@ -8,7 +8,7 @@
     if (window.lottie) return Promise.resolve(window.lottie);
     return new Promise(function (resolve, reject) {
       var s = document.createElement('script');
-      s.src = 'assets/lottie.min.js';
+      s.src = '/coming-soon/assets/lottie.min.js';
       s.async = true;
       s.onload = function () {
         if (window.lottie) resolve(window.lottie);
