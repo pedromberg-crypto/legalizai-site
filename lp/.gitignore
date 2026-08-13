@@ -1,0 +1,5 @@
+.vercel
+
+# sandbox local de testes da LP (cópia livre pra experimentar dobras/componentes).
+# Nunca deve subir: Vercel serve lp/ como root, então isso viraria rota pública.
+_lab/
