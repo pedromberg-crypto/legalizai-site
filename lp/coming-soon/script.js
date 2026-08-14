@@ -20,6 +20,8 @@
   var error = $('soon-error');
   var submitBtn = form.querySelector('.soon-submit');
 
+  console.log('[waitlist-debug] script inicializado', { form: !!form, submitBtn: !!submitBtn });
+
   function digits(s) { return (s || '').replace(/\D/g, ''); }
 
   /* máscara (00) 00000-0000, preservando a posição do cursor */
@@ -38,10 +40,26 @@
 
   form.addEventListener('submit', function (e) {
     e.preventDefault();
-    if (!nome.value.trim() || !sobrenome.value.trim() || !cidade.value.trim()) return;
-    if (!email.value || (email.validity && !email.validity.valid)) return;
-    if (digits(whatsapp.value).length < 10) return;
+    console.log('[waitlist-debug] submit handler disparado', {
+      nome: nome.value, sobrenome: sobrenome.value, email: email.value,
+      whatsapp: whatsapp.value, cidade: cidade.value,
+      emailValid: email.validity && email.validity.valid,
+      whatsappDigits: digits(whatsapp.value).length,
+    });
+    if (!nome.value.trim() || !sobrenome.value.trim() || !cidade.value.trim()) {
+      console.log('[waitlist-debug] bloqueado: nome/sobrenome/cidade vazio');
+      return;
+    }
+    if (!email.value || (email.validity && !email.validity.valid)) {
+      console.log('[waitlist-debug] bloqueado: email invalido');
+      return;
+    }
+    if (digits(whatsapp.value).length < 10) {
+      console.log('[waitlist-debug] bloqueado: whatsapp com menos de 10 digitos');
+      return;
+    }
 
+    console.log('[waitlist-debug] validacao passou, enviando fetch...');
     error.classList.add('hidden');
     submitBtn.disabled = true;
 
@@ -58,6 +76,7 @@
       })
     })
       .then(function (res) {
+        console.log('[waitlist-debug] resposta recebida', res.status);
         if (!res.ok) throw new Error('request_failed');
 
         /* conversão pro GTM — sem PII, só o sinal do evento */
@@ -71,7 +90,8 @@
         cidade.value = '';
         done.classList.remove('hidden');
       })
-      .catch(function () {
+      .catch(function (err) {
+        console.log('[waitlist-debug] erro no fetch', err);
         error.classList.remove('hidden');
       })
       .finally(function () {
