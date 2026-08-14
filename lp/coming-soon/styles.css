@@ -61,6 +61,7 @@ input { font:inherit; color:var(--ink-900); }
 .wait-form p { font-size:.95rem; }
 .wait-form small { color:var(--ink-500); font-size:.82rem; }
 .wait-done { margin-top:12px; font-size:.9rem; color:var(--success-700); font-weight:600; }
+.wait-error { margin-top:12px; font-size:.9rem; color:var(--coral-700); font-weight:600; }
 
 /* ============================================================ LAYOUT (coming soon) */
 html.soon-html, body.soon-body { height:100%; }
