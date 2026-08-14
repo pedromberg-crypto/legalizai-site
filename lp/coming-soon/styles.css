@@ -109,6 +109,9 @@ body.soon-body { min-height:100dvh; display:flex; flex-direction:column; }
 .soon-footer nav a { font-size:.82rem; color:var(--ink-500); text-decoration:none; }
 .soon-footer nav a:hover { color:var(--ink-900); text-decoration:underline; }
 .soon-footer p { font-size:.76rem; color:var(--ink-400); }
+/* identificação profissional (CRC do responsável técnico e da empresa contábil):
+   é dado obrigatório de exibição, não copy, então vem um degrau abaixo do resto */
+.soon-footer p + p { margin-top:4px; font-size:.7rem; line-height:1.45; }
 
 /* ---------- desktop: 2 colunas, tudo cabe em 100dvh, sem scroll ---------- */
 @media (min-width:900px) and (min-height:600px) {
