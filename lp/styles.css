@@ -120,6 +120,12 @@ h2 { font-size:clamp(1.55rem, 2.4vw + .8rem, 2.4rem); font-weight:800; line-heig
 .header-nav a { text-decoration:none; font-size:.92rem; font-weight:600; color:var(--ink-600); transition:color .15s; }
 .header-nav a:hover { color:var(--coral-700); }
 .header-inner > .btn { margin-left:auto; }
+/* páginas de aceite (termos/privacidade) não têm o CTA "Baixar o app". Sem ele,
+   o margin-inline:auto do nav deixaria o único link boiando no meio da barra
+   com o lado direito vazio, o que lê como elemento faltando. Aqui ele encosta
+   à direita e a barra fecha em duas âncoras: marca à esquerda, navegação à
+   direita. */
+.site-header-legal .header-nav { margin-inline:auto 0; }
 
 /* ============================================================ HERO */
 .hero { padding:56px 0 24px; position:relative; overflow:clip; }
