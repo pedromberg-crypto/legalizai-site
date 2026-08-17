@@ -16,6 +16,7 @@
   var email = $('soon-email');
   var whatsapp = $('soon-whatsapp');
   var cidade = $('soon-cidade');
+  var consent = $('soon-consent');
   var done = $('soon-done');
   var error = $('soon-error');
   var submitBtn = form.querySelector('.soon-submit');
@@ -58,6 +59,15 @@
       console.log('[waitlist-debug] bloqueado: whatsapp com menos de 10 digitos');
       return;
     }
+    /* guarda de consentimento LGPD. O `required` do HTML já barra o envio (a
+       página não usa novalidate, então o navegador mostra a bolha nativa como
+       faz com os outros cinco campos) — esta guarda existe pro caso de o
+       atributo cair num refactor: sem ela o formulário voltaria a mandar dado
+       pessoal pro backend sem consentimento, e ninguém perceberia. */
+    if (!consent.checked) {
+      console.log('[waitlist-debug] bloqueado: consentimento LGPD nao marcado');
+      return;
+    }
 
     console.log('[waitlist-debug] validacao passou, enviando fetch...');
     error.classList.add('hidden');
@@ -81,13 +91,14 @@
 
         /* conversão pro GTM — sem PII, só o sinal do evento */
         window.dataLayer = window.dataLayer || [];
-        window.dataLayer.push({ event: 'waitlist_signup', form_id: 'soon-form' });
+        window.dataLayer.push({ event: 'waitlist_signup', form_id: 'soon-form', lgpd_consent: true });
 
         nome.value = '';
         sobrenome.value = '';
         email.value = '';
         whatsapp.value = '';
         cidade.value = '';
+        consent.checked = false;   /* o próximo envio precisa de consentimento novo */
         done.classList.remove('hidden');
       })
       .catch(function (err) {
