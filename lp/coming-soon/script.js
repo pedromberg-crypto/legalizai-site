@@ -14,6 +14,7 @@
   var email = $('soon-email');
   var whatsapp = $('soon-whatsapp');
   var cidade = $('soon-cidade');
+  var consent = $('soon-consent');
   var done = $('soon-done');
 
   function digits(s) { return (s || '').replace(/\D/g, ''); }
@@ -37,16 +38,23 @@
     if (!nome.value.trim() || !sobrenome.value.trim() || !cidade.value.trim()) return;
     if (!email.value || (email.validity && !email.validity.valid)) return;
     if (digits(whatsapp.value).length < 10) return;
+    /* guarda de consentimento. O `required` do HTML já barra o envio (a página
+       não usa novalidate, então o navegador mostra a bolha nativa como faz com
+       os outros campos) — esta linha existe pro caso de o atributo cair num
+       refactor: sem ela, o formulário voltaria a enviar sem consentimento e
+       ninguém perceberia. */
+    if (!consent.checked) return;
 
     /* conversão pro GTM — sem PII, só o sinal do evento */
     window.dataLayer = window.dataLayer || [];
-    window.dataLayer.push({ event: 'waitlist_signup', form_id: 'soon-form' });
+    window.dataLayer.push({ event: 'waitlist_signup', form_id: 'soon-form', lgpd_consent: true });
 
     nome.value = '';
     sobrenome.value = '';
     email.value = '';
     whatsapp.value = '';
     cidade.value = '';
+    consent.checked = false;   /* o próximo envio precisa de consentimento novo */
     done.classList.remove('hidden');
   });
 })();

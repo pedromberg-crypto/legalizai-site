@@ -1,7 +1,10 @@
 /* ============================================================
    LEGALIZAI · Coming Soon
-   Self-contained: token/base/botão/wait-form copiados de ../lp/styles.css
-   (projeto Vercel separado, sem acesso à pasta lp/ em produção).
+   Self-contained: token/base/botão/wait-form copiados de ../styles.css, pra
+   esta página não carregar o CSS inteiro da LP só por causa de um formulário.
+   NÃO é projeto Vercel separado (o comentário antigo dizia isso e estava
+   errado): o deploy é único, root em lp/, com cleanUrls — por isso /termos e
+   /privacidade resolvem normalmente a partir daqui. Ver README e lp/vercel.json.
    ============================================================ */
 
 /* ---------- tokens (subset usado nesta página) ---------- */
@@ -102,6 +105,29 @@ body.soon-body { min-height:100dvh; display:flex; flex-direction:column; }
 .soon-fields input:focus, .soon-field-row input:focus {
   border-color:var(--coral-500); box-shadow:0 0 0 4px rgba(242,100,60,.12);
 }
+/* consentimento LGPD — fica ANTES do botão porque o usuário precisa ler a
+   condição antes de agir, não depois de já ter mirado no CTA.
+   O alvo de toque de 44px vem do padding do label (a caixa inteira é
+   clicável), não do tamanho do input: inflar o input desalinharia ele da
+   primeira linha do texto. */
+.soon-consent {
+  display:flex; align-items:flex-start; gap:12px;
+  margin-top:22px; padding:13px 16px;
+  background:#fff; border:1.5px solid var(--ink-200); border-radius:14px;
+  cursor:pointer; transition:border-color .18s, box-shadow .18s;
+}
+.soon-consent:hover { border-color:var(--coral-200); }
+/* o anel de foco vai no LABEL, não no input: a caixa nativa de 20px daria um
+   anel pequeno e deslocado dentro de um alvo grande */
+.soon-consent:focus-within { border-color:var(--coral-500); box-shadow:0 0 0 4px rgba(242,100,60,.12); }
+.soon-consent input {
+  flex:none; width:20px; height:20px; margin:2px 0 0; /* 2px alinha com a 1ª linha do texto */
+  accent-color:var(--coral-500); cursor:pointer;
+}
+.soon-consent-text { font-size:.86rem; line-height:1.5; color:var(--ink-600); }
+.soon-consent-text a { color:var(--coral-700); font-weight:600; }
+.soon-consent-text a:hover { text-decoration:none; }
+
 .soon-submit { width:100%; margin-top:22px; padding:13px 22px; }
 
 .soon-footer { padding:16px 20px 20px; text-align:center; flex:none; }
