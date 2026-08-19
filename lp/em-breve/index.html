@@ -64,7 +64,14 @@
           <input type="text" id="soon-nome" placeholder="Nome completo" required aria-label="Nome completo" autocomplete="name">
           <input type="email" id="soon-email" placeholder="Seu e-mail" required aria-label="Seu e-mail" autocomplete="email">
           <input type="tel" id="soon-whatsapp" placeholder="WhatsApp com DDD" required aria-label="WhatsApp" autocomplete="tel" inputmode="numeric">
-          <input type="text" id="soon-cidade" placeholder="Cidade" required aria-label="Cidade" autocomplete="address-level2">
+          <!-- combobox de cidade: o <input> continua sendo o campo enviado; a
+               lista abaixo é só sugestão (o usuário pode digitar livremente). -->
+          <div class="soon-ac">
+            <input type="text" id="soon-cidade" placeholder="Cidade" required aria-label="Cidade"
+                   autocomplete="off" role="combobox" aria-expanded="false"
+                   aria-controls="soon-cidade-list" aria-autocomplete="list">
+            <ul class="soon-ac-list hidden" id="soon-cidade-list" role="listbox" aria-label="Sugestões de cidade"></ul>
+          </div>
         </div>
         <!-- LGPD art. 8º: o consentimento tem que ser livre, informado e para
              finalidade ESPECÍFICA — por isso a finalidade ("receber contato

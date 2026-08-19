@@ -106,6 +106,29 @@ body.soon-body { min-height:100dvh; display:flex; flex-direction:column; }
 .soon-fields input:focus, .soon-field-row input:focus {
   border-color:var(--coral-500); box-shadow:0 0 0 4px rgba(242,100,60,.12);
 }
+
+/* ---------- autocomplete de cidade ---------- */
+/* o wrapper é o contexto de posicionamento da lista; sem ele o dropdown
+   ancoraria na .soon-card e ficaria deslocado. */
+.soon-ac { position:relative; }
+.soon-ac input { width:100%; }
+.soon-ac-list {
+  position:absolute; z-index:20; top:calc(100% + 6px); left:0; right:0;
+  margin:0; padding:6px; list-style:none;
+  max-height:232px; overflow-y:auto; overscroll-behavior:contain;
+  background:#fff; border:1.5px solid var(--ink-200); border-radius:14px;
+  box-shadow:0 12px 28px rgba(27,30,36,.12);
+}
+.soon-ac-option {
+  padding:10px 12px; border-radius:10px; cursor:pointer;
+  font-size:.95rem; line-height:1.35; color:var(--ink-900);
+  display:flex; align-items:baseline; gap:8px;
+}
+/* hover e navegação por teclado compartilham o mesmo destaque pra não existir
+   "dois cursores" visíveis ao mesmo tempo */
+.soon-ac-option:hover, .soon-ac-option[aria-selected="true"] { background:var(--coral-50); }
+.soon-ac-option mark { background:none; color:var(--coral-700); font-weight:700; }
+.soon-ac-uf { margin-left:auto; font-size:.8rem; color:var(--ink-500); font-weight:600; }
 /* consentimento LGPD — fica ANTES do botão porque o usuário precisa ler a
    condição antes de agir, não depois de já ter mirado no CTA.
    O alvo de toque de 44px vem do padding do label (a caixa inteira é
