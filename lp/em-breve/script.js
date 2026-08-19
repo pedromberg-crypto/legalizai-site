@@ -7,7 +7,6 @@
   'use strict';
 
   var WAITLIST_ENDPOINT = 'https://api.legalizai.com.br/waitlist';
-  var MUNICIPIOS_URL = '/em-breve/assets/municipios.json';
 
   function $(id) { return document.getElementById(id); }
 
@@ -16,7 +15,6 @@
   var email = $('soon-email');
   var whatsapp = $('soon-whatsapp');
   var cidade = $('soon-cidade');
-  var cidadeList = $('soon-cidade-list');
   var consent = $('soon-consent');
   var done = $('soon-done');
   var error = $('soon-error');
@@ -31,30 +29,6 @@
     var parts = fullName.trim().split(/\s+/);
     return { nome: parts[0], sobrenome: parts.slice(1).join(' ') || parts[0] };
   }
-
-  /* lista oficial de municípios (IBGE) — trava o campo cidade em valores válidos */
-  var municipiosValidos = Object.create(null);
-  fetch(MUNICIPIOS_URL)
-    .then(function (res) { return res.json(); })
-    .then(function (list) {
-      var frag = document.createDocumentFragment();
-      list.forEach(function (item) {
-        var label = item[0] + ' - ' + item[1];
-        municipiosValidos[label] = true;
-        var opt = document.createElement('option');
-        opt.value = label;
-        frag.appendChild(opt);
-      });
-      cidadeList.appendChild(frag);
-    })
-    .catch(function (err) {
-      console.log('[waitlist-debug] falha ao carregar lista de municipios', err);
-    });
-
-  cidade.addEventListener('input', function () {
-    var isValid = !cidade.value || !!municipiosValidos[cidade.value];
-    cidade.setCustomValidity(isValid ? '' : 'Selecione uma cidade da lista.');
-  });
 
   /* máscara (00) 00000-0000, preservando a posição do cursor */
   whatsapp.addEventListener('input', function () {
@@ -88,12 +62,6 @@
     }
     if (digits(whatsapp.value).length < 10) {
       console.log('[waitlist-debug] bloqueado: whatsapp com menos de 10 digitos');
-      return;
-    }
-    if (!municipiosValidos[cidade.value.trim()]) {
-      console.log('[waitlist-debug] bloqueado: cidade fora da lista oficial');
-      cidade.setCustomValidity('Selecione uma cidade da lista.');
-      cidade.reportValidity();
       return;
     }
     /* guarda de consentimento LGPD. O `required` do HTML já barra o envio (a
