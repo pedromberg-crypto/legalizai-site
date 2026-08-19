@@ -57,18 +57,29 @@
     <p class="soon-sub">Preço fechado, contador de verdade desde o início.</p>
 
     <div class="soon-form">
-      <form class="wait-form" id="soon-form">
+      <!-- autocomplete="no-autofill": o Chrome IGNORA autocomplete="off" em
+           campos de nome/e-mail/telefone/endereço (decisão antiga do time do
+           Blink) e mostra a bolha de autofill mesmo assim — em cima da nossa
+           lista de cidades. O que ele respeita é um token que não está na
+           allowlist dele: qualquer valor desconhecido desliga a heurística.
+           Por isso o valor é esse literal e não "off"; trocar de volta
+           ressuscita a bolha nativa.
+           Efeito colateral do truque: token inválido vale como "on" pela spec,
+           então o Firefox voltaria a oferecer o histórico do campo — só não
+           oferece porque nenhum input aqui tem `name` (o envio é por fetch,
+           lendo os ids). Pôr `name` nesses campos reabre a lista no Firefox. -->
+      <form class="wait-form" id="soon-form" autocomplete="no-autofill">
         <p><strong>Garanta sua oferta de lançamento</strong></p>
         <small>1º mês grátis pra quem entrar agora.</small>
         <div class="soon-fields">
-          <input type="text" id="soon-nome" placeholder="Nome completo" required aria-label="Nome completo" autocomplete="name">
-          <input type="email" id="soon-email" placeholder="Seu e-mail" required aria-label="Seu e-mail" autocomplete="email">
-          <input type="tel" id="soon-whatsapp" placeholder="WhatsApp com DDD" required aria-label="WhatsApp" autocomplete="tel" inputmode="numeric">
+          <input type="text" id="soon-nome" placeholder="Nome completo" required aria-label="Nome completo" autocomplete="no-autofill">
+          <input type="email" id="soon-email" placeholder="Seu e-mail" required aria-label="Seu e-mail" autocomplete="no-autofill">
+          <input type="tel" id="soon-whatsapp" placeholder="WhatsApp com DDD" required aria-label="WhatsApp" autocomplete="no-autofill" inputmode="numeric">
           <!-- combobox de cidade: o <input> continua sendo o campo enviado; a
                lista abaixo é só sugestão (o usuário pode digitar livremente). -->
           <div class="soon-ac">
             <input type="text" id="soon-cidade" placeholder="Cidade" required aria-label="Cidade"
-                   autocomplete="off" role="combobox" aria-expanded="false"
+                   autocomplete="no-autofill" role="combobox" aria-expanded="false"
                    aria-controls="soon-cidade-list" aria-autocomplete="list">
             <ul class="soon-ac-list hidden" id="soon-cidade-list" role="listbox" aria-label="Sugestões de cidade"></ul>
           </div>
