@@ -57,27 +57,26 @@
     <p class="soon-sub">Preço fechado, contador de verdade desde o início.</p>
 
     <div class="soon-form">
-      <!-- autocomplete="new-password" nos quatro campos não é copiar-colar
-           errado. O Chrome ignora de propósito autocomplete="off" em form que
-           ele classifica como perfil/endereço, e a bolha nativa abria por cima
-           do nosso dropdown de cidades. "new-password" é token reconhecido e
-           faz o Chrome tratar o campo como senha nova — nada de sugerir nome,
-           e-mail ou endereço salvos. Como nenhum input aqui é type="password",
-           não aparece UI de gerenciador de senha nem oferta de salvar.
-           Nenhum input tem `name` de propósito: o envio é por fetch lendo os
-           ids, e sem `name` o Firefox também não guarda histórico do campo. -->
-      <form class="wait-form" id="soon-form" autocomplete="new-password">
+      <!-- autocomplete="off" desliga o histórico de campo (aquela lista com o
+           que já foi digitado antes). O Chrome só ignora "off" para autofill
+           de ENDEREÇO e CARTÃO — para histórico simples ele respeita.
+           Não usar "new-password" aqui: o token faz o Chrome tratar o campo
+           como senha/usuário e ele passa a oferecer login salvo (aparecia
+           "natanael" embaixo do Nome). Nenhum input tem `name` de propósito —
+           o envio é por fetch lendo os ids, e sem `name` o Firefox também não
+           guarda histórico. -->
+      <form class="wait-form" id="soon-form" autocomplete="off">
         <p><strong>Garanta sua oferta de lançamento</strong></p>
         <small>1º mês grátis pra quem entrar agora.</small>
         <div class="soon-fields">
-          <input type="text" id="soon-nome" placeholder="Nome completo" required aria-label="Nome completo" autocomplete="new-password">
-          <input type="email" id="soon-email" placeholder="Seu e-mail" required aria-label="Seu e-mail" autocomplete="new-password">
-          <input type="tel" id="soon-whatsapp" placeholder="WhatsApp com DDD" required aria-label="WhatsApp" autocomplete="new-password" inputmode="numeric">
+          <input type="text" id="soon-nome" placeholder="Nome completo" required aria-label="Nome completo" autocomplete="off">
+          <input type="email" id="soon-email" placeholder="Seu e-mail" required aria-label="Seu e-mail" autocomplete="off">
+          <input type="tel" id="soon-whatsapp" placeholder="WhatsApp com DDD" required aria-label="WhatsApp" autocomplete="off" inputmode="numeric">
           <!-- combobox de cidade: o <input> continua sendo o campo enviado; a
                lista abaixo é só sugestão (o usuário pode digitar livremente). -->
           <div class="soon-ac">
             <input type="text" id="soon-cidade" placeholder="Cidade" required aria-label="Cidade"
-                   autocomplete="new-password" role="combobox" aria-expanded="false"
+                   autocomplete="off" role="combobox" aria-expanded="false"
                    aria-controls="soon-cidade-list" aria-autocomplete="list">
             <ul class="soon-ac-list hidden" id="soon-cidade-list" role="listbox" aria-label="Sugestões de cidade"></ul>
           </div>
