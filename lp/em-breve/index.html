@@ -57,13 +57,22 @@
     <p class="soon-sub">Preço fechado, contador de verdade desde o início.</p>
 
     <div class="soon-form">
-      <form class="wait-form" id="soon-form" autocomplete="off">
+      <!-- autocomplete="new-password" nos quatro campos não é copiar-colar
+           errado. O Chrome ignora de propósito autocomplete="off" em form que
+           ele classifica como perfil/endereço, e a bolha nativa abria por cima
+           do nosso dropdown de cidades. "new-password" é token reconhecido e
+           faz o Chrome tratar o campo como senha nova — nada de sugerir nome,
+           e-mail ou endereço salvos. Como nenhum input aqui é type="password",
+           não aparece UI de gerenciador de senha nem oferta de salvar.
+           Nenhum input tem `name` de propósito: o envio é por fetch lendo os
+           ids, e sem `name` o Firefox também não guarda histórico do campo. -->
+      <form class="wait-form" id="soon-form" autocomplete="new-password">
         <p><strong>Garanta sua oferta de lançamento</strong></p>
         <small>1º mês grátis pra quem entrar agora.</small>
         <div class="soon-fields">
-          <input type="text" id="soon-nome" placeholder="Nome completo" required aria-label="Nome completo" autocomplete="no-autofill">
-          <input type="email" id="soon-email" placeholder="Seu e-mail" required aria-label="Seu e-mail" autocomplete="no-autofill">
-          <input type="tel" id="soon-whatsapp" placeholder="WhatsApp com DDD" required aria-label="WhatsApp" autocomplete="no-autofill" inputmode="numeric">
+          <input type="text" id="soon-nome" placeholder="Nome completo" required aria-label="Nome completo" autocomplete="new-password">
+          <input type="email" id="soon-email" placeholder="Seu e-mail" required aria-label="Seu e-mail" autocomplete="new-password">
+          <input type="tel" id="soon-whatsapp" placeholder="WhatsApp com DDD" required aria-label="WhatsApp" autocomplete="new-password" inputmode="numeric">
           <!-- combobox de cidade: o <input> continua sendo o campo enviado; a
                lista abaixo é só sugestão (o usuário pode digitar livremente). -->
           <div class="soon-ac">
