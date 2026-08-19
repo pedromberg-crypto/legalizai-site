@@ -2,7 +2,7 @@
   "cleanUrls": true,
   "trailingSlash": false,
   "redirects": [
-    { "source": "/", "destination": "/coming-soon", "permanent": false }
+    { "source": "/", "destination": "/em-breve", "permanent": false }
   ],
   "rewrites": [
     { "source": "/home", "destination": "/" }
