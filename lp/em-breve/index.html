@@ -61,13 +61,11 @@
         <p><strong>Garanta sua oferta de lançamento</strong></p>
         <small>1º mês grátis pra quem entrar agora.</small>
         <div class="soon-fields">
-          <div class="soon-field-row">
-            <input type="text" id="soon-nome" placeholder="Nome" required aria-label="Nome" autocomplete="given-name">
-            <input type="text" id="soon-sobrenome" placeholder="Sobrenome" required aria-label="Sobrenome" autocomplete="family-name">
-          </div>
+          <input type="text" id="soon-nome" placeholder="Nome completo" required aria-label="Nome completo" autocomplete="name">
           <input type="email" id="soon-email" placeholder="Seu e-mail" required aria-label="Seu e-mail" autocomplete="email">
           <input type="tel" id="soon-whatsapp" placeholder="WhatsApp com DDD" required aria-label="WhatsApp" autocomplete="tel" inputmode="numeric">
-          <input type="text" id="soon-cidade" placeholder="Cidade" required aria-label="Cidade" autocomplete="address-level2">
+          <input type="text" id="soon-cidade" list="soon-cidade-list" placeholder="Cidade" required aria-label="Cidade" autocomplete="off">
+          <datalist id="soon-cidade-list"></datalist>
         </div>
         <!-- LGPD art. 8º: o consentimento tem que ser livre, informado e para
              finalidade ESPECÍFICA — por isso a finalidade ("receber contato

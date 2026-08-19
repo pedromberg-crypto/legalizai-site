@@ -7,15 +7,16 @@
   'use strict';
 
   var WAITLIST_ENDPOINT = 'https://api.legalizai.com.br/waitlist';
+  var MUNICIPIOS_URL = '/em-breve/assets/municipios.json';
 
   function $(id) { return document.getElementById(id); }
 
   var form = $('soon-form');
   var nome = $('soon-nome');
-  var sobrenome = $('soon-sobrenome');
   var email = $('soon-email');
   var whatsapp = $('soon-whatsapp');
   var cidade = $('soon-cidade');
+  var cidadeList = $('soon-cidade-list');
   var consent = $('soon-consent');
   var done = $('soon-done');
   var error = $('soon-error');
@@ -24,6 +25,36 @@
   console.log('[waitlist-debug] script inicializado', { form: !!form, submitBtn: !!submitBtn });
 
   function digits(s) { return (s || '').replace(/\D/g, ''); }
+
+  /* separa "Nome completo" em nome/sobrenome pro contrato existente do backend */
+  function splitNome(fullName) {
+    var parts = fullName.trim().split(/\s+/);
+    return { nome: parts[0], sobrenome: parts.slice(1).join(' ') || parts[0] };
+  }
+
+  /* lista oficial de municípios (IBGE) — trava o campo cidade em valores válidos */
+  var municipiosValidos = Object.create(null);
+  fetch(MUNICIPIOS_URL)
+    .then(function (res) { return res.json(); })
+    .then(function (list) {
+      var frag = document.createDocumentFragment();
+      list.forEach(function (item) {
+        var label = item[0] + ' - ' + item[1];
+        municipiosValidos[label] = true;
+        var opt = document.createElement('option');
+        opt.value = label;
+        frag.appendChild(opt);
+      });
+      cidadeList.appendChild(frag);
+    })
+    .catch(function (err) {
+      console.log('[waitlist-debug] falha ao carregar lista de municipios', err);
+    });
+
+  cidade.addEventListener('input', function () {
+    var isValid = !cidade.value || !!municipiosValidos[cidade.value];
+    cidade.setCustomValidity(isValid ? '' : 'Selecione uma cidade da lista.');
+  });
 
   /* máscara (00) 00000-0000, preservando a posição do cursor */
   whatsapp.addEventListener('input', function () {
@@ -42,13 +73,13 @@
   form.addEventListener('submit', function (e) {
     e.preventDefault();
     console.log('[waitlist-debug] submit handler disparado', {
-      nome: nome.value, sobrenome: sobrenome.value, email: email.value,
+      nome: nome.value, email: email.value,
       whatsapp: whatsapp.value, cidade: cidade.value,
       emailValid: email.validity && email.validity.valid,
       whatsappDigits: digits(whatsapp.value).length,
     });
-    if (!nome.value.trim() || !sobrenome.value.trim() || !cidade.value.trim()) {
-      console.log('[waitlist-debug] bloqueado: nome/sobrenome/cidade vazio');
+    if (!nome.value.trim() || !cidade.value.trim()) {
+      console.log('[waitlist-debug] bloqueado: nome/cidade vazio');
       return;
     }
     if (!email.value || (email.validity && !email.validity.valid)) {
@@ -57,6 +88,12 @@
     }
     if (digits(whatsapp.value).length < 10) {
       console.log('[waitlist-debug] bloqueado: whatsapp com menos de 10 digitos');
+      return;
+    }
+    if (!municipiosValidos[cidade.value.trim()]) {
+      console.log('[waitlist-debug] bloqueado: cidade fora da lista oficial');
+      cidade.setCustomValidity('Selecione uma cidade da lista.');
+      cidade.reportValidity();
       return;
     }
     /* guarda de consentimento LGPD. O `required` do HTML já barra o envio (a
@@ -73,12 +110,14 @@
     error.classList.add('hidden');
     submitBtn.disabled = true;
 
+    var partesNome = splitNome(nome.value);
+
     fetch(WAITLIST_ENDPOINT, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({
-        nome: nome.value.trim(),
-        sobrenome: sobrenome.value.trim(),
+        nome: partesNome.nome,
+        sobrenome: partesNome.sobrenome,
         email: email.value.trim(),
         whatsapp: whatsapp.value.trim(),
         cidade: cidade.value.trim(),
@@ -94,7 +133,6 @@
         window.dataLayer.push({ event: 'waitlist_signup', form_id: 'soon-form', lgpd_consent: true });
 
         nome.value = '';
-        sobrenome.value = '';
         email.value = '';
         whatsapp.value = '';
         cidade.value = '';
