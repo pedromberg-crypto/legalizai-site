@@ -8,8 +8,37 @@
 
   var WAITLIST_ENDPOINT = 'https://api.legalizai.com.br/waitlist';
   var MUNICIPIOS_URL = '/em-breve/assets/municipios.json';
+  var UTM_KEYS = ['utm_source', 'utm_medium', 'utm_campaign', 'utm_content', 'utm_term'];
+  var UTM_STORAGE_KEY = 'legalizai_utm';
 
   function $(id) { return document.getElementById(id); }
+
+  /* O Meta preenche utm_campaign={{campaign.name}}, utm_content={{adset.name}}
+     e utm_term={{ad.name}} dinamicamente na URL do anúncio (taxonomia de
+     tráfego pago). UTM presente na URL vale e sobrescreve o que tinha salvo;
+     URL sem UTM (usuário navegou/recarregou depois do clique) reaproveita a
+     última capturada na sessão em vez de perder a origem. */
+  function captureUtms() {
+    var params = new URLSearchParams(window.location.search);
+    var fromUrl = {};
+    var hasAny = false;
+    UTM_KEYS.forEach(function (key) {
+      var value = params.get(key);
+      if (value) { fromUrl[key] = value.slice(0, 200); hasAny = true; }
+    });
+    if (hasAny) {
+      try { sessionStorage.setItem(UTM_STORAGE_KEY, JSON.stringify(fromUrl)); } catch (e) {}
+      return fromUrl;
+    }
+    try {
+      var saved = sessionStorage.getItem(UTM_STORAGE_KEY);
+      return saved ? JSON.parse(saved) : {};
+    } catch (e) {
+      return {};
+    }
+  }
+
+  var utms = captureUtms();
 
   var form = $('soon-form');
   var nome = $('soon-nome');
@@ -267,7 +296,12 @@
         email: email.value.trim(),
         whatsapp: whatsapp.value.trim(),
         cidade: cidade.value.trim(),
-        origem: 'coming-soon'
+        origem: 'coming-soon',
+        utmSource: utms.utm_source || '',
+        utmMedium: utms.utm_medium || '',
+        utmCampaign: utms.utm_campaign || '',
+        utmContent: utms.utm_content || '',
+        utmTerm: utms.utm_term || ''
       })
     })
       .then(function (res) {
