@@ -132,7 +132,10 @@ input { font:inherit; color:var(--ink-900); }
   border-color:var(--coral-500);
   box-shadow:0 4px 14px rgba(27,30,36,.06), inset 0 1px 0 rgba(255,255,255,.6);
 }
-.soon-price-plan-head { display:flex; align-items:center; gap:5px; margin-bottom:5px; }
+/* margin-top só existe pra sobrar espaço pra pill flutuante em cima (ver
+   .soon-price-duration logo abaixo) — no desktop a pill volta pro canto e
+   essa margem é zerada de novo (ver @media). */
+.soon-price-plan-head { display:flex; align-items:center; gap:5px; margin-top:10px; margin-bottom:5px; }
 .soon-price-icon {
   flex:none; width:17px; height:17px; border-radius:50%;
   background:rgba(255,255,255,.8); color:var(--coral-600);
@@ -162,11 +165,12 @@ input { font:inherit; color:var(--ink-900); }
 #soon-price-mei .soon-price-icon, #soon-price-me .soon-price-icon { width:20.4px; height:20.4px; }
 #soon-price-mei .soon-price-icon svg, #soon-price-me .soon-price-icon svg { width:13.2px; height:13.2px; }
 #soon-price-mei .soon-price-plan-name, #soon-price-me .soon-price-plan-name { font-size:.792rem; }
-/* pill sai do fluxo (não fica mais colado no valor) e vai pro canto
-   superior direito — top/right = padding do card (base 9px/10px), pra
-   ficar rente à margem interna em vez de grudado na borda de verdade. */
+/* mobile: pill sai do fluxo e flutua ACIMA do card, centralizada, meio
+   pra dentro meio pra fora da borda de cima (badge clássico) — em vez do
+   canto (que no mobile, com o card mais estreito, ficava perto demais do
+   texto "MEI"). Desktop reposiciona pro canto de novo (ver @media). */
 #soon-price-mei .soon-price-duration, #soon-price-me .soon-price-duration {
-  position:absolute; top:9px; right:10px;
+  position:absolute; top:-8px; left:50%; right:auto; transform:translateX(-50%);
   padding:2.2px 6.6px; font-size:.616rem;
 }
 /* só o "R$49/mês" (texto solto + strong, sem span próprio) — "depois" tem
@@ -189,7 +193,297 @@ body.soon-body { min-height:100dvh; display:flex; flex-direction:column; }
   padding:32px 20px;
 }
 
-.soon-col-visual { display:none; }
+/* visível também no mobile agora (pedido: telefone + cards aparecem depois
+   do form, na rolagem) — fundo claro aqui (não coral, que é só do desktop,
+   ver @media). margin-top separa do form acima (soon-main não tem gap). */
+.soon-col-visual {
+  display:flex; align-items:center; justify-content:center;
+  background:var(--ink-50);
+  position:relative; overflow:hidden;
+  margin-top:32px; padding:24px 0;
+}
+
+/* escala responsiva: nunca deixa a composição (phone + cards flutuantes)
+   estourar a coluna, seja qual for a tela. 473x497 = bounding box real da
+   composição sem escala (medido via getBoundingClientRect); 1.43 é o teto
+   (tamanho "ideal" calibrado num monitor 24"). O fator 0.815 reserva ~18%
+   de respiro ao redor da composição (calibrado ~10% maior que antes num
+   note 1536x639). Encolhe suave em telas menores em vez de cortar.
+   Aqui embaixo é o valor BASE (mobile): usa 100vw, não 50vw — não tem
+   coluna dividida em mobile, é a largura inteira. Desktop sobrescreve pra
+   voltar a usar 50vw (ver @media). Fator 0.72 (mais conservador que o
+   0.815 do desktop) porque não dava pra testar visualmente ao vivo — se
+   sobrar espaço demais nas laterais, é seguro subir esse número. */
+.phone-stage {
+  perspective:1400px;
+  transform:scale(min(1, calc(0.72 * 100vw / 473px)));
+  position:relative;
+}
+
+/* sombra de chão: encolhe/dilui quando o phone sobe, ancora o objeto no espaço */
+.phone-ground-shadow {
+  position:absolute; left:50%; bottom:-6%; transform:translateX(-50%);
+  width:170px; height:34px; border-radius:50%;
+  background:radial-gradient(closest-side, rgba(27,30,36,.38), rgba(27,30,36,0) 72%);
+  filter:blur(2px);
+  animation:groundShadow 7s ease-in-out infinite;
+  z-index:0;
+}
+@keyframes groundShadow {
+  0%   { transform:translateX(-50%) scale(1);    opacity:.75; }
+  50%  { transform:translateX(-50%) scale(.72);  opacity:.4; }
+  100% { transform:translateX(-50%) scale(1);    opacity:.75; }
+}
+
+.phone-mock {
+  width:220px; aspect-ratio:1070/2176;
+  transform-style:preserve-3d; position:relative; z-index:1;
+  animation:phoneFloat 7s ease-in-out infinite;
+}
+
+@keyframes phoneFloat {
+  0%   { transform:translateY(0)    rotateY(-6deg) rotateX(2.5deg); }
+  50%  { transform:translateY(-18px) rotateY(4deg)  rotateX(-1.5deg); }
+  100% { transform:translateY(0)    rotateY(-6deg) rotateX(2.5deg); }
+}
+
+/* corpo real: render fotográfico do iPhone 15 Pro (Figma/Uiscore, export 2x),
+   sem CSS a desenhar titânio/botões/ilha — tudo isso já vem na foto. */
+.phone-frame {
+  width:100%; height:100%; position:relative;
+  background-image:url('assets/iphone-frame.png');
+  background-size:100% 100%; background-repeat:no-repeat;
+  filter:
+    drop-shadow(0 40px 60px rgba(27,30,36,.42))
+    drop-shadow(0 12px 20px rgba(27,30,36,.28));
+}
+
+/* tela: preenche o frame inteiro e usa MÁSCARA (screen-mask.png, recorte
+   exato do Screen.png real do Figma — mesmo crop do iphone-frame.png) pra
+   clipar no formato preciso da tela fotografada, ilha dinâmica incluída.
+   Zero frestinha: nada de border-radius aproximado tentando adivinhar a
+   curva do canto. */
+.phone-screen {
+  position:absolute; inset:0;
+  background:var(--ink-50);
+  -webkit-mask-image:url('assets/screen-mask.png');
+  mask-image:url('assets/screen-mask.png');
+  -webkit-mask-size:100% 100%; mask-size:100% 100%;
+  -webkit-mask-repeat:no-repeat; mask-repeat:no-repeat;
+  overflow:hidden; display:flex; flex-direction:column;
+  padding:36px 20px 18px;
+}
+
+.phone-statusbar {
+  flex:none; display:flex; align-items:center; justify-content:space-between;
+  margin:-16px -3px 6px; color:var(--ink-900);
+}
+.phone-time { font-size:.62rem; font-weight:700; letter-spacing:-.01em; }
+.phone-status-icons { display:flex; align-items:center; gap:3px; }
+.phone-icon-signal { width:11px; height:auto; }
+.phone-icon-wifi { width:11px; height:auto; }
+.phone-icon-battery { width:15px; height:auto; opacity:.95; }
+
+/* vidro: reflexo diagonal fixo + brilho de topo, dá sensação de superfície física */
+.phone-screen::before {
+  content:""; position:absolute; inset:0; z-index:5; pointer-events:none;
+  background:linear-gradient(115deg,
+    rgba(255,255,255,.16) 0%, rgba(255,255,255,.05) 14%,
+    rgba(255,255,255,0) 28%, rgba(255,255,255,0) 62%,
+    rgba(255,255,255,.05) 80%, rgba(255,255,255,0) 100%);
+  mix-blend-mode:overlay;
+}
+.phone-screen::after {
+  content:""; position:absolute; inset:0 0 auto 0; height:40%; z-index:5; pointer-events:none;
+  background:linear-gradient(180deg, rgba(255,255,255,.22), rgba(255,255,255,0));
+  mix-blend-mode:soft-light;
+}
+
+.phone-brand { flex:none; height:16px; width:auto; align-self:flex-start; }
+
+/* absorve o espaço sobrando (igual .app-main real): empurra texto+CTA pra base */
+.phone-illustration {
+  flex:1; min-height:0; display:flex; align-items:center; justify-content:center;
+  padding:8px 0;
+}
+.phone-lottie { width:100%; max-width:150px; height:auto; }
+.phone-lottie svg { display:block; }
+
+.phone-text-block { flex:none; }
+
+.phone-headline {
+  font-size:.68rem; font-weight:700; line-height:1.35;
+  color:var(--ink-900); text-align:left;
+}
+.phone-headline span { font-weight:700; color:var(--ink-400); }
+
+.phone-pill {
+  display:flex; align-items:center; gap:5px;
+  margin-top:8px; font-size:.48rem; font-weight:600;
+  color:var(--ink-600); background:var(--coral-50); border:1px solid var(--ink-200);
+  border-radius:6px; padding:5px 7px; line-height:1.25;
+}
+.phone-pill-icon { width:11px; height:11px; flex:none; color:var(--coral-500); }
+
+.phone-footer-cta { flex:none; margin-top:10px; }
+
+.phone-card {
+  width:100%; margin-top:6px; padding:8px; border-radius:8px; border:0;
+  background:#fff; border:1px solid var(--ink-200);
+  display:flex; align-items:flex-start; gap:6px; text-align:left;
+  font-family:inherit; cursor:default;
+}
+.phone-card-primary { background:var(--coral-600); border-color:var(--coral-600); }
+
+.phone-card-icon {
+  flex:none; width:20px; height:20px; border-radius:5px;
+  display:flex; align-items:center; justify-content:center;
+  background:var(--coral-50); color:var(--coral-500);
+}
+.phone-card-icon svg { width:12px; height:12px; }
+.phone-card-icon-on { background:rgba(255,255,255,.2); color:#fff; }
+
+.phone-card-text { flex:1; display:flex; flex-direction:column; gap:1px; min-width:0; }
+.phone-card-text strong { font-size:.56rem; font-weight:700; color:var(--ink-900); }
+.phone-card-text em { font-style:normal; font-size:.44rem; color:var(--ink-500); line-height:1.3; }
+.phone-card-primary .phone-card-text strong,
+.phone-card-primary .phone-card-text em { color:#fff; }
+
+.phone-chevron { flex:none; width:11px; height:11px; margin-top:2px; opacity:.7; color:var(--ink-500); }
+.phone-card-primary .phone-chevron { color:#fff; }
+
+.phone-login { margin-top:10px; font-size:.46rem; color:var(--ink-400); text-align:center; }
+.phone-login span { font-weight:700; color:var(--ink-900); text-decoration:underline; text-underline-offset:2px; }
+
+/* ---------- cards flutuantes: prints reais de telas do app, soltos no espaço ---------- */
+.float-card {
+  position:absolute; z-index:2; width:206px;
+  background:#fff; border:1px solid var(--ink-200); border-radius:18px;
+  padding:14px; box-shadow:0 24px 40px -16px rgba(27,30,36,.28), 0 6px 14px -6px rgba(27,30,36,.14);
+}
+
+/* canto superior esquerdo: âncora no canto inferior-direito do card (o que
+   toca o phone) — só ~10% da largura/altura do card (já escalado .7) entra
+   na tela, resto fica acima e à esquerda, fora do aparelho */
+.float-card-cnae {
+  z-index:0;
+  top:-108px; left:-178px;
+  transform-origin:100% 100%;
+  animation:floatCardA 8s ease-in-out infinite;
+}
+/* mesma lógica do notas, espelhada: 10% do card entra na tela pela direita, resto pra fora */
+.float-card-atalhos {
+  top:calc(38% - 100px); right:-185px;
+  transform-origin:0% 50%;
+  animation:floatCardB 9s ease-in-out infinite;
+}
+/* dentro do .phone-stage (mesmo espaço de coordenadas do phone, não da coluna):
+   só ~10% da largura do card entra por cima da tela, o resto fica pra fora à esquerda */
+.float-card-notas {
+  bottom:14%; left:-185px;
+  transform-origin:100% 100%;
+  animation:floatCardC 7.5s ease-in-out infinite;
+}
+
+@keyframes floatCardA {
+  0%,100% { transform:translateY(0) rotate(-3deg) scale(.7); }
+  50%     { transform:translateY(-14px) rotate(-1deg) scale(.7); }
+}
+@keyframes floatCardB {
+  0%,100% { transform:translateY(0) rotate(2.5deg) scale(.7); }
+  50%     { transform:translateY(12px) rotate(1deg) scale(.7); }
+}
+@keyframes floatCardC {
+  0%,100% { transform:translateY(0) rotate(-2deg) scale(.7); }
+  50%     { transform:translateY(-10px) rotate(-3.5deg) scale(.7); }
+}
+
+/* frase que "mudou de casa" do H1 — flutua ao lado direito do telefone,
+   dentro do .phone-stage (por isso left:100% ancora bem na borda direita
+   do phone: o stage não tem largura própria além do phone-mock). Escala
+   junto com o resto da composição por herdar o transform do .phone-stage. */
+.phone-tagline {
+  position:absolute; z-index:2; left:calc(100% + 14px); top:74%; width:200px;
+  color:var(--ink-50); font-weight:800; letter-spacing:-.01em;
+  font-size:clamp(.85rem, 1.9vh, 1.09rem); line-height:1.22;
+  animation:phoneTaglineFloat 8s ease-in-out infinite;
+}
+@keyframes phoneTaglineFloat {
+  0%,100% { transform:translateY(-50%); }
+  50%     { transform:translateY(calc(-50% - 10px)); }
+}
+
+.fc-row-between { display:flex; align-items:flex-start; justify-content:space-between; gap:8px; }
+.fc-section-title { font-size:.72rem; font-weight:700; color:var(--ink-900); }
+.fc-link { font-size:.6rem; font-weight:700; color:var(--coral-700); }
+
+.fc-tag-success { display:block; font-size:.52rem; font-weight:700; color:var(--success-700); }
+.fc-title { margin-top:2px; font-size:.68rem; font-weight:700; color:var(--ink-900); line-height:1.3; }
+.fc-badge-success {
+  flex:none; font-size:.5rem; font-weight:800; color:var(--success-700);
+  background:var(--success-50); border-radius:999px; padding:3px 7px; margin-top:1px;
+}
+.fc-desc { margin-top:6px; font-size:.58rem; color:var(--ink-500); line-height:1.4; }
+
+.fc-stats { margin-top:8px; display:flex; gap:6px; align-items:stretch; }
+.fc-stat { flex:1; border-radius:12px; padding:7px 8px; background:var(--ink-50); }
+.fc-stat-success { background:var(--success-50); }
+.fc-stat-label { font-size:.46rem; color:var(--ink-400); line-height:1.25; }
+.fc-stat-success .fc-stat-label { color:var(--success-700); }
+.fc-stat-value { margin-top:1px; font-size:.6rem; font-weight:700; color:var(--ink-900); }
+.fc-stat-success .fc-stat-value { color:var(--success-700); }
+.fc-stat-sub { font-size:.44rem; color:var(--ink-500); }
+
+.fc-subheading { margin-top:9px; font-size:.6rem; font-weight:700; color:var(--ink-900); }
+.fc-check-item { margin-top:5px; display:flex; align-items:flex-start; gap:6px; }
+.fc-check-icon {
+  flex:none; width:14px; height:14px; margin-top:.5px; border-radius:50%;
+  background:var(--success-50); color:var(--success-700);
+  display:flex; align-items:center; justify-content:center;
+}
+.fc-check-icon svg { width:8px; height:8px; }
+.fc-check-item span:last-child { font-size:.54rem; color:var(--ink-500); line-height:1.35; }
+
+.fc-grid2 { margin-top:10px; display:grid; grid-template-columns:1fr 1fr; gap:8px; }
+.fc-action { border-radius:14px; padding:12px; border:1px solid var(--ink-200); background:#fff; }
+.fc-action-primary { background:var(--coral-600); border-color:var(--coral-600); }
+.fc-action-icon {
+  width:26px; height:26px; border-radius:8px; background:var(--ink-50); color:var(--coral-600);
+  display:flex; align-items:center; justify-content:center;
+}
+.fc-action-icon svg { width:13px; height:13px; }
+.fc-action-icon-on { background:rgba(255,255,255,.22); color:#fff; }
+.fc-action-title { margin-top:9px; font-size:.62rem; font-weight:700; color:var(--ink-900); line-height:1.25; }
+.fc-action-sub { margin-top:1px; font-size:.46rem; color:var(--ink-500); line-height:1.3; }
+.fc-action-primary .fc-action-title, .fc-action-primary .fc-action-sub { color:#fff; }
+.fc-action-primary .fc-action-sub { opacity:.85; }
+
+.fc-notas-list { margin-top:8px; display:flex; flex-direction:column; gap:6px; }
+.fc-nota-row {
+  display:flex; align-items:center; gap:8px; border:1px solid var(--ink-200);
+  border-radius:12px; padding:7px 8px;
+}
+.fc-avatar {
+  position:relative; flex:none; width:26px; height:26px; border-radius:50%;
+  background:var(--ink-900); color:#fff; font-size:.44rem; font-weight:700;
+  display:flex; align-items:center; justify-content:center;
+}
+.fc-dot {
+  position:absolute; bottom:-1px; right:-1px; width:8px; height:8px; border-radius:50%;
+  background:var(--success-500); border:2px solid #fff;
+}
+.fc-nota-info { flex:1; min-width:0; }
+.fc-nota-title { font-size:.54rem; font-weight:700; color:var(--ink-900); white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+.fc-nota-date { margin-top:1px; font-size:.46rem; color:var(--ink-400); }
+.fc-nota-valor { flex:none; font-size:.54rem; font-weight:700; color:var(--success-700); }
+
+@media (prefers-reduced-motion: reduce) {
+  .phone-mock { animation:none; transform:rotateY(-12deg) rotateX(4deg); }
+  .float-card-cnae { animation:none; transform-origin:100% 100%; transform:rotate(-3deg) scale(.7); }
+  .float-card-atalhos { animation:none; transform:rotate(2.5deg) scale(.7); }
+  .float-card-notas { animation:none; transform:rotate(-2deg) scale(.7); }
+  .phone-tagline { animation:none; transform:translateY(-50%); }
+}
 
 .soon-card {
   width:100%; max-width:523px; margin:0 auto; text-align:center;
@@ -360,288 +654,15 @@ body.soon-body { min-height:100dvh; display:flex; flex-direction:column; }
     overflow:hidden; clip:rect(0,0,0,0); white-space:nowrap; border:0;
   }
 
-  .soon-col-visual {
-    display:flex; align-items:center; justify-content:center;
-    background:var(--coral-500);
-    position:relative; overflow:hidden;
-  }
-
-  /* escala responsiva: nunca deixa a composição (phone + cards flutuantes)
-     estourar a coluna, seja qual for a tela. 473x497 = bounding box real da
-     composição sem escala (medido via getBoundingClientRect); 1.43 é o teto
-     (tamanho "ideal" calibrado num monitor 24"). O fator 0.815 reserva ~18%
-     de respiro ao redor da composição (calibrado ~10% maior que antes num
-     note 1536x639). Encolhe suave em telas menores em vez de cortar. */
+  /* desktop-only: aqui só o que REALMENTE muda em relação ao mobile (ver
+     bloco global lá em cima) — cor de fundo (coral em vez de creme) e a
+     fórmula de escala usando 50vw (metade da tela, já que aqui É colunas
+     divididas — no mobile virou 100vw, tela inteira). */
+  .soon-col-visual { background:var(--coral-500); }
   .phone-stage {
-    perspective:1400px;
     transform:scale(min(1.43, calc(0.815 * 50vw / 473px), calc(0.815 * 100vh / 497px)));
-    position:relative;
   }
 
-  /* sombra de chão: encolhe/dilui quando o phone sobe, ancora o objeto no espaço */
-  .phone-ground-shadow {
-    position:absolute; left:50%; bottom:-6%; transform:translateX(-50%);
-    width:170px; height:34px; border-radius:50%;
-    background:radial-gradient(closest-side, rgba(27,30,36,.38), rgba(27,30,36,0) 72%);
-    filter:blur(2px);
-    animation:groundShadow 7s ease-in-out infinite;
-    z-index:0;
-  }
-  @keyframes groundShadow {
-    0%   { transform:translateX(-50%) scale(1);    opacity:.75; }
-    50%  { transform:translateX(-50%) scale(.72);  opacity:.4; }
-    100% { transform:translateX(-50%) scale(1);    opacity:.75; }
-  }
-
-  .phone-mock {
-    width:220px; aspect-ratio:1070/2176;
-    transform-style:preserve-3d; position:relative; z-index:1;
-    animation:phoneFloat 7s ease-in-out infinite;
-  }
-
-  @keyframes phoneFloat {
-    0%   { transform:translateY(0)    rotateY(-6deg) rotateX(2.5deg); }
-    50%  { transform:translateY(-18px) rotateY(4deg)  rotateX(-1.5deg); }
-    100% { transform:translateY(0)    rotateY(-6deg) rotateX(2.5deg); }
-  }
-
-  /* corpo real: render fotográfico do iPhone 15 Pro (Figma/Uiscore, export 2x),
-     sem CSS a desenhar titânio/botões/ilha — tudo isso já vem na foto. */
-  .phone-frame {
-    width:100%; height:100%; position:relative;
-    background-image:url('assets/iphone-frame.png');
-    background-size:100% 100%; background-repeat:no-repeat;
-    filter:
-      drop-shadow(0 40px 60px rgba(27,30,36,.42))
-      drop-shadow(0 12px 20px rgba(27,30,36,.28));
-  }
-
-  /* tela: preenche o frame inteiro e usa MÁSCARA (screen-mask.png, recorte
-     exato do Screen.png real do Figma — mesmo crop do iphone-frame.png) pra
-     clipar no formato preciso da tela fotografada, ilha dinâmica incluída.
-     Zero frestinha: nada de border-radius aproximado tentando adivinhar a
-     curva do canto. */
-  .phone-screen {
-    position:absolute; inset:0;
-    background:var(--ink-50);
-    -webkit-mask-image:url('assets/screen-mask.png');
-    mask-image:url('assets/screen-mask.png');
-    -webkit-mask-size:100% 100%; mask-size:100% 100%;
-    -webkit-mask-repeat:no-repeat; mask-repeat:no-repeat;
-    overflow:hidden; display:flex; flex-direction:column;
-    padding:36px 20px 18px;
-  }
-
-  .phone-statusbar {
-    flex:none; display:flex; align-items:center; justify-content:space-between;
-    margin:-16px -3px 6px; color:var(--ink-900);
-  }
-  .phone-time { font-size:.62rem; font-weight:700; letter-spacing:-.01em; }
-  .phone-status-icons { display:flex; align-items:center; gap:3px; }
-  .phone-icon-signal { width:11px; height:auto; }
-  .phone-icon-wifi { width:11px; height:auto; }
-  .phone-icon-battery { width:15px; height:auto; opacity:.95; }
-
-  /* vidro: reflexo diagonal fixo + brilho de topo, dá sensação de superfície física */
-  .phone-screen::before {
-    content:""; position:absolute; inset:0; z-index:5; pointer-events:none;
-    background:linear-gradient(115deg,
-      rgba(255,255,255,.16) 0%, rgba(255,255,255,.05) 14%,
-      rgba(255,255,255,0) 28%, rgba(255,255,255,0) 62%,
-      rgba(255,255,255,.05) 80%, rgba(255,255,255,0) 100%);
-    mix-blend-mode:overlay;
-  }
-  .phone-screen::after {
-    content:""; position:absolute; inset:0 0 auto 0; height:40%; z-index:5; pointer-events:none;
-    background:linear-gradient(180deg, rgba(255,255,255,.22), rgba(255,255,255,0));
-    mix-blend-mode:soft-light;
-  }
-
-  .phone-brand { flex:none; height:16px; width:auto; align-self:flex-start; }
-
-  /* absorve o espaço sobrando (igual .app-main real): empurra texto+CTA pra base */
-  .phone-illustration {
-    flex:1; min-height:0; display:flex; align-items:center; justify-content:center;
-    padding:8px 0;
-  }
-  .phone-lottie { width:100%; max-width:150px; height:auto; }
-  .phone-lottie svg { display:block; }
-
-  .phone-text-block { flex:none; }
-
-  .phone-headline {
-    font-size:.68rem; font-weight:700; line-height:1.35;
-    color:var(--ink-900); text-align:left;
-  }
-  .phone-headline span { font-weight:700; color:var(--ink-400); }
-
-  .phone-pill {
-    display:flex; align-items:center; gap:5px;
-    margin-top:8px; font-size:.48rem; font-weight:600;
-    color:var(--ink-600); background:var(--coral-50); border:1px solid var(--ink-200);
-    border-radius:6px; padding:5px 7px; line-height:1.25;
-  }
-  .phone-pill-icon { width:11px; height:11px; flex:none; color:var(--coral-500); }
-
-  .phone-footer-cta { flex:none; margin-top:10px; }
-
-  .phone-card {
-    width:100%; margin-top:6px; padding:8px; border-radius:8px; border:0;
-    background:#fff; border:1px solid var(--ink-200);
-    display:flex; align-items:flex-start; gap:6px; text-align:left;
-    font-family:inherit; cursor:default;
-  }
-  .phone-card-primary { background:var(--coral-600); border-color:var(--coral-600); }
-
-  .phone-card-icon {
-    flex:none; width:20px; height:20px; border-radius:5px;
-    display:flex; align-items:center; justify-content:center;
-    background:var(--coral-50); color:var(--coral-500);
-  }
-  .phone-card-icon svg { width:12px; height:12px; }
-  .phone-card-icon-on { background:rgba(255,255,255,.2); color:#fff; }
-
-  .phone-card-text { flex:1; display:flex; flex-direction:column; gap:1px; min-width:0; }
-  .phone-card-text strong { font-size:.56rem; font-weight:700; color:var(--ink-900); }
-  .phone-card-text em { font-style:normal; font-size:.44rem; color:var(--ink-500); line-height:1.3; }
-  .phone-card-primary .phone-card-text strong,
-  .phone-card-primary .phone-card-text em { color:#fff; }
-
-  .phone-chevron { flex:none; width:11px; height:11px; margin-top:2px; opacity:.7; color:var(--ink-500); }
-  .phone-card-primary .phone-chevron { color:#fff; }
-
-  .phone-login { margin-top:10px; font-size:.46rem; color:var(--ink-400); text-align:center; }
-  .phone-login span { font-weight:700; color:var(--ink-900); text-decoration:underline; text-underline-offset:2px; }
-
-  /* ---------- cards flutuantes: prints reais de telas do app, soltos no espaço ---------- */
-  .float-card {
-    position:absolute; z-index:2; width:206px;
-    background:#fff; border:1px solid var(--ink-200); border-radius:18px;
-    padding:14px; box-shadow:0 24px 40px -16px rgba(27,30,36,.28), 0 6px 14px -6px rgba(27,30,36,.14);
-  }
-
-  /* canto superior esquerdo: âncora no canto inferior-direito do card (o que
-     toca o phone) — só ~10% da largura/altura do card (já escalado .7) entra
-     na tela, resto fica acima e à esquerda, fora do aparelho */
-  .float-card-cnae {
-    z-index:0;
-    top:-108px; left:-178px;
-    transform-origin:100% 100%;
-    animation:floatCardA 8s ease-in-out infinite;
-  }
-  /* mesma lógica do notas, espelhada: 10% do card entra na tela pela direita, resto pra fora */
-  .float-card-atalhos {
-    top:calc(38% - 100px); right:-185px;
-    transform-origin:0% 50%;
-    animation:floatCardB 9s ease-in-out infinite;
-  }
-  /* dentro do .phone-stage (mesmo espaço de coordenadas do phone, não da coluna):
-     só ~10% da largura do card entra por cima da tela, o resto fica pra fora à esquerda */
-  .float-card-notas {
-    bottom:14%; left:-185px;
-    transform-origin:100% 100%;
-    animation:floatCardC 7.5s ease-in-out infinite;
-  }
-
-  @keyframes floatCardA {
-    0%,100% { transform:translateY(0) rotate(-3deg) scale(.7); }
-    50%     { transform:translateY(-14px) rotate(-1deg) scale(.7); }
-  }
-  @keyframes floatCardB {
-    0%,100% { transform:translateY(0) rotate(2.5deg) scale(.7); }
-    50%     { transform:translateY(12px) rotate(1deg) scale(.7); }
-  }
-  @keyframes floatCardC {
-    0%,100% { transform:translateY(0) rotate(-2deg) scale(.7); }
-    50%     { transform:translateY(-10px) rotate(-3.5deg) scale(.7); }
-  }
-
-  /* frase que "mudou de casa" do H1 — flutua ao lado direito do telefone,
-     dentro do .phone-stage (por isso left:100% ancora bem na borda direita
-     do phone: o stage não tem largura própria além do phone-mock). Escala
-     junto com o resto da composição por herdar o transform do .phone-stage. */
-  .phone-tagline {
-    position:absolute; z-index:2; left:calc(100% + 14px); top:74%; width:200px;
-    color:var(--ink-50); font-weight:800; letter-spacing:-.01em;
-    font-size:clamp(.85rem, 1.9vh, 1.09rem); line-height:1.22;
-    animation:phoneTaglineFloat 8s ease-in-out infinite;
-  }
-  @keyframes phoneTaglineFloat {
-    0%,100% { transform:translateY(-50%); }
-    50%     { transform:translateY(calc(-50% - 10px)); }
-  }
-
-  .fc-row-between { display:flex; align-items:flex-start; justify-content:space-between; gap:8px; }
-  .fc-section-title { font-size:.72rem; font-weight:700; color:var(--ink-900); }
-  .fc-link { font-size:.6rem; font-weight:700; color:var(--coral-700); }
-
-  .fc-tag-success { display:block; font-size:.52rem; font-weight:700; color:var(--success-700); }
-  .fc-title { margin-top:2px; font-size:.68rem; font-weight:700; color:var(--ink-900); line-height:1.3; }
-  .fc-badge-success {
-    flex:none; font-size:.5rem; font-weight:800; color:var(--success-700);
-    background:var(--success-50); border-radius:999px; padding:3px 7px; margin-top:1px;
-  }
-  .fc-desc { margin-top:6px; font-size:.58rem; color:var(--ink-500); line-height:1.4; }
-
-  .fc-stats { margin-top:8px; display:flex; gap:6px; align-items:stretch; }
-  .fc-stat { flex:1; border-radius:12px; padding:7px 8px; background:var(--ink-50); }
-  .fc-stat-success { background:var(--success-50); }
-  .fc-stat-label { font-size:.46rem; color:var(--ink-400); line-height:1.25; }
-  .fc-stat-success .fc-stat-label { color:var(--success-700); }
-  .fc-stat-value { margin-top:1px; font-size:.6rem; font-weight:700; color:var(--ink-900); }
-  .fc-stat-success .fc-stat-value { color:var(--success-700); }
-  .fc-stat-sub { font-size:.44rem; color:var(--ink-500); }
-
-  .fc-subheading { margin-top:9px; font-size:.6rem; font-weight:700; color:var(--ink-900); }
-  .fc-check-item { margin-top:5px; display:flex; align-items:flex-start; gap:6px; }
-  .fc-check-icon {
-    flex:none; width:14px; height:14px; margin-top:.5px; border-radius:50%;
-    background:var(--success-50); color:var(--success-700);
-    display:flex; align-items:center; justify-content:center;
-  }
-  .fc-check-icon svg { width:8px; height:8px; }
-  .fc-check-item span:last-child { font-size:.54rem; color:var(--ink-500); line-height:1.35; }
-
-  .fc-grid2 { margin-top:10px; display:grid; grid-template-columns:1fr 1fr; gap:8px; }
-  .fc-action { border-radius:14px; padding:12px; border:1px solid var(--ink-200); background:#fff; }
-  .fc-action-primary { background:var(--coral-600); border-color:var(--coral-600); }
-  .fc-action-icon {
-    width:26px; height:26px; border-radius:8px; background:var(--ink-50); color:var(--coral-600);
-    display:flex; align-items:center; justify-content:center;
-  }
-  .fc-action-icon svg { width:13px; height:13px; }
-  .fc-action-icon-on { background:rgba(255,255,255,.22); color:#fff; }
-  .fc-action-title { margin-top:9px; font-size:.62rem; font-weight:700; color:var(--ink-900); line-height:1.25; }
-  .fc-action-sub { margin-top:1px; font-size:.46rem; color:var(--ink-500); line-height:1.3; }
-  .fc-action-primary .fc-action-title, .fc-action-primary .fc-action-sub { color:#fff; }
-  .fc-action-primary .fc-action-sub { opacity:.85; }
-
-  .fc-notas-list { margin-top:8px; display:flex; flex-direction:column; gap:6px; }
-  .fc-nota-row {
-    display:flex; align-items:center; gap:8px; border:1px solid var(--ink-200);
-    border-radius:12px; padding:7px 8px;
-  }
-  .fc-avatar {
-    position:relative; flex:none; width:26px; height:26px; border-radius:50%;
-    background:var(--ink-900); color:#fff; font-size:.44rem; font-weight:700;
-    display:flex; align-items:center; justify-content:center;
-  }
-  .fc-dot {
-    position:absolute; bottom:-1px; right:-1px; width:8px; height:8px; border-radius:50%;
-    background:var(--success-500); border:2px solid #fff;
-  }
-  .fc-nota-info { flex:1; min-width:0; }
-  .fc-nota-title { font-size:.54rem; font-weight:700; color:var(--ink-900); white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
-  .fc-nota-date { margin-top:1px; font-size:.46rem; color:var(--ink-400); }
-  .fc-nota-valor { flex:none; font-size:.54rem; font-weight:700; color:var(--success-700); }
-
-  @media (prefers-reduced-motion: reduce) {
-    .phone-mock { animation:none; transform:rotateY(-12deg) rotateX(4deg); }
-    .float-card-cnae { animation:none; transform-origin:100% 100%; transform:rotate(-3deg) scale(.7); }
-    .float-card-atalhos { animation:none; transform:rotate(2.5deg) scale(.7); }
-    .float-card-notas { animation:none; transform:rotate(-2deg) scale(.7); }
-    .phone-tagline { animation:none; transform:translateY(-50%); }
-  }
 
   /* daqui pra baixo: tipografia/espaçamento FLUIDOS via clamp() preso em vh
      — encolhem/crescem sozinhos com a altura da tela, sem JS medindo nada e
@@ -684,7 +705,15 @@ body.soon-body { min-height:100dvh; display:flex; flex-direction:column; }
      valores fluidos desse breakpoint, não dos valores base) */
   #soon-price-mei .soon-price-icon, #soon-price-me .soon-price-icon { width:clamp(19px, 1.9vh, 22px); height:clamp(19px, 1.9vh, 22px); }
   #soon-price-mei .soon-price-plan-name, #soon-price-me .soon-price-plan-name { font-size:clamp(.624rem, 1.02vh, .72rem); }
-  #soon-price-mei .soon-price-duration, #soon-price-me .soon-price-duration { font-size:clamp(.484rem, .935vh, .55rem); top:clamp(4px, .7vh, 7px); right:8px; }
+  /* desktop: pill volta pro canto (o mobile flutua em cima, ver base) —
+     left/transform precisam ser resetados explícito, senão o valor mobile
+     (left:50%+translateX) continua valendo aqui também. */
+  #soon-price-mei .soon-price-duration, #soon-price-me .soon-price-duration {
+    font-size:clamp(.484rem, .935vh, .55rem);
+    top:clamp(4px, .7vh, 7px); right:8px; left:auto; transform:none;
+  }
+  /* margem extra do mobile (espaço pra pill flutuante) não existe aqui */
+  .soon-price-plan-head { margin-top:0; }
   #soon-price-mei .soon-price-then, #soon-price-me .soon-price-then { font-size:clamp(.6072rem, .9504vh, .7128rem); }
   #soon-price-mei .soon-price-value, #soon-price-me .soon-price-value { font-size:clamp(1.507rem, 2.695vh, 1.87rem); }
 
