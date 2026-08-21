@@ -82,7 +82,7 @@ input { font:inherit; color:var(--ink-900); }
    class (utility é sempre um valor fixo, não dá pra expressar "outro valor
    a partir de 900px" nela) — fica em @layer components, junto com a versão
    desktop no media query lá embaixo, os dois sempre no mesmo lugar. */
-.wait-form { padding:18px; }
+.wait-form { padding:19.8px; }
 /* :not() nos <p> com classe própria de tamanho — sem isso, ".wait-form p"
    (classe+elemento, especificidade 0,1,1) vence QUALQUER regra escrita só
    com classe (0,1,0), tipo .soon-price-value, .soon-price-then e
@@ -154,6 +154,27 @@ input { font:inherit; color:var(--ink-900); }
 .soon-price-then-label { font-size:.54rem; font-weight:500; color:var(--ink-400); }
 .soon-price-then strong { color:var(--ink-900); font-weight:700; }
 .soon-price-card small.soon-price-validity { position:relative; display:block; margin-top:8px; text-align:center; color:var(--ink-500); font-size:.66rem; }
+
+/* ---------- destaque só no card MEI (pedido explícito: não mexe no ME/Simples) ----------
+   Escopado por #soon-price-mei e #soon-price-me (ids já existiam, usados
+   pelo is-selected) — replicado nos dois cards, mesmo destaque nos dois. */
+#soon-price-mei, #soon-price-me { position:relative; } /* âncora pro pill absoluto no canto */
+#soon-price-mei .soon-price-icon, #soon-price-me .soon-price-icon { width:20.4px; height:20.4px; }
+#soon-price-mei .soon-price-icon svg, #soon-price-me .soon-price-icon svg { width:13.2px; height:13.2px; }
+#soon-price-mei .soon-price-plan-name, #soon-price-me .soon-price-plan-name { font-size:.792rem; }
+/* pill sai do fluxo (não fica mais colado no valor) e vai pro canto
+   superior direito — top/right = padding do card (base 9px/10px), pra
+   ficar rente à margem interna em vez de grudado na borda de verdade. */
+#soon-price-mei .soon-price-duration, #soon-price-me .soon-price-duration {
+  position:absolute; top:9px; right:10px;
+  padding:2.2px 6.6px; font-size:.616rem;
+}
+/* só o "R$49/mês" (texto solto + strong, sem span próprio) — "depois" tem
+   classe própria (.soon-price-then-label) com tamanho fixo, não escala junto */
+#soon-price-mei .soon-price-then, #soon-price-me .soon-price-then { font-size:.8184rem; }
+/* idem: "R$19"/"R$79" é texto solto dentro de .soon-price-value — "/mês"
+   tem <em> com tamanho próprio, então só o número escala */
+#soon-price-mei .soon-price-value, #soon-price-me .soon-price-value { font-size:2.2176rem; }
 
 /* ============================================================ LAYOUT (coming soon) */
 /* html não tem class="soon-html" no markup (nunca teve) — o seletor com
@@ -634,7 +655,7 @@ body.soon-body { min-height:100dvh; display:flex; flex-direction:column; }
   .soon-logo { height:clamp(26px, 3.96vh, 40px); margin-top:clamp(4px, .8vh, 10px); margin-bottom:clamp(4px, 2vh, 18px); }
   .soon-sub { margin-top:10px; font-size:.92rem; }
   .soon-form { margin-top:clamp(4px, 1vh, 10px); }
-  .wait-form { padding:clamp(6px, 1.1vh, 12px); }
+  .wait-form { padding:clamp(6.6px, 1.21vh, 13.2px); }
   .soon-form-title { font-size:clamp(.77rem, 1.43vh, .935rem); }
   .soon-form-title-accent { font-size:clamp(1.01rem, 1.87vh, 1.22rem); }
   .soon-fields { gap:clamp(6px, 1.25vh, 18px); margin-top:clamp(3px, .6vh, 8px); }
@@ -658,6 +679,14 @@ body.soon-body { min-height:100dvh; display:flex; flex-direction:column; }
   .soon-price-duration { font-size:clamp(.44rem, .85vh, .5rem); }
   .soon-price-then { font-size:clamp(.46rem, .72vh, .54rem); }
   .soon-price-plan-name { font-size:clamp(.52rem, .85vh, .6rem); }
+
+  /* mesmo destaque nos dois cards, versão desktop (+20%/+10% em cima dos
+     valores fluidos desse breakpoint, não dos valores base) */
+  #soon-price-mei .soon-price-icon, #soon-price-me .soon-price-icon { width:clamp(19px, 1.9vh, 22px); height:clamp(19px, 1.9vh, 22px); }
+  #soon-price-mei .soon-price-plan-name, #soon-price-me .soon-price-plan-name { font-size:clamp(.624rem, 1.02vh, .72rem); }
+  #soon-price-mei .soon-price-duration, #soon-price-me .soon-price-duration { font-size:clamp(.484rem, .935vh, .55rem); top:clamp(4px, .7vh, 7px); right:8px; }
+  #soon-price-mei .soon-price-then, #soon-price-me .soon-price-then { font-size:clamp(.6072rem, .9504vh, .7128rem); }
+  #soon-price-mei .soon-price-value, #soon-price-me .soon-price-value { font-size:clamp(1.507rem, 2.695vh, 1.87rem); }
 
   .soon-consent { margin-top:clamp(3px, .8vh, 12px); padding:clamp(5px, .7vh, 10px) 12px; }
   .soon-footer { flex:none; padding:clamp(2px, .5vh, 8px) 0 clamp(3px, .6vh, 10px); }
