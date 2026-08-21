@@ -151,8 +151,28 @@
     mostrarProxima();
   }
 
+  /* Variações da abertura pra não repetir a mesma frase pra todo visitante —
+     um humano não abre a conversa com o texto idêntico toda vez. */
+  var ABERTURAS = [
+    'Léo aqui, da Legalizai, de olho pra te ajudar com o que precisar.',
+    'Aqui é o Léo, o suricato de vigia da Legalizai, pode perguntar à vontade.',
+    'Léo na área, da Legalizai, fica esperto que eu já fiquei, manda sua dúvida.',
+    'Sou o Léo, da Legalizai, pergunta o que quiser sobre a gente.',
+  ];
+
+  function saudacaoPorHorario() {
+    var hora = new Date().getHours();
+    if (hora < 6) return 'Boa madrugada!';
+    if (hora < 12) return 'Bom dia!';
+    if (hora < 18) return 'Boa tarde!';
+    return 'Boa noite!';
+  }
+
   function boasVindas() {
-    bolha('agent', 'Oi! Eu sou o Léo, da Legalizai. 👋 Pode me perguntar o que quiser sobre a gente — e se quiser garantir o 1º mês grátis, o formulário está aqui na página.');
+    var abertura = ABERTURAS[Math.floor(Math.random() * ABERTURAS.length)];
+    var texto = saudacaoPorHorario() + ' 👋 ' + abertura +
+      ' Se quiser garantir o 1º mês grátis, o formulário está aqui na página. Vai, legaliza aí.';
+    revelarResposta(texto);
   }
 
   function carregarHistorico() {
