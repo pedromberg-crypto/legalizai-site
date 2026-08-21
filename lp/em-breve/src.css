@@ -1,0 +1,639 @@
+/* ============================================================
+   LEGALIZAI · Chegando em breve — ENTRADA do Tailwind (v4)
+   `styles.css` (o arquivo que a Vercel de fato serve) é GERADO a partir
+   deste arquivo via `npm run build:css` — não editar styles.css direto,
+   a próxima build sobrescreve. Ver README e .claude/skills/design-responsivo.
+
+   Preflight do Tailwind DESLIGADO de propósito: o reset já existe abaixo
+   (base ---------- ), testado e calibrado; ligar o preflight também
+   duplicaria/brigaria com ele. Por isso importa theme+utilities só, não
+   o pacote inteiro (`@import "tailwindcss"` ligaria o preflight junto).
+   ============================================================ */
+@import "tailwindcss/theme.css" layer(theme);
+@import "tailwindcss/utilities.css" layer(utilities);
+
+/* @theme gera utilities novas (bg-coral-600, text-ink-500 etc) a partir
+   dessas variáveis — só pro CSS NOVO que a gente for escrevendo em
+   utility classes daqui pra frente. O CSS legado abaixo (@layer
+   components) continua usando var(--coral-500) direto, sem o prefixo
+   "color-" — por isso os valores são reaproveitados do :root de sempre,
+   em vez de duplicar a paleta em dois lugares. */
+@theme {
+  --color-coral-50: #FEF3EE; --color-coral-100: #FBDDD1; --color-coral-200: #F8C3B0;
+  --color-coral-500: #F2643C; --color-coral-600: #DD4E27; --color-coral-700: #B83D1C;
+
+  --color-ink-50: #FAF8F5; --color-ink-100: #F1EEE9; --color-ink-200: #E3DED7;
+  --color-ink-400: #A19B92; --color-ink-500: #736E67; --color-ink-600: #524E48; --color-ink-900: #1B1E24;
+
+  --color-success-50: #E7F6EF; --color-success-500: #17A06A; --color-success-700: #0B5E40;
+
+  --font-sans: 'Sora', system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
+}
+
+@layer components {
+
+/* ============================================================
+   LEGALIZAI · Coming Soon
+   Self-contained: token/base/botão/wait-form copiados de ../styles.css, pra
+   esta página não carregar o CSS inteiro da LP só por causa de um formulário.
+   NÃO é projeto Vercel separado (o comentário antigo dizia isso e estava
+   errado): o deploy é único, root em lp/, com cleanUrls — por isso /termos e
+   /privacidade resolvem normalmente a partir daqui. Ver README e lp/vercel.json.
+   ============================================================ */
+
+/* ---------- tokens (subset usado nesta página) ---------- */
+:root {
+  --coral-50:#FEF3EE; --coral-100:#FBDDD1; --coral-200:#F8C3B0; --coral-500:#F2643C;
+  --coral-600:#DD4E27; --coral-700:#B83D1C;
+
+  --ink-50:#FAF8F5; --ink-100:#F1EEE9; --ink-200:#E3DED7; --ink-400:#A19B92;
+  --ink-500:#736E67; --ink-600:#524E48; --ink-900:#1B1E24;
+
+  --success-50:#E7F6EF; --success-500:#17A06A; --success-700:#0B5E40;
+
+  --font: 'Sora', system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
+  --r-btn:16px;
+  --shadow-coral:0 8px 24px rgba(242,100,60,.28);
+  --ease-out:cubic-bezier(.22,1,.36,1);
+}
+
+/* ---------- base ---------- */
+*,*::before,*::after { box-sizing:border-box; }
+body {
+  margin:0; font-family:var(--font); color:var(--ink-900);
+  background:var(--ink-50); line-height:1.6;
+  -webkit-font-smoothing:antialiased; text-rendering:optimizeLegibility;
+}
+img,svg { display:block; max-width:100%; }
+a { color:inherit; }
+h1,p { margin:0; }
+button { font:inherit; cursor:pointer; }
+input { font:inherit; color:var(--ink-900); }
+::placeholder { color:var(--ink-500); }
+/* .hidden não precisa mais de regra própria: a utility "hidden" do
+   Tailwind (display:none) já resolve, nenhuma outra regra daqui compete
+   com ela pra essa propriedade nos elementos que o script.js alterna via
+   classList (#soon-done, #soon-error, #soon-cidade-list, #soon-tipo-list). */
+:focus-visible { outline:3px solid var(--coral-600); outline-offset:3px; border-radius:6px; }
+
+/* .wait-form: só o padding fica aqui (tem versão diferente pro breakpoint
+   desktop, clamp() lá embaixo) — bg/border/radius já viraram utility class
+   no HTML. Regra prática: propriedade com variante desktop NÃO vira utility
+   class (utility é sempre um valor fixo, não dá pra expressar "outro valor
+   a partir de 900px" nela) — fica em @layer components, junto com a versão
+   desktop no media query lá embaixo, os dois sempre no mesmo lugar. */
+.wait-form { padding:18px; }
+.wait-form p { font-size:.95rem; }
+.soon-form-title-accent { color:var(--coral-600); font-size:1.2em; }
+.wait-form small { color:var(--ink-500); font-size:.82rem; }
+
+/* ---------- card de preço (oferta principal) ---------- */
+/* base clara com um brilho coral pontual (::before, radial, canto superior
+   direito) — coral aparece como acento, não como fundo. As sub-cards de
+   plano viram "vidro" (branco translúcido + blur) flutuando sobre essa base,
+   por isso a base precisa de um pouco de cor por trás pra o blur ter o que
+   desfocar. */
+.soon-price-card {
+  position:relative; overflow:hidden;
+  margin-top:14px; padding:10px; border-radius:16px;
+  background:linear-gradient(155deg, #fff 0%, var(--coral-50) 60%, #fff 100%);
+  border:1px solid var(--ink-100);
+  box-shadow:0 10px 26px rgba(27,30,36,.08);
+}
+.soon-price-card::before {
+  content:''; position:absolute; top:-60px; right:-40px; width:200px; height:200px;
+  background:radial-gradient(circle, rgba(242,100,60,.35), rgba(242,100,60,0) 70%);
+  pointer-events:none;
+}
+.soon-price-grid { position:relative; display:flex; gap:8px; }
+.soon-price-plan-card {
+  flex:1; min-width:0; padding:9px 10px; border-radius:12px;
+  background:rgba(255,255,255,.55); border:1px solid rgba(255,255,255,.7);
+  backdrop-filter:blur(8px) saturate(160%); -webkit-backdrop-filter:blur(8px) saturate(160%);
+  box-shadow:0 4px 14px rgba(27,30,36,.06), inset 0 1px 0 rgba(255,255,255,.6);
+  transition:border-color .18s, box-shadow .18s;
+}
+/* marca qual condição a pessoa garantiu ao escolher em "Vc pretende" —
+   script.js liga essa classe no card certo (soon-price-mei / soon-price-me) */
+.soon-price-plan-card.is-selected {
+  border-color:var(--coral-500);
+  box-shadow:0 4px 14px rgba(27,30,36,.06), inset 0 1px 0 rgba(255,255,255,.6);
+}
+.soon-price-plan-head { display:flex; align-items:center; gap:5px; margin-bottom:5px; }
+.soon-price-icon {
+  flex:none; width:17px; height:17px; border-radius:50%;
+  background:rgba(255,255,255,.8); color:var(--coral-600);
+  display:flex; align-items:center; justify-content:center;
+}
+.soon-price-icon svg { width:11px; height:11px; }
+.soon-price-plan-name { flex:1; min-width:0; font-size:.66rem; font-weight:700; color:var(--ink-600); white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+.soon-price-value-row { display:flex; align-items:baseline; flex-wrap:wrap; gap:5px; }
+.soon-price-value { margin:0; font-size:1.2rem; font-weight:800; color:var(--ink-900); letter-spacing:-.02em; line-height:1; }
+.soon-price-value em { font-style:normal; font-size:.62rem; font-weight:700; color:var(--ink-500); margin-left:1px; }
+/* liga o valor grande ao "por quanto tempo" — pílula coral coladinha ao lado
+   do preço, pra ninguém ler só "R$19/mês" e achar que é o preço fixo */
+.soon-price-duration {
+  flex:none; padding:2px 6px; border-radius:999px; white-space:nowrap;
+  background:var(--coral-500); color:#fff; font-size:.56rem; font-weight:700;
+  line-height:1.4;
+}
+.soon-price-then { margin:4px 0 0; font-size:.7rem; color:var(--ink-500); }
+.soon-price-then-label { font-size:.6rem; font-weight:500; color:var(--ink-400); }
+.soon-price-then strong { color:var(--coral-600); font-weight:700; }
+.soon-price-card small.soon-price-validity { position:relative; display:block; margin-top:8px; text-align:center; color:var(--ink-500); font-size:.66rem; }
+
+/* ============================================================ LAYOUT (coming soon) */
+/* html não tem class="soon-html" no markup (nunca teve) — o seletor com
+   classe nunca batia; dependia da propagação implícita do overflow da body
+   pro viewport, que o Safari/iPad é conhecido por não fazer direito. Alvo
+   direto no elemento, sem depender de propagação de navegador nenhum. */
+html, body.soon-body { height:100%; }
+body.soon-body { min-height:100dvh; display:flex; flex-direction:column; }
+
+.soon-main {
+  flex:1; display:flex; flex-direction:column;
+  padding:32px 20px;
+}
+
+.soon-col-visual { display:none; }
+
+.soon-card {
+  width:100%; max-width:581px; margin:0 auto; text-align:center;
+}
+
+.soon-logo { height:39px; width:auto; margin:0 auto 20px; }
+
+.soon-card h1 {
+  font-size:clamp(1.7rem, 3.4vw + 1rem, 2.5rem);
+  font-weight:800; line-height:1.15; letter-spacing:-.02em;
+}
+.h1-muted { color:var(--ink-400); }
+
+.soon-sub { margin-top:14px; color:var(--ink-500); font-size:1.02rem; line-height:1.6; }
+
+.soon-form { margin-top:28px; text-align:left; }
+.soon-form .wait-form { background:var(--ink-100); }
+
+.soon-fields { display:flex; flex-direction:column; gap:22px; margin-top:14px; }
+/* display:contents por padrão: o wrapper não existe pro layout, e-mail e
+   WhatsApp continuam empilhados normalmente como se não estivessem num div.
+   Só vira row de verdade dentro do @media de notebook (ver bloco desktop). */
+.soon-field-row { display:contents; }
+/* border-WIDTH/COR e box-shadow de foco ficam aqui (não viram utility): o
+   estado .is-invalid (aplicado via JS em soon-select-trigger) muda essas
+   MESMAS propriedades — se a cor virasse utility class fixa no HTML, o
+   estado de erro não teria como sobrescrever (uma classe estática não
+   reage a JS). Border-radius/bg/outline/transition já viraram utility
+   class no HTML (nenhum estado disputa essas). Padding/font-size ficam
+   fluidos (clamp() no bloco desktop mais abaixo). */
+.soon-fields input, .soon-fields .soon-select-trigger, .soon-field-row input {
+  flex:1; min-width:0; border:1.5px solid var(--ink-200);
+  padding:13px 16px; font-size:1rem;
+}
+.soon-fields input:focus, .soon-fields .soon-select-trigger:focus, .soon-field-row input:focus {
+  border-color:var(--coral-500); box-shadow:0 0 0 4px rgba(242,100,60,.12);
+}
+
+/* ---------- autocomplete de cidade ---------- */
+/* position:relative virou utility class (relative) no HTML — o wrapper
+   continua sendo o contexto de posicionamento da lista, só a origem da
+   regra mudou. */
+.soon-ac input { width:100%; }
+.soon-ac-list {
+  position:absolute; z-index:20; top:calc(100% + 6px); left:0; right:0;
+  margin:0; padding:6px; list-style:none;
+  max-height:232px; overflow-y:auto; overscroll-behavior:contain;
+  background:#fff; border:1.5px solid var(--ink-200); border-radius:14px;
+  box-shadow:0 12px 28px rgba(27,30,36,.12);
+}
+.soon-ac-option {
+  padding:10px 12px; border-radius:10px; cursor:pointer;
+  font-size:.95rem; line-height:1.35; color:var(--ink-900);
+  display:flex; align-items:baseline; gap:8px;
+}
+/* hover e navegação por teclado compartilham o mesmo destaque pra não existir
+   "dois cursores" visíveis ao mesmo tempo */
+.soon-ac-option:hover, .soon-ac-option[aria-selected="true"] { background:var(--coral-50); }
+.soon-ac-option mark { background:none; color:var(--coral-700); font-weight:700; }
+.soon-ac-uf { margin-left:auto; font-size:.8rem; color:var(--ink-500); font-weight:600; }
+
+/* ---------- combobox "Vc pretende" (mesma casca visual do combobox de cidade acima) ---------- */
+/* layout (width/flex/gap/text-align) virou utility class no HTML. Cor fica
+   aqui: .has-value soma um estado (texto escurece quando tem valor
+   escolhido, via JS) — mesma razão do border-color acima, uma utility de
+   cor fixa não reagiria ao estado. */
+.soon-select-trigger { color:var(--ink-500); }
+.soon-select-trigger.has-value { color:var(--ink-900); }
+/* #soon-tipo-trigger (id), não só .soon-select-trigger: essa regra empata
+   em especificidade com a regra compartilhada de borda dos campos
+   (.soon-fields .soon-select-trigger, 2 classes também) — funciona hoje por
+   ordem no arquivo, mas ID deixa a precedência garantida em vez de depender
+   de desempate, então fica assim por segurança. */
+#soon-tipo-trigger.soon-select-trigger:hover { border-color:var(--coral-200); }
+#soon-tipo-trigger.soon-select-trigger.is-invalid { border-color:var(--coral-500); box-shadow:0 0 0 4px rgba(242,100,60,.12); }
+.soon-select-trigger.is-open .soon-select-chevron { transform:rotate(180deg); }
+/* consentimento LGPD — fica ANTES do botão porque o usuário precisa ler a
+   condição antes de agir, não depois de já ter mirado no CTA.
+   O alvo de toque de 44px vem do padding do label (a caixa inteira é
+   clicável), não do tamanho do input: inflar o input desalinharia ele da
+   primeira linha do texto. */
+/* display/align/gap/bg/radius/cursor/transition viraram utility class no
+   HTML. margin-top/padding ficam aqui — têm versão diferente pro desktop
+   (clamp() lá embaixo). border fica inteiro aqui (não só a cor) porque
+   hover/focus-within só trocam a COR — se a largura/estilo do border
+   fossem utility e a cor customizada, um sairia dessincronizado do outro. */
+.soon-consent { margin-top:22px; padding:13px 16px; border:1.5px solid var(--ink-200); }
+.soon-consent:hover { border-color:var(--coral-200); }
+/* o anel de foco vai no LABEL, não no input: a caixa nativa de 20px daria um
+   anel pequeno e deslocado dentro de um alvo grande */
+.soon-consent:focus-within { border-color:var(--coral-500); box-shadow:0 0 0 4px rgba(242,100,60,.12); }
+.soon-consent input {
+  flex:none; width:20px; height:20px; margin:2px 0 0; /* 2px alinha com a 1ª linha do texto */
+  accent-color:var(--coral-500); cursor:pointer;
+}
+
+.soon-submit { width:100%; margin-top:22px; padding:13px 22px; }
+
+.soon-footer { padding:16px 20px 20px; text-align:center; flex:none; }
+.soon-footer nav { display:flex; justify-content:center; flex-wrap:wrap; gap:16px; margin-bottom:8px; }
+.soon-footer p { font-size:.76rem; color:var(--ink-400); }
+/* identificação profissional (CRC do responsável técnico e da empresa contábil):
+   é dado obrigatório de exibição, não copy, então vem um degrau abaixo do resto */
+.soon-footer p + p { margin-top:4px; font-size:.62rem; line-height:1.45; }
+
+/* ---------- desktop: 2 colunas, tudo cabe em 100vh, sem scroll ---------- */
+@media (min-width:900px) and (min-height:600px) {
+  /* explícito nos dois — html E body — pra travar o scroll do documento
+     sem depender de propagação de overflow entre eles (ver comentário lá
+     em cima, no seletor base html+body.soon-body). */
+  /* 100vh, não 100dvh: essa regra só roda em desktop (min-height:600px do
+     media query já garante isso) — não existe barra de ferramentas dinâmica
+     de mobile aqui pra justificar dvh, e dvh tem suporte/cálculo inconsistente
+     entre navegadores (Firefox principalmente) — foi a causa real do scroll
+     de página inteira que só aparecia no site publicado (Firefox), nunca no
+     Chrome local. vh é bem mais previsível pra essa faixa. */
+  html, body.soon-body { height:100vh; overflow:hidden; }
+
+  .soon-main {
+    display:grid; grid-template-columns:1fr 1fr; grid-template-rows:100%;
+    padding:0; overflow:hidden; height:100%;
+  }
+
+  /* FLUIDO, não "medir e encolher": tipografia/espaçamento do form usam
+     clamp() preso em vh (ver .soon-logo, .soon-form-title, .soon-price-*,
+     .phone-tagline mais abaixo) — o conteúdo já nasce do tamanho certo pra
+     caber, sem precisar de JS medindo px nem de transform:scale escalando
+     o bloco inteiro depois do fato. Isso elimina a classe inteira de bug
+     que vivemos essa sessão (fórmula de encolhimento errada/desatualizada).
+     overflow-y:auto + justify-content:safe center ficam como REDE DE
+     SEGURANÇA, não como mecanismo principal: se algum clamp() ainda assim
+     não bastar numa tela extrema, aparece scroll SÓ nesta coluna (nunca
+     conteúdo cortado/invisível) — "safe" garante que o topo do conteúdo
+     fica alcançável rolando, em vez do centering padrão cortar as duas
+     pontas. */
+  .soon-col-form {
+    display:flex; flex-direction:column; justify-content:safe center;
+    padding:4vh 48px; overflow-y:auto; overflow-x:hidden; height:100%;
+  }
+
+  /* a frase do H1 muda de casa no desktop: some daqui e reaparece flutuando
+     ao lado do telefone (.phone-tagline, mesmo texto). Escondida por clip,
+     não display:none, pra continuar no dom/na árvore de acessibilidade —
+     quem usa leitor de tela ainda ouve o H1 real; só quem enxerga vê a
+     versão decorativa (a seção .soon-col-visual inteira é aria-hidden). */
+  .soon-card h1 {
+    position:absolute; width:1px; height:1px; padding:0; margin:-1px;
+    overflow:hidden; clip:rect(0,0,0,0); white-space:nowrap; border:0;
+  }
+
+  .soon-col-visual {
+    display:flex; align-items:center; justify-content:center;
+    background:var(--coral-500);
+    position:relative; overflow:hidden;
+  }
+
+  /* escala responsiva: nunca deixa a composição (phone + cards flutuantes)
+     estourar a coluna, seja qual for a tela. 473x497 = bounding box real da
+     composição sem escala (medido via getBoundingClientRect); 1.43 é o teto
+     (tamanho "ideal" calibrado num monitor 24"). O fator 0.815 reserva ~18%
+     de respiro ao redor da composição (calibrado ~10% maior que antes num
+     note 1536x639). Encolhe suave em telas menores em vez de cortar. */
+  .phone-stage {
+    perspective:1400px;
+    transform:scale(min(1.43, calc(0.815 * 50vw / 473px), calc(0.815 * 100vh / 497px)));
+    position:relative;
+  }
+
+  /* sombra de chão: encolhe/dilui quando o phone sobe, ancora o objeto no espaço */
+  .phone-ground-shadow {
+    position:absolute; left:50%; bottom:-6%; transform:translateX(-50%);
+    width:170px; height:34px; border-radius:50%;
+    background:radial-gradient(closest-side, rgba(27,30,36,.38), rgba(27,30,36,0) 72%);
+    filter:blur(2px);
+    animation:groundShadow 7s ease-in-out infinite;
+    z-index:0;
+  }
+  @keyframes groundShadow {
+    0%   { transform:translateX(-50%) scale(1);    opacity:.75; }
+    50%  { transform:translateX(-50%) scale(.72);  opacity:.4; }
+    100% { transform:translateX(-50%) scale(1);    opacity:.75; }
+  }
+
+  .phone-mock {
+    width:220px; aspect-ratio:1070/2176;
+    transform-style:preserve-3d; position:relative; z-index:1;
+    animation:phoneFloat 7s ease-in-out infinite;
+  }
+
+  @keyframes phoneFloat {
+    0%   { transform:translateY(0)    rotateY(-6deg) rotateX(2.5deg); }
+    50%  { transform:translateY(-18px) rotateY(4deg)  rotateX(-1.5deg); }
+    100% { transform:translateY(0)    rotateY(-6deg) rotateX(2.5deg); }
+  }
+
+  /* corpo real: render fotográfico do iPhone 15 Pro (Figma/Uiscore, export 2x),
+     sem CSS a desenhar titânio/botões/ilha — tudo isso já vem na foto. */
+  .phone-frame {
+    width:100%; height:100%; position:relative;
+    background-image:url('assets/iphone-frame.png');
+    background-size:100% 100%; background-repeat:no-repeat;
+    filter:
+      drop-shadow(0 40px 60px rgba(27,30,36,.42))
+      drop-shadow(0 12px 20px rgba(27,30,36,.28));
+  }
+
+  /* tela: preenche o frame inteiro e usa MÁSCARA (screen-mask.png, recorte
+     exato do Screen.png real do Figma — mesmo crop do iphone-frame.png) pra
+     clipar no formato preciso da tela fotografada, ilha dinâmica incluída.
+     Zero frestinha: nada de border-radius aproximado tentando adivinhar a
+     curva do canto. */
+  .phone-screen {
+    position:absolute; inset:0;
+    background:var(--ink-50);
+    -webkit-mask-image:url('assets/screen-mask.png');
+    mask-image:url('assets/screen-mask.png');
+    -webkit-mask-size:100% 100%; mask-size:100% 100%;
+    -webkit-mask-repeat:no-repeat; mask-repeat:no-repeat;
+    overflow:hidden; display:flex; flex-direction:column;
+    padding:36px 20px 18px;
+  }
+
+  .phone-statusbar {
+    flex:none; display:flex; align-items:center; justify-content:space-between;
+    margin:-16px -3px 6px; color:var(--ink-900);
+  }
+  .phone-time { font-size:.62rem; font-weight:700; letter-spacing:-.01em; }
+  .phone-status-icons { display:flex; align-items:center; gap:3px; }
+  .phone-icon-signal { width:11px; height:auto; }
+  .phone-icon-wifi { width:11px; height:auto; }
+  .phone-icon-battery { width:15px; height:auto; opacity:.95; }
+
+  /* vidro: reflexo diagonal fixo + brilho de topo, dá sensação de superfície física */
+  .phone-screen::before {
+    content:""; position:absolute; inset:0; z-index:5; pointer-events:none;
+    background:linear-gradient(115deg,
+      rgba(255,255,255,.16) 0%, rgba(255,255,255,.05) 14%,
+      rgba(255,255,255,0) 28%, rgba(255,255,255,0) 62%,
+      rgba(255,255,255,.05) 80%, rgba(255,255,255,0) 100%);
+    mix-blend-mode:overlay;
+  }
+  .phone-screen::after {
+    content:""; position:absolute; inset:0 0 auto 0; height:40%; z-index:5; pointer-events:none;
+    background:linear-gradient(180deg, rgba(255,255,255,.22), rgba(255,255,255,0));
+    mix-blend-mode:soft-light;
+  }
+
+  .phone-brand { flex:none; height:16px; width:auto; align-self:flex-start; }
+
+  /* absorve o espaço sobrando (igual .app-main real): empurra texto+CTA pra base */
+  .phone-illustration {
+    flex:1; min-height:0; display:flex; align-items:center; justify-content:center;
+    padding:8px 0;
+  }
+  .phone-lottie { width:100%; max-width:150px; height:auto; }
+  .phone-lottie svg { display:block; }
+
+  .phone-text-block { flex:none; }
+
+  .phone-headline {
+    font-size:.68rem; font-weight:700; line-height:1.35;
+    color:var(--ink-900); text-align:left;
+  }
+  .phone-headline span { font-weight:700; color:var(--ink-400); }
+
+  .phone-pill {
+    display:flex; align-items:center; gap:5px;
+    margin-top:8px; font-size:.48rem; font-weight:600;
+    color:var(--ink-600); background:var(--coral-50); border:1px solid var(--ink-200);
+    border-radius:6px; padding:5px 7px; line-height:1.25;
+  }
+  .phone-pill-icon { width:11px; height:11px; flex:none; color:var(--coral-500); }
+
+  .phone-footer-cta { flex:none; margin-top:10px; }
+
+  .phone-card {
+    width:100%; margin-top:6px; padding:8px; border-radius:8px; border:0;
+    background:#fff; border:1px solid var(--ink-200);
+    display:flex; align-items:flex-start; gap:6px; text-align:left;
+    font-family:inherit; cursor:default;
+  }
+  .phone-card-primary { background:var(--coral-600); border-color:var(--coral-600); }
+
+  .phone-card-icon {
+    flex:none; width:20px; height:20px; border-radius:5px;
+    display:flex; align-items:center; justify-content:center;
+    background:var(--coral-50); color:var(--coral-500);
+  }
+  .phone-card-icon svg { width:12px; height:12px; }
+  .phone-card-icon-on { background:rgba(255,255,255,.2); color:#fff; }
+
+  .phone-card-text { flex:1; display:flex; flex-direction:column; gap:1px; min-width:0; }
+  .phone-card-text strong { font-size:.56rem; font-weight:700; color:var(--ink-900); }
+  .phone-card-text em { font-style:normal; font-size:.44rem; color:var(--ink-500); line-height:1.3; }
+  .phone-card-primary .phone-card-text strong,
+  .phone-card-primary .phone-card-text em { color:#fff; }
+
+  .phone-chevron { flex:none; width:11px; height:11px; margin-top:2px; opacity:.7; color:var(--ink-500); }
+  .phone-card-primary .phone-chevron { color:#fff; }
+
+  .phone-login { margin-top:10px; font-size:.46rem; color:var(--ink-400); text-align:center; }
+  .phone-login span { font-weight:700; color:var(--ink-900); text-decoration:underline; text-underline-offset:2px; }
+
+  /* ---------- cards flutuantes: prints reais de telas do app, soltos no espaço ---------- */
+  .float-card {
+    position:absolute; z-index:2; width:206px;
+    background:#fff; border:1px solid var(--ink-200); border-radius:18px;
+    padding:14px; box-shadow:0 24px 40px -16px rgba(27,30,36,.28), 0 6px 14px -6px rgba(27,30,36,.14);
+  }
+
+  /* canto superior esquerdo: âncora no canto inferior-direito do card (o que
+     toca o phone) — só ~10% da largura/altura do card (já escalado .7) entra
+     na tela, resto fica acima e à esquerda, fora do aparelho */
+  .float-card-cnae {
+    z-index:0;
+    top:-108px; left:-178px;
+    transform-origin:100% 100%;
+    animation:floatCardA 8s ease-in-out infinite;
+  }
+  /* mesma lógica do notas, espelhada: 10% do card entra na tela pela direita, resto pra fora */
+  .float-card-atalhos {
+    top:calc(38% - 100px); right:-185px;
+    transform-origin:0% 50%;
+    animation:floatCardB 9s ease-in-out infinite;
+  }
+  /* dentro do .phone-stage (mesmo espaço de coordenadas do phone, não da coluna):
+     só ~10% da largura do card entra por cima da tela, o resto fica pra fora à esquerda */
+  .float-card-notas {
+    bottom:14%; left:-185px;
+    transform-origin:100% 100%;
+    animation:floatCardC 7.5s ease-in-out infinite;
+  }
+
+  @keyframes floatCardA {
+    0%,100% { transform:translateY(0) rotate(-3deg) scale(.7); }
+    50%     { transform:translateY(-14px) rotate(-1deg) scale(.7); }
+  }
+  @keyframes floatCardB {
+    0%,100% { transform:translateY(0) rotate(2.5deg) scale(.7); }
+    50%     { transform:translateY(12px) rotate(1deg) scale(.7); }
+  }
+  @keyframes floatCardC {
+    0%,100% { transform:translateY(0) rotate(-2deg) scale(.7); }
+    50%     { transform:translateY(-10px) rotate(-3.5deg) scale(.7); }
+  }
+
+  /* frase que "mudou de casa" do H1 — flutua ao lado direito do telefone,
+     dentro do .phone-stage (por isso left:100% ancora bem na borda direita
+     do phone: o stage não tem largura própria além do phone-mock). Escala
+     junto com o resto da composição por herdar o transform do .phone-stage. */
+  .phone-tagline {
+    position:absolute; z-index:2; left:calc(100% + 14px); top:74%; width:200px;
+    color:var(--ink-50); font-weight:800; letter-spacing:-.01em;
+    font-size:clamp(.85rem, 1.9vh, 1.09rem); line-height:1.22;
+    animation:phoneTaglineFloat 8s ease-in-out infinite;
+  }
+  @keyframes phoneTaglineFloat {
+    0%,100% { transform:translateY(-50%); }
+    50%     { transform:translateY(calc(-50% - 10px)); }
+  }
+
+  .fc-row-between { display:flex; align-items:flex-start; justify-content:space-between; gap:8px; }
+  .fc-section-title { font-size:.72rem; font-weight:700; color:var(--ink-900); }
+  .fc-link { font-size:.6rem; font-weight:700; color:var(--coral-700); }
+
+  .fc-tag-success { display:block; font-size:.52rem; font-weight:700; color:var(--success-700); }
+  .fc-title { margin-top:2px; font-size:.68rem; font-weight:700; color:var(--ink-900); line-height:1.3; }
+  .fc-badge-success {
+    flex:none; font-size:.5rem; font-weight:800; color:var(--success-700);
+    background:var(--success-50); border-radius:999px; padding:3px 7px; margin-top:1px;
+  }
+  .fc-desc { margin-top:6px; font-size:.58rem; color:var(--ink-500); line-height:1.4; }
+
+  .fc-stats { margin-top:8px; display:flex; gap:6px; align-items:stretch; }
+  .fc-stat { flex:1; border-radius:12px; padding:7px 8px; background:var(--ink-50); }
+  .fc-stat-success { background:var(--success-50); }
+  .fc-stat-label { font-size:.46rem; color:var(--ink-400); line-height:1.25; }
+  .fc-stat-success .fc-stat-label { color:var(--success-700); }
+  .fc-stat-value { margin-top:1px; font-size:.6rem; font-weight:700; color:var(--ink-900); }
+  .fc-stat-success .fc-stat-value { color:var(--success-700); }
+  .fc-stat-sub { font-size:.44rem; color:var(--ink-500); }
+
+  .fc-subheading { margin-top:9px; font-size:.6rem; font-weight:700; color:var(--ink-900); }
+  .fc-check-item { margin-top:5px; display:flex; align-items:flex-start; gap:6px; }
+  .fc-check-icon {
+    flex:none; width:14px; height:14px; margin-top:.5px; border-radius:50%;
+    background:var(--success-50); color:var(--success-700);
+    display:flex; align-items:center; justify-content:center;
+  }
+  .fc-check-icon svg { width:8px; height:8px; }
+  .fc-check-item span:last-child { font-size:.54rem; color:var(--ink-500); line-height:1.35; }
+
+  .fc-grid2 { margin-top:10px; display:grid; grid-template-columns:1fr 1fr; gap:8px; }
+  .fc-action { border-radius:14px; padding:12px; border:1px solid var(--ink-200); background:#fff; }
+  .fc-action-primary { background:var(--coral-600); border-color:var(--coral-600); }
+  .fc-action-icon {
+    width:26px; height:26px; border-radius:8px; background:var(--ink-50); color:var(--coral-600);
+    display:flex; align-items:center; justify-content:center;
+  }
+  .fc-action-icon svg { width:13px; height:13px; }
+  .fc-action-icon-on { background:rgba(255,255,255,.22); color:#fff; }
+  .fc-action-title { margin-top:9px; font-size:.62rem; font-weight:700; color:var(--ink-900); line-height:1.25; }
+  .fc-action-sub { margin-top:1px; font-size:.46rem; color:var(--ink-500); line-height:1.3; }
+  .fc-action-primary .fc-action-title, .fc-action-primary .fc-action-sub { color:#fff; }
+  .fc-action-primary .fc-action-sub { opacity:.85; }
+
+  .fc-notas-list { margin-top:8px; display:flex; flex-direction:column; gap:6px; }
+  .fc-nota-row {
+    display:flex; align-items:center; gap:8px; border:1px solid var(--ink-200);
+    border-radius:12px; padding:7px 8px;
+  }
+  .fc-avatar {
+    position:relative; flex:none; width:26px; height:26px; border-radius:50%;
+    background:var(--ink-900); color:#fff; font-size:.44rem; font-weight:700;
+    display:flex; align-items:center; justify-content:center;
+  }
+  .fc-dot {
+    position:absolute; bottom:-1px; right:-1px; width:8px; height:8px; border-radius:50%;
+    background:var(--success-500); border:2px solid #fff;
+  }
+  .fc-nota-info { flex:1; min-width:0; }
+  .fc-nota-title { font-size:.54rem; font-weight:700; color:var(--ink-900); white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+  .fc-nota-date { margin-top:1px; font-size:.46rem; color:var(--ink-400); }
+  .fc-nota-valor { flex:none; font-size:.54rem; font-weight:700; color:var(--success-700); }
+
+  @media (prefers-reduced-motion: reduce) {
+    .phone-mock { animation:none; transform:rotateY(-12deg) rotateX(4deg); }
+    .float-card-cnae { animation:none; transform-origin:100% 100%; transform:rotate(-3deg) scale(.7); }
+    .float-card-atalhos { animation:none; transform:rotate(2.5deg) scale(.7); }
+    .float-card-notas { animation:none; transform:rotate(-2deg) scale(.7); }
+    .phone-tagline { animation:none; transform:translateY(-50%); }
+  }
+
+  /* daqui pra baixo: tipografia/espaçamento FLUIDOS via clamp() preso em vh
+     — encolhem/crescem sozinhos com a altura da tela, sem JS medindo nada e
+     sem transform:scale no bloco inteiro. É o "conserto de raiz" pedido:
+     pra aumentar/reduzir algo no futuro, mexe só no clamp() daquele
+     elemento — não precisa mais caçar 5 valores espalhados. */
+  .soon-card { max-width:605px; }
+  /* h1 na base só reage a vw (largura) — em desktop isso não protege nada
+     numa tela curta, então aqui ele também passa a reagir a vh. */
+  .soon-card h1 { font-size:clamp(1.05rem, 1.9vh, 1.6rem); }
+  .soon-logo { height:clamp(20px, 3vh, 30px); margin-bottom:clamp(4px, 2vh, 18px); }
+  .soon-sub { margin-top:10px; font-size:.92rem; }
+  .soon-form { margin-top:clamp(4px, 1vh, 10px); }
+  .wait-form { padding:clamp(6px, 1.1vh, 12px); }
+  .soon-form-title { font-size:clamp(.7rem, 1.3vh, .85rem); }
+  .soon-fields { gap:clamp(4px, .85vh, 12px); margin-top:clamp(3px, .6vh, 8px); }
+  .soon-fields input, .soon-fields .soon-select-trigger, .soon-field-row input {
+    padding:clamp(5px, .9vh, 9px) clamp(10px, 1.1vw, 14px);
+    font-size:clamp(.78rem, 1.35vh, .92rem);
+  }
+  /* e-mail e WhatsApp lado a lado em QUALQUER desktop (≥900px) — não só
+     abaixo de uma altura específica. O gate por altura (max-height:820px)
+     dependia de bater exato com a tela do notebook de quem testava; fixo
+     assim é previsível em qualquer monitor largo, sem "não apareceu na
+     minha tela". Mobile continua empilhado (.soon-field-row só vira flex
+     aqui dentro do media query desktop). */
+  .soon-field-row { display:flex; gap:12px; }
+  .soon-field-row input { flex:1; min-width:0; }
+  .soon-submit { padding:clamp(6px, .95vh, 10px) 20px; margin-top:clamp(5px, 1.1vh, 12px); }
+
+  .soon-price-card { margin-top:clamp(4px, .9vh, 10px); padding:clamp(4px, .8vh, 7px); }
+  .soon-price-plan-card { padding:clamp(4px, .7vh, 7px) 8px; }
+  .soon-price-value { font-size:clamp(.85rem, 1.5vh, 1.02rem); }
+  .soon-price-duration { font-size:clamp(.44rem, .85vh, .5rem); }
+  .soon-price-then { font-size:clamp(.52rem, .85vh, .62rem); }
+  .soon-price-plan-name { font-size:clamp(.52rem, .85vh, .6rem); }
+
+  .soon-consent { margin-top:clamp(3px, .8vh, 12px); padding:clamp(5px, .7vh, 10px) 12px; }
+  .soon-footer { flex:none; padding:clamp(2px, .5vh, 8px) 0 clamp(3px, .6vh, 10px); }
+  .soon-footer nav { gap:10px; margin-bottom:4px; }
+  /* só o tamanho muda por breakpoint — cor/decoração/hover viraram utility
+     class no HTML (piloto da migração pro Tailwind); isso aqui fica porque
+     nossa faixa desktop é um media query composto (largura E altura), que
+     não bate com nenhum breakpoint padrão do Tailwind. */
+  .soon-footer nav a { font-size:.66rem; }
+  .soon-footer p { font-size:.6rem; }
+}
+
+} /* fim @layer components */

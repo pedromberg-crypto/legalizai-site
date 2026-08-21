@@ -1,0 +1,26 @@
+{
+  "name": "legalizai-site",
+  "version": "1.0.0",
+  "description": "Site institucional da Legalizai — estático (HTML/CSS/JS puro, sem build), deploy único na Vercel (`legalizei-lp`, domínio `www.legalizai.com.br`). Root do deploy: `lp/`.",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "build:css": "tailwindcss -i lp/em-breve/src.css -o lp/em-breve/styles.css --minify"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/pedromberg-crypto/legalizai-site.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "commonjs",
+  "bugs": {
+    "url": "https://github.com/pedromberg-crypto/legalizai-site/issues"
+  },
+  "homepage": "https://github.com/pedromberg-crypto/legalizai-site#readme",
+  "devDependencies": {
+    "@tailwindcss/cli": "^4.3.3",
+    "tailwindcss": "^4.3.3"
+  }
+}
