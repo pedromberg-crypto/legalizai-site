@@ -85,6 +85,11 @@
   var acMatches = [];
   var acIndex = -1;
   var acLoading = false;
+  /* UF resolvida quando o usuário escolhe uma opção da lista de autocomplete
+     (a base do IBGE já resolve nomes de cidade duplicados em vários estados).
+     Zerada sempre que o texto do campo muda por digitação, pra não sobrar UF
+     de uma escolha antiga colada num texto diferente. */
+  var cidadeUf = '';
 
   /* "São Gonçalo" e "sao goncalo" precisam casar: tira acento e caixa */
   function normalize(s) {
@@ -210,11 +215,15 @@
   function choose(index) {
     if (index < 0 || index >= acMatches.length) return;
     cidade.value = acMatches[index].nome;
+    cidadeUf = acMatches[index].uf;
     closeList();
   }
 
   cidade.addEventListener('focus', loadMunicipios);
-  cidade.addEventListener('input', function () { renderMatches(cidade.value); });
+  cidade.addEventListener('input', function () {
+    cidadeUf = '';
+    renderMatches(cidade.value);
+  });
 
   cidade.addEventListener('keydown', function (e) {
     if (e.key === 'ArrowDown') { e.preventDefault(); highlight(acIndex + 1); }
@@ -399,6 +408,7 @@
         whatsapp: whatsapp.value.trim(),
         cidade: cidade.value.trim(),
         tipoNegocio: tipo.value,
+        estado: cidadeUf,
         origem: 'coming-soon',
         utmSource: utms.utm_source || '',
         utmMedium: utms.utm_medium || '',
@@ -420,6 +430,7 @@
         whatsapp.value = '';
         cidade.value = '';
         resetTipoSelect();
+        cidadeUf = '';
         consent.checked = false;   /* o próximo envio precisa de consentimento novo */
         done.classList.remove('hidden');
       })
