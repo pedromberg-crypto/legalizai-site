@@ -223,7 +223,7 @@ body.soon-body { min-height:100dvh; display:flex; flex-direction:column; }
   flex:none; width:20px; height:20px; margin:2px 0 0; /* 2px alinha com a 1ª linha do texto */
   accent-color:var(--coral-500); cursor:pointer;
 }
-.soon-consent-text { font-size:.7rem; line-height:1.5; color:var(--ink-600); }
+.soon-consent-text { font-size:.62rem; line-height:1.5; color:var(--ink-600); }
 .soon-consent-text a { color:var(--coral-700); font-weight:600; }
 .soon-consent-text a:hover { text-decoration:none; }
 .soon-consent-highlight { color:var(--coral-600); font-weight:600; }
@@ -237,7 +237,7 @@ body.soon-body { min-height:100dvh; display:flex; flex-direction:column; }
 .soon-footer p { font-size:.76rem; color:var(--ink-400); }
 /* identificação profissional (CRC do responsável técnico e da empresa contábil):
    é dado obrigatório de exibição, não copy, então vem um degrau abaixo do resto */
-.soon-footer p + p { margin-top:4px; font-size:.7rem; line-height:1.45; }
+.soon-footer p + p { margin-top:4px; font-size:.62rem; line-height:1.45; }
 
 /* ---------- desktop: 2 colunas, tudo cabe em 100vh, sem scroll ---------- */
 @media (min-width:900px) and (min-height:600px) {
