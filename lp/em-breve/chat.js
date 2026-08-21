@@ -101,6 +101,56 @@
     return el;
   }
 
+  /* Quebra a resposta em frases pra simular várias mensagens seguidas, como
+     uma pessoa manda no chat, em vez de um bloco só. Primeiro tenta parágrafo
+     (linha em branco, caso o modelo mande); sem isso, quebra por frase —
+     protegendo reticências ("...") e decimal ("1.234") de virarem corte, já
+     que os dois têm ponto no meio sem ser fim de frase. */
+  function dividirEmBolhas(texto) {
+    var porParagrafo = texto.split(/\n\s*\n/).map(function (p) { return p.trim(); }).filter(Boolean);
+    if (porParagrafo.length > 1) return porParagrafo;
+
+    var protegido = texto.replace(/\.\.\./g, '…').replace(/(\d)\.(\d)/g, '$1․$2');
+    var frases = protegido.match(/[^.!?]+[.!?]+(?=\s|$)|[^.!?]+$/g) || [protegido];
+    return frases
+      .map(function (f) { return f.replace(/…/g, '...').replace(/․/g, '.').trim(); })
+      .filter(Boolean);
+  }
+
+  /* Pausa entre bolhas, proporcional ao tamanho da próxima — maior tempo de
+     "digitando" pra frase maior, com teto pra não parecer travado. */
+  function atrasoParaTexto(texto) {
+    return Math.min(1600, 500 + texto.length * 20);
+  }
+
+  function liberarInput() {
+    send.disabled = false;
+    input.disabled = false;
+    input.focus();
+  }
+
+  /* Mostra as frases da resposta uma de cada vez: a primeira aparece na
+     hora (a espera da rede já cumpriu o papel de "pensando"), as seguintes
+     vêm depois de um "Léo está digitando…" simulado. Libera o campo só
+     quando a última bolha aparece. */
+  function revelarResposta(texto) {
+    var partes = dividirEmBolhas(texto);
+    if (!partes.length) { liberarInput(); return; }
+
+    var i = 0;
+    function mostrarProxima() {
+      bolha('agent', partes[i]);
+      i++;
+      if (i >= partes.length) { liberarInput(); return; }
+      var digitando = bolha('agent', 'Léo está digitando…', 'digitando');
+      setTimeout(function () {
+        digitando.remove();
+        mostrarProxima();
+      }, atrasoParaTexto(partes[i]));
+    }
+    mostrarProxima();
+  }
+
   function boasVindas() {
     bolha('agent', 'Oi! Eu sou o Léo, da Legalizai. 👋 Pode me perguntar o que quiser sobre a gente — e se quiser garantir o 1º mês grátis, o formulário está aqui na página.');
   }
@@ -154,7 +204,7 @@
       })
       .then(function (m) {
         digitando.remove();
-        bolha('agent', m.content);
+        revelarResposta(m.content || '');
         window.dataLayer = window.dataLayer || [];
         window.dataLayer.push({ event: 'leo_chat_message', form_id: 'lz-chat' });
       })
@@ -163,11 +213,7 @@
         bolha('agent', err.message === 'limite'
           ? 'Opa, muitas mensagens em sequência — me dá um minutinho e a gente continua. 🙂'
           : 'Tive um problema aqui do meu lado. Pode tentar de novo em instantes?');
-      })
-      .finally(function () {
-        send.disabled = false;
-        input.disabled = false;
-        input.focus();
+        liberarInput();
       });
   });
 })();
