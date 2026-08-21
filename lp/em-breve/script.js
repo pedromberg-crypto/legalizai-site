@@ -214,7 +214,7 @@
 
   function choose(index) {
     if (index < 0 || index >= acMatches.length) return;
-    cidade.value = acMatches[index].nome;
+    cidade.value = acMatches[index].nome + ' - ' + acMatches[index].uf;
     cidadeUf = acMatches[index].uf;
     closeList();
   }
