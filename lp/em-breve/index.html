@@ -32,6 +32,7 @@
 
 <main class="soon-main">
   <section class="soon-col soon-col-form">
+  <div class="soon-col-form-inner">
   <div class="soon-card">
     <svg class="soon-logo" viewBox="0 0 659.73 130" role="img" aria-label="Legalizai">
       <g fill="var(--ink-900)">
@@ -53,8 +54,7 @@
       <path fill="#fff" d="M121.43,18.95l-60.67,60.67-19.33-19.33c-7.6-7.6-19.93-7.6-27.54,0h0s34.97,34.97,34.97,34.97c6.56,6.56,17.21,6.56,23.77,0l48.79-48.79v-27.54Z"/>
     </svg>
 
-    <h1>A contabilidade que fala a sua língua. <span class="h1-muted">Sem contabilês.</span></h1>
-    <p class="soon-sub">Preço fechado, contador de verdade desde o início.</p>
+    <h1>Está chegando, a contabilidade que fala a sua língua. <span class="h1-muted">Sem contabilês.</span></h1>
 
     <div class="soon-form">
       <!-- autocomplete="off" desliga o histórico de campo (aquela lista com o
@@ -66,12 +66,18 @@
            o envio é por fetch lendo os ids, e sem `name` o Firefox também não
            guarda histórico. -->
       <form class="wait-form" id="soon-form" autocomplete="off">
-        <p><strong>Garanta sua oferta de lançamento</strong></p>
-        <small>1º mês grátis pra quem entrar agora.</small>
+        <p class="soon-form-title"><strong><span class="soon-form-title-accent">Você não paga nada agora,</span><br>é só pra garantir sua condição no lançamento.</strong></p>
+
         <div class="soon-fields">
           <input type="text" id="soon-nome" placeholder="Nome completo" required aria-label="Nome completo" autocomplete="off">
-          <input type="email" id="soon-email" placeholder="Seu e-mail" required aria-label="Seu e-mail" autocomplete="off">
-          <input type="tel" id="soon-whatsapp" placeholder="WhatsApp com DDD" required aria-label="WhatsApp" autocomplete="off" inputmode="numeric">
+          <!-- soon-field-row é display:contents por padrão (não afeta stack
+               normal em mobile/monitor alto) — só vira linha lado a lado em
+               telas de notebook (ver @media dedicado), pra reduzir a altura
+               do form SEM depender só de encolher a fonte no scale-to-fit. -->
+          <div class="soon-field-row">
+            <input type="email" id="soon-email" placeholder="Seu e-mail" required aria-label="Seu e-mail" autocomplete="off">
+            <input type="tel" id="soon-whatsapp" placeholder="WhatsApp com DDD" required aria-label="WhatsApp" autocomplete="off" inputmode="numeric">
+          </div>
           <!-- combobox de cidade: o <input> continua sendo o campo enviado; a
                lista abaixo é só sugestão (o usuário pode digitar livremente). -->
           <div class="soon-ac">
@@ -80,25 +86,77 @@
                    aria-controls="soon-cidade-list" aria-autocomplete="list">
             <ul class="soon-ac-list hidden" id="soon-cidade-list" role="listbox" aria-label="Sugestões de cidade"></ul>
           </div>
+          <!-- combobox custom (mesma estética/mecânica do combobox de cidade
+               acima): botão + listbox, não <select> nativo, pra manter a
+               lista com o visual da marca (.soon-ac-list/.soon-ac-option). -->
+          <div class="soon-ac soon-select" id="soon-tipo-wrap">
+            <button type="button" class="soon-select-trigger" id="soon-tipo-trigger"
+                    role="combobox" aria-haspopup="listbox" aria-expanded="false"
+                    aria-controls="soon-tipo-list" aria-label="Vc pretende">
+              <span id="soon-tipo-label">Vc pretende</span>
+              <svg class="soon-select-chevron" viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m6 9 6 6 6-6"/></svg>
+            </button>
+            <ul class="soon-ac-list hidden" id="soon-tipo-list" role="listbox" aria-label="Vc pretende">
+              <li class="soon-ac-option" id="soon-tipo-opt-0" role="option" aria-selected="false" data-value="Abrir minha empresa do zero aqui (ME/Simples)" data-plan="me">Abrir minha empresa do zero aqui (ME/Simples)</li>
+              <li class="soon-ac-option" id="soon-tipo-opt-1" role="option" aria-selected="false" data-value="Migrar meu MEI para cá" data-plan="mei">Migrar meu MEI para cá</li>
+              <li class="soon-ac-option" id="soon-tipo-opt-2" role="option" aria-selected="false" data-value="Migrar meu ME/Simples Nacional para cá" data-plan="me">Migrar meu ME/Simples Nacional para cá</li>
+            </ul>
+            <input type="hidden" id="soon-tipo" value="">
+          </div>
         </div>
+
+        <div class="soon-price-card">
+          <div class="soon-price-grid">
+            <div class="soon-price-plan-card" id="soon-price-mei">
+              <div class="soon-price-plan-head">
+                <span class="soon-price-icon" aria-hidden="true">
+                  <svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 7h-9m0 0 3-3m-3 3 3 3M4 17h9m0 0-3-3m3 3-3 3"/></svg>
+                </span>
+                <span class="soon-price-plan-name">MEI</span>
+              </div>
+              <div class="soon-price-value-row">
+                <p class="soon-price-value">R$19<em>/mês</em></p>
+                <span class="soon-price-duration">3 primeiros meses</span>
+              </div>
+              <p class="soon-price-then"><span class="soon-price-then-label">depois</span> <strong>R$49</strong>/mês</p>
+            </div>
+            <div class="soon-price-plan-card" id="soon-price-me">
+              <div class="soon-price-plan-head">
+                <span class="soon-price-icon" aria-hidden="true">
+                  <svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 21V5a1 1 0 0 1 1-1h9a1 1 0 0 1 1 1v16"/><path d="M15 9h4a1 1 0 0 1 1 1v11M9 8h2M9 12h2M9 16h2"/></svg>
+                </span>
+                <span class="soon-price-plan-name">ME&nbsp;/&nbsp;Simples</span>
+              </div>
+              <div class="soon-price-value-row">
+                <p class="soon-price-value">R$79<em>/mês</em></p>
+                <span class="soon-price-duration">3 primeiros meses</span>
+              </div>
+              <p class="soon-price-then"><span class="soon-price-then-label">depois</span> <strong>R$139</strong>/mês</p>
+            </div>
+          </div>
+          <small class="soon-price-validity">Vale até 31/12/2026 ou enquanto a lista estiver aberta.</small>
+        </div>
+
         <!-- LGPD art. 8º: o consentimento tem que ser livre, informado e para
-             finalidade ESPECÍFICA — por isso a finalidade ("receber contato
-             sobre o lançamento") está escrita aqui, e não só "aceito os termos".
-             A caixa nasce desmarcada de propósito: consentimento pré-marcado
-             não é consentimento válido (§ do art. 8º).
-             Os links são <a> dentro do <label>: pela spec, o label não alterna
-             a caixa quando o clique cai em conteúdo interativo descendente,
-             então clicar "Termos de uso" abre o documento sem marcar nada. -->
+               finalidade ESPECÍFICA — por isso a finalidade ("receber contato
+               sobre o lançamento") está escrita aqui, e não só "aceito os termos".
+               A caixa nasce desmarcada de propósito: consentimento pré-marcado
+               não é consentimento válido (§ do art. 8º).
+               Os links são <a> dentro do <label>: pela spec, o label não alterna
+               a caixa quando o clique cai em conteúdo interativo descendente,
+               então clicar "Termos de uso" abre o documento sem marcar nada. -->
         <label class="soon-consent">
           <input type="checkbox" id="soon-consent" required>
           <span class="soon-consent-text">
             Li e concordo com os <a href="/termos" target="_blank" rel="noopener">Termos de uso</a>
             e com a <a href="/privacidade" target="_blank" rel="noopener">Política de Privacidade</a>,
             e autorizo o uso dos meus dados para receber contato sobre o lançamento do Legalizai.
+            <span class="soon-consent-highlight">(Isso é apenas para podermos te avisar no lançamento)</span>
           </span>
         </label>
-        <button class="btn btn-primary soon-submit" type="submit">Garantir minha oferta de lançamento</button>
-        <p class="wait-done hidden" id="soon-done">Garantido! Seu 1º mês grátis tá reservado. Avisamos assim que abrir.</p>
+        <button class="btn btn-primary soon-submit" type="submit">Garantir minha condição de lançamento</button>
+
+        <p class="wait-done hidden" id="soon-done">Garantido! Sua condição de lançamento tá reservada. Avisamos assim que abrir.</p>
         <p class="wait-error hidden" id="soon-error">Não deu pra enviar agora. Tenta de novo em instantes.</p>
       </form>
     </div>
@@ -113,6 +171,7 @@
     <p>© 2026 Legalizai · Legalize Digital LTDA · CNPJ 41.569.345/0001-48 · Belo Horizonte/MG</p>
     <p>Responsabilidade técnica: Legalize Auditoria e Consultoria Contábil LTDA · CNPJ 12.423.332/0001-68 · CRC-MG 007900/O · Contador responsável: Mauro Lopes de Faria, CRC-MG 094967/O-0</p>
   </footer>
+  </div>
   </section>
   <section class="soon-col soon-col-visual" aria-hidden="true">
     <div class="phone-stage">
@@ -158,7 +217,7 @@
 
               <div class="phone-pill">
                 <svg viewBox="0 0 24 24" class="phone-pill-icon" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 13c0 5-3.5 7.5-7.66 8.95a1 1 0 0 1-.67-.01C7.5 20.5 4 18 4 13V6a1 1 0 0 1 1-1c2 0 4.5-1.2 6.24-2.72a1.17 1.17 0 0 1 1.52 0C14.51 3.81 17 5 19 5a1 1 0 0 1 1 1z"/><path d="m9 12 2 2 4-4"/></svg>
-                <span>Um escritório de contabilidade de verdade, em BH.</span>
+                <span>22 anos de contabilidade de verdade, em BH.</span>
               </div>
             </div>
 
@@ -264,6 +323,8 @@
         <span>Desenhar a interface (o visual e a navegação) desses sites</span>
       </div>
       </div>
+
+      <p class="phone-tagline" aria-hidden="true">Está chegando,<br>a contabilidade<br>que fala a sua língua.<br>Sem contabilês.</p>
     </div>
   </section>
 </main>

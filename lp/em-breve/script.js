@@ -45,6 +45,7 @@
   var email = $('soon-email');
   var whatsapp = $('soon-whatsapp');
   var cidade = $('soon-cidade');
+  var tipo = $('soon-tipo');
   var acList = $('soon-cidade-list');
   var consent = $('soon-consent');
   var done = $('soon-done');
@@ -237,6 +238,101 @@
 
   cidade.addEventListener('blur', closeList);
 
+  /* ---------- combobox "Vc pretende" (mesma mecânica do de cidade acima,
+     sem busca por texto: só 3 opções fixas, então é abrir/navegar/escolher) ---------- */
+  var tipoWrap = $('soon-tipo-wrap');
+  var tipoTrigger = $('soon-tipo-trigger');
+  var tipoList = $('soon-tipo-list');
+  var tipoLabel = $('soon-tipo-label');
+  var tipoDefaultLabel = tipoLabel.textContent;
+  var tipoOptions = Array.prototype.slice.call(tipoList.children);
+  var tipoIndex = -1;
+
+  function closeTipoList() {
+    tipoList.classList.add('hidden');
+    tipoTrigger.setAttribute('aria-expanded', 'false');
+    tipoTrigger.classList.remove('is-open');
+  }
+
+  function openTipoList() {
+    tipoList.classList.remove('hidden');
+    tipoTrigger.setAttribute('aria-expanded', 'true');
+    tipoTrigger.classList.add('is-open');
+  }
+
+  /* aria-selected marca ao mesmo tempo "opção em destaque pelo teclado" e
+     "opção atualmente escolhida" — depois de fechar a lista o destaque que
+     sobra é sempre o valor escolhido, então reabrir já mostra onde estava */
+  function setActiveTipoOption(index) {
+    tipoIndex = index;
+    tipoOptions.forEach(function (opt, i) {
+      opt.setAttribute('aria-selected', i === index ? 'true' : 'false');
+    });
+    if (index >= 0) tipoTrigger.setAttribute('aria-activedescendant', tipoOptions[index].id);
+    else tipoTrigger.removeAttribute('aria-activedescendant');
+  }
+
+  /* liga a borda coral no card de preço (MEI ou ME/Simples) que corresponde
+     à opção escolhida, pra pessoa ver exatamente qual condição ela garantiu */
+  var priceCardMei = $('soon-price-mei');
+  var priceCardMe = $('soon-price-me');
+  function highlightPriceCard(plan) {
+    if (priceCardMei) priceCardMei.classList.toggle('is-selected', plan === 'mei');
+    if (priceCardMe) priceCardMe.classList.toggle('is-selected', plan === 'me');
+  }
+
+  function selectTipo(index) {
+    var li = tipoOptions[index];
+    tipo.value = li.getAttribute('data-value');
+    tipoLabel.textContent = li.textContent;
+    tipoTrigger.classList.add('has-value');
+    tipoTrigger.classList.remove('is-invalid');
+    setActiveTipoOption(index);
+    highlightPriceCard(li.getAttribute('data-plan'));
+    closeTipoList();
+  }
+
+  function resetTipoSelect() {
+    tipo.value = '';
+    tipoLabel.textContent = tipoDefaultLabel;
+    tipoTrigger.classList.remove('has-value', 'is-invalid');
+    setActiveTipoOption(-1);
+    highlightPriceCard(null);
+    closeTipoList();
+  }
+
+  tipoTrigger.addEventListener('click', function () {
+    if (tipoList.classList.contains('hidden')) openTipoList(); else closeTipoList();
+  });
+
+  /* mousedown, não click: mesmo motivo do combobox de cidade — o blur do
+     trigger dispararia antes do click e fecharia a lista antes da escolha */
+  tipoList.addEventListener('mousedown', function (e) {
+    e.preventDefault();
+    var li = e.target.closest('.soon-ac-option');
+    if (li) selectTipo(tipoOptions.indexOf(li));
+  });
+
+  tipoTrigger.addEventListener('keydown', function (e) {
+    if (e.key === 'ArrowDown') {
+      e.preventDefault();
+      if (tipoList.classList.contains('hidden')) openTipoList();
+      setActiveTipoOption((tipoIndex + 1 + tipoOptions.length) % tipoOptions.length);
+    } else if (e.key === 'ArrowUp') {
+      e.preventDefault();
+      if (tipoList.classList.contains('hidden')) openTipoList();
+      setActiveTipoOption((tipoIndex - 1 + tipoOptions.length) % tipoOptions.length);
+    } else if (e.key === 'Enter' || e.key === ' ') {
+      e.preventDefault();
+      if (tipoList.classList.contains('hidden')) openTipoList();
+      else if (tipoIndex >= 0) selectTipo(tipoIndex);
+    } else if (e.key === 'Escape' || e.key === 'Tab') {
+      closeTipoList();
+    }
+  });
+
+  tipoTrigger.addEventListener('blur', closeTipoList);
+
   /* máscara (00) 00000-0000, preservando a posição do cursor */
   whatsapp.addEventListener('input', function () {
     var caret = whatsapp.selectionStart || 0;
@@ -255,12 +351,18 @@
     e.preventDefault();
     console.log('[waitlist-debug] submit handler disparado', {
       nome: nome.value, email: email.value,
-      whatsapp: whatsapp.value, cidade: cidade.value,
+      whatsapp: whatsapp.value, cidade: cidade.value, tipo: tipo.value,
       emailValid: email.validity && email.validity.valid,
       whatsappDigits: digits(whatsapp.value).length,
     });
     if (!nome.value.trim() || !cidade.value.trim()) {
       console.log('[waitlist-debug] bloqueado: nome/cidade vazio');
+      return;
+    }
+    if (!tipo.value) {
+      console.log('[waitlist-debug] bloqueado: tipo (MEI/ME) nao selecionado');
+      tipoTrigger.classList.add('is-invalid');
+      tipoTrigger.focus({ preventScroll: true });
       return;
     }
     if (!email.value || (email.validity && !email.validity.valid)) {
@@ -296,6 +398,7 @@
         email: email.value.trim(),
         whatsapp: whatsapp.value.trim(),
         cidade: cidade.value.trim(),
+        tipoNegocio: tipo.value,
         origem: 'coming-soon',
         utmSource: utms.utm_source || '',
         utmMedium: utms.utm_medium || '',
@@ -316,6 +419,7 @@
         email.value = '';
         whatsapp.value = '';
         cidade.value = '';
+        resetTipoSelect();
         consent.checked = false;   /* o próximo envio precisa de consentimento novo */
         done.classList.remove('hidden');
       })

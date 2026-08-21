@@ -62,9 +62,66 @@ input { font:inherit; color:var(--ink-900); }
 
 .wait-form { background:var(--ink-50); border:1px solid var(--ink-100); border-radius:18px; padding:18px; }
 .wait-form p { font-size:.95rem; }
+.soon-form-title { text-align:center; }
+.soon-form-title-accent { color:var(--coral-600); font-size:1.2em; }
 .wait-form small { color:var(--ink-500); font-size:.82rem; }
 .wait-done { margin-top:12px; font-size:.9rem; color:var(--success-700); font-weight:600; }
 .wait-error { margin-top:12px; font-size:.9rem; color:var(--coral-700); font-weight:600; }
+
+/* ---------- card de preço (oferta principal) ---------- */
+/* base clara com um brilho coral pontual (::before, radial, canto superior
+   direito) — coral aparece como acento, não como fundo. As sub-cards de
+   plano viram "vidro" (branco translúcido + blur) flutuando sobre essa base,
+   por isso a base precisa de um pouco de cor por trás pra o blur ter o que
+   desfocar. */
+.soon-price-card {
+  position:relative; overflow:hidden;
+  margin-top:14px; padding:10px; border-radius:16px;
+  background:linear-gradient(155deg, #fff 0%, var(--coral-50) 60%, #fff 100%);
+  border:1px solid var(--ink-100);
+  box-shadow:0 10px 26px rgba(27,30,36,.08);
+}
+.soon-price-card::before {
+  content:''; position:absolute; top:-60px; right:-40px; width:200px; height:200px;
+  background:radial-gradient(circle, rgba(242,100,60,.35), rgba(242,100,60,0) 70%);
+  pointer-events:none;
+}
+.soon-price-grid { position:relative; display:flex; gap:8px; }
+.soon-price-plan-card {
+  flex:1; min-width:0; padding:9px 10px; border-radius:12px;
+  background:rgba(255,255,255,.55); border:1px solid rgba(255,255,255,.7);
+  backdrop-filter:blur(8px) saturate(160%); -webkit-backdrop-filter:blur(8px) saturate(160%);
+  box-shadow:0 4px 14px rgba(27,30,36,.06), inset 0 1px 0 rgba(255,255,255,.6);
+  transition:border-color .18s, box-shadow .18s;
+}
+/* marca qual condição a pessoa garantiu ao escolher em "Vc pretende" —
+   script.js liga essa classe no card certo (soon-price-mei / soon-price-me) */
+.soon-price-plan-card.is-selected {
+  border-color:var(--coral-500);
+  box-shadow:0 4px 14px rgba(27,30,36,.06), inset 0 1px 0 rgba(255,255,255,.6);
+}
+.soon-price-plan-head { display:flex; align-items:center; gap:5px; margin-bottom:5px; }
+.soon-price-icon {
+  flex:none; width:17px; height:17px; border-radius:50%;
+  background:rgba(255,255,255,.8); color:var(--coral-600);
+  display:flex; align-items:center; justify-content:center;
+}
+.soon-price-icon svg { width:11px; height:11px; }
+.soon-price-plan-name { flex:1; min-width:0; font-size:.66rem; font-weight:700; color:var(--ink-600); white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+.soon-price-value-row { display:flex; align-items:baseline; flex-wrap:wrap; gap:5px; }
+.soon-price-value { margin:0; font-size:1.2rem; font-weight:800; color:var(--ink-900); letter-spacing:-.02em; line-height:1; }
+.soon-price-value em { font-style:normal; font-size:.62rem; font-weight:700; color:var(--ink-500); margin-left:1px; }
+/* liga o valor grande ao "por quanto tempo" — pílula coral coladinha ao lado
+   do preço, pra ninguém ler só "R$19/mês" e achar que é o preço fixo */
+.soon-price-duration {
+  flex:none; padding:2px 6px; border-radius:999px; white-space:nowrap;
+  background:var(--coral-500); color:#fff; font-size:.56rem; font-weight:700;
+  line-height:1.4;
+}
+.soon-price-then { margin:4px 0 0; font-size:.7rem; color:var(--ink-500); }
+.soon-price-then-label { font-size:.6rem; font-weight:500; color:var(--ink-400); }
+.soon-price-then strong { color:var(--coral-600); font-weight:700; }
+.soon-price-card small.soon-price-validity { position:relative; display:block; margin-top:8px; text-align:center; color:var(--ink-500); font-size:.66rem; }
 
 /* ============================================================ LAYOUT (coming soon) */
 html.soon-html, body.soon-body { height:100%; }
@@ -81,7 +138,7 @@ body.soon-body { min-height:100dvh; display:flex; flex-direction:column; }
   width:100%; max-width:480px; margin:0 auto; text-align:center;
 }
 
-.soon-logo { height:30px; width:auto; margin:0 auto 20px; }
+.soon-logo { height:39px; width:auto; margin:0 auto 20px; }
 
 .soon-card .eyebrow { margin-bottom:18px; }
 
@@ -97,13 +154,16 @@ body.soon-body { min-height:100dvh; display:flex; flex-direction:column; }
 .soon-form .wait-form { background:var(--ink-100); }
 
 .soon-fields { display:flex; flex-direction:column; gap:22px; margin-top:14px; }
-.soon-field-row { display:flex; gap:22px; }
-.soon-fields input, .soon-field-row input {
+/* display:contents por padrão: o wrapper não existe pro layout, e-mail e
+   WhatsApp continuam empilhados normalmente como se não estivessem num div.
+   Só vira row de verdade dentro do @media de notebook (ver bloco desktop). */
+.soon-field-row { display:contents; }
+.soon-fields input, .soon-fields .soon-select-trigger, .soon-field-row input {
   flex:1; min-width:0; border:1.5px solid var(--ink-200); border-radius:14px;
   padding:13px 16px; font-size:1rem; background:#fff; outline:0; /* ≥16px: evita zoom do iOS */
   transition:border-color .18s, box-shadow .18s;
 }
-.soon-fields input:focus, .soon-field-row input:focus {
+.soon-fields input:focus, .soon-fields .soon-select-trigger:focus, .soon-field-row input:focus {
   border-color:var(--coral-500); box-shadow:0 0 0 4px rgba(242,100,60,.12);
 }
 
@@ -129,6 +189,17 @@ body.soon-body { min-height:100dvh; display:flex; flex-direction:column; }
 .soon-ac-option:hover, .soon-ac-option[aria-selected="true"] { background:var(--coral-50); }
 .soon-ac-option mark { background:none; color:var(--coral-700); font-weight:700; }
 .soon-ac-uf { margin-left:auto; font-size:.8rem; color:var(--ink-500); font-weight:600; }
+
+/* ---------- combobox "Vc pretende" (mesma casca visual do combobox de cidade acima) ---------- */
+.soon-select-trigger {
+  width:100%; display:flex; align-items:center; justify-content:space-between; gap:10px;
+  text-align:left; color:var(--ink-500); font-family:inherit;
+}
+.soon-select-trigger.has-value { color:var(--ink-900); }
+.soon-select-trigger:hover { border-color:var(--coral-200); }
+.soon-select-trigger.is-invalid { border-color:var(--coral-500); box-shadow:0 0 0 4px rgba(242,100,60,.12); }
+.soon-select-chevron { flex:none; color:var(--ink-400); transition:transform .18s var(--ease-out); }
+.soon-select-trigger.is-open .soon-select-chevron { transform:rotate(180deg); }
 /* consentimento LGPD — fica ANTES do botão porque o usuário precisa ler a
    condição antes de agir, não depois de já ter mirado no CTA.
    O alvo de toque de 44px vem do padding do label (a caixa inteira é
@@ -148,9 +219,10 @@ body.soon-body { min-height:100dvh; display:flex; flex-direction:column; }
   flex:none; width:20px; height:20px; margin:2px 0 0; /* 2px alinha com a 1ª linha do texto */
   accent-color:var(--coral-500); cursor:pointer;
 }
-.soon-consent-text { font-size:.86rem; line-height:1.5; color:var(--ink-600); }
+.soon-consent-text { font-size:.7rem; line-height:1.5; color:var(--ink-600); }
 .soon-consent-text a { color:var(--coral-700); font-weight:600; }
 .soon-consent-text a:hover { text-decoration:none; }
+.soon-consent-highlight { color:var(--coral-600); font-weight:600; }
 
 .soon-submit { width:100%; margin-top:22px; padding:13px 22px; }
 
@@ -172,17 +244,31 @@ body.soon-body { min-height:100dvh; display:flex; flex-direction:column; }
     padding:0; overflow:hidden; height:100%;
   }
 
+  /* FLUIDO, não "medir e encolher": tipografia/espaçamento do form usam
+     clamp() preso em vh (ver .soon-logo, .soon-form-title, .soon-price-*,
+     .phone-tagline mais abaixo) — o conteúdo já nasce do tamanho certo pra
+     caber, sem precisar de JS medindo px nem de transform:scale escalando
+     o bloco inteiro depois do fato. Isso elimina a classe inteira de bug
+     que vivemos essa sessão (fórmula de encolhimento errada/desatualizada).
+     overflow-y:auto + justify-content:safe center ficam como REDE DE
+     SEGURANÇA, não como mecanismo principal: se algum clamp() ainda assim
+     não bastar numa tela extrema, aparece scroll SÓ nesta coluna (nunca
+     conteúdo cortado/invisível) — "safe" garante que o topo do conteúdo
+     fica alcançável rolando, em vez do centering padrão cortar as duas
+     pontas. */
   .soon-col-form {
-    display:flex; flex-direction:column; justify-content:center;
-    padding:4vh 48px; overflow:hidden; height:100%;
+    display:flex; flex-direction:column; justify-content:safe center;
+    padding:4vh 48px; overflow-y:auto; overflow-x:hidden; height:100%;
   }
 
-  /* mesma lógica de scale-to-fit do phone-stage: 585px = altura natural do
-     card (medida via getBoundingClientRect); em telas baixas encolhe pra
-     sempre sobrar respiro em vez de colar nas bordas. Nunca amplia (min c/ 1)
-     em monitores bem altos, mantém o tamanho de referência. */
-  .soon-card {
-    transform:scale(min(1, calc(0.8 * 100dvh / 585px)));
+  /* a frase do H1 muda de casa no desktop: some daqui e reaparece flutuando
+     ao lado do telefone (.phone-tagline, mesmo texto). Escondida por clip,
+     não display:none, pra continuar no dom/na árvore de acessibilidade —
+     quem usa leitor de tela ainda ouve o H1 real; só quem enxerga vê a
+     versão decorativa (a seção .soon-col-visual inteira é aria-hidden). */
+  .soon-card h1 {
+    position:absolute; width:1px; height:1px; padding:0; margin:-1px;
+    overflow:hidden; clip:rect(0,0,0,0); white-space:nowrap; border:0;
   }
 
   .soon-col-visual {
@@ -381,6 +467,21 @@ body.soon-body { min-height:100dvh; display:flex; flex-direction:column; }
     50%     { transform:translateY(-10px) rotate(-3.5deg) scale(.7); }
   }
 
+  /* frase que "mudou de casa" do H1 — flutua ao lado direito do telefone,
+     dentro do .phone-stage (por isso left:100% ancora bem na borda direita
+     do phone: o stage não tem largura própria além do phone-mock). Escala
+     junto com o resto da composição por herdar o transform do .phone-stage. */
+  .phone-tagline {
+    position:absolute; z-index:2; left:calc(100% + 14px); top:74%; width:200px;
+    color:var(--ink-50); font-weight:800; letter-spacing:-.01em;
+    font-size:clamp(.85rem, 1.9vh, 1.09rem); line-height:1.22;
+    animation:phoneTaglineFloat 8s ease-in-out infinite;
+  }
+  @keyframes phoneTaglineFloat {
+    0%,100% { transform:translateY(-50%); }
+    50%     { transform:translateY(calc(-50% - 10px)); }
+  }
+
   .fc-row-between { display:flex; align-items:flex-start; justify-content:space-between; gap:8px; }
   .fc-section-title { font-size:.72rem; font-weight:700; color:var(--ink-900); }
   .fc-link { font-size:.6rem; font-weight:700; color:var(--coral-700); }
@@ -450,20 +551,51 @@ body.soon-body { min-height:100dvh; display:flex; flex-direction:column; }
     .float-card-cnae { animation:none; transform-origin:100% 100%; transform:rotate(-3deg) scale(.7); }
     .float-card-atalhos { animation:none; transform:rotate(2.5deg) scale(.7); }
     .float-card-notas { animation:none; transform:rotate(-2deg) scale(.7); }
+    .phone-tagline { animation:none; transform:translateY(-50%); }
   }
 
-  .soon-card { max-width:500px; margin-top:auto; margin-bottom:auto; }
-  .soon-logo { height:31px; margin-bottom:46px; }
+  /* daqui pra baixo: tipografia/espaçamento FLUIDOS via clamp() preso em vh
+     — encolhem/crescem sozinhos com a altura da tela, sem JS medindo nada e
+     sem transform:scale no bloco inteiro. É o "conserto de raiz" pedido:
+     pra aumentar/reduzir algo no futuro, mexe só no clamp() daquele
+     elemento — não precisa mais caçar 5 valores espalhados. */
+  .soon-card { max-width:500px; }
+  .soon-logo { height:clamp(30px, 5vh, 40px); margin-bottom:clamp(18px, 4.6vh, 46px); }
   .soon-card h1 { font-size:clamp(1.4rem, 1.6vw + 1rem, 1.9rem); }
   .soon-sub { margin-top:10px; font-size:.92rem; }
-  .soon-form { margin-top:18px; }
-  .wait-form { padding:14px; }
-  .soon-fields { gap:16px; margin-top:10px; }
-  .soon-fields input, .soon-field-row input { padding:10px 14px; font-size:.92rem; }
-  .soon-submit { padding:11px 20px; margin-top:16px; }
+  .soon-form { margin-top:clamp(10px, 1.8vh, 18px); }
+  .wait-form { padding:clamp(12px, 1.8vh, 18px); }
+  .soon-form-title { font-size:clamp(.82rem, 1.7vh, .95rem); }
+  .soon-fields { gap:clamp(12px, 2vh, 22px); margin-top:clamp(8px, 1.4vh, 14px); }
+  .soon-fields input, .soon-fields .soon-select-trigger, .soon-field-row input {
+    padding:clamp(9px, 1.4vh, 13px) clamp(12px, 1.2vw, 16px);
+    font-size:clamp(.85rem, 1.75vh, 1rem);
+  }
+  .soon-submit { padding:clamp(10px, 1.4vh, 13px) 22px; margin-top:clamp(12px, 2vh, 22px); }
 
-  .soon-footer { flex:none; padding:10px 0 14px; }
+  .soon-price-card { padding:clamp(8px, 1.2vh, 10px); }
+  .soon-price-plan-card { padding:clamp(7px, 1vh, 9px) 10px; }
+  .soon-price-value { font-size:clamp(1rem, 2.2vh, 1.2rem); }
+  .soon-price-duration { font-size:clamp(.5rem, 1vh, .56rem); }
+  .soon-price-then { font-size:clamp(.62rem, 1.1vh, .7rem); }
+  .soon-price-plan-name { font-size:clamp(.6rem, 1.1vh, .66rem); }
+
+  .soon-footer { flex:none; padding:clamp(8px, 1.4vh, 16px) 0 clamp(10px, 1.8vh, 20px); }
   .soon-footer nav { gap:10px; margin-bottom:4px; }
   .soon-footer nav a { font-size:.66rem; }
   .soon-footer p { font-size:.6rem; }
+}
+
+/* ---------- estágio intermediário "notebook" ----------
+   Breakpoint por CONTEÚDO, não por device: telas de notebook (mesma
+   largura de desktop, altura mais curta — 768/800px são as mais comuns)
+   têm menos vh sobrando pros clamp() acima respirarem. Antes de deixar
+   tudo no piso do clamp(), muda o LAYOUT — e-mail e WhatsApp viram uma
+   linha só (.soon-field-row sai de display:contents pra display:flex) —
+   pra reduzir a altura total do form primeiro. Monitor alto nem entra
+   aqui (sobra vh, os clamp() já ficam no teto sozinhos); mobile (<900px)
+   nem entra na conta, rolagem normal já resolve. */
+@media (min-width:900px) and (min-height:600px) and (max-height:820px) {
+  .soon-field-row { display:flex; gap:14px; }
+  .soon-field-row input { flex:1; min-width:0; }
 }
