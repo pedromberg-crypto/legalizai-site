@@ -124,7 +124,11 @@ input { font:inherit; color:var(--ink-900); }
 .soon-price-card small.soon-price-validity { position:relative; display:block; margin-top:8px; text-align:center; color:var(--ink-500); font-size:.66rem; }
 
 /* ============================================================ LAYOUT (coming soon) */
-html.soon-html, body.soon-body { height:100%; }
+/* html não tem class="soon-html" no markup (nunca teve) — o seletor com
+   classe nunca batia; dependia da propagação implícita do overflow da body
+   pro viewport, que o Safari/iPad é conhecido por não fazer direito. Alvo
+   direto no elemento, sem depender de propagação de navegador nenhum. */
+html, body.soon-body { height:100%; }
 body.soon-body { min-height:100dvh; display:flex; flex-direction:column; }
 
 .soon-main {
@@ -237,7 +241,10 @@ body.soon-body { min-height:100dvh; display:flex; flex-direction:column; }
 
 /* ---------- desktop: 2 colunas, tudo cabe em 100dvh, sem scroll ---------- */
 @media (min-width:900px) and (min-height:600px) {
-  body.soon-body { height:100dvh; overflow:hidden; }
+  /* explícito nos dois — html E body — pra travar o scroll do documento
+     sem depender de propagação de overflow entre eles (ver comentário lá
+     em cima, no seletor base html+body.soon-body). */
+  html, body.soon-body { height:100dvh; overflow:hidden; }
 
   .soon-main {
     display:grid; grid-template-columns:1fr 1fr; grid-template-rows:100%;
