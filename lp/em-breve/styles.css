@@ -239,12 +239,18 @@ body.soon-body { min-height:100dvh; display:flex; flex-direction:column; }
    é dado obrigatório de exibição, não copy, então vem um degrau abaixo do resto */
 .soon-footer p + p { margin-top:4px; font-size:.7rem; line-height:1.45; }
 
-/* ---------- desktop: 2 colunas, tudo cabe em 100dvh, sem scroll ---------- */
+/* ---------- desktop: 2 colunas, tudo cabe em 100vh, sem scroll ---------- */
 @media (min-width:900px) and (min-height:600px) {
   /* explícito nos dois — html E body — pra travar o scroll do documento
      sem depender de propagação de overflow entre eles (ver comentário lá
      em cima, no seletor base html+body.soon-body). */
-  html, body.soon-body { height:100dvh; overflow:hidden; }
+  /* 100vh, não 100dvh: essa regra só roda em desktop (min-height:600px do
+     media query já garante isso) — não existe barra de ferramentas dinâmica
+     de mobile aqui pra justificar dvh, e dvh tem suporte/cálculo inconsistente
+     entre navegadores (Firefox principalmente) — foi a causa real do scroll
+     de página inteira que só aparecia no site publicado (Firefox), nunca no
+     Chrome local. vh é bem mais previsível pra essa faixa. */
+  html, body.soon-body { height:100vh; overflow:hidden; }
 
   .soon-main {
     display:grid; grid-template-columns:1fr 1fr; grid-template-rows:100%;
@@ -292,7 +298,7 @@ body.soon-body { min-height:100dvh; display:flex; flex-direction:column; }
      note 1536x639). Encolhe suave em telas menores em vez de cortar. */
   .phone-stage {
     perspective:1400px;
-    transform:scale(min(1.43, calc(0.815 * 50vw / 473px), calc(0.815 * 100dvh / 497px)));
+    transform:scale(min(1.43, calc(0.815 * 50vw / 473px), calc(0.815 * 100vh / 497px)));
     position:relative;
   }
 
