@@ -195,12 +195,19 @@ body.soon-body { min-height:100dvh; display:flex; flex-direction:column; }
 
 /* visível também no mobile agora (pedido: telefone + cards aparecem depois
    do form, na rolagem) — fundo claro aqui (não coral, que é só do desktop,
-   ver @media). margin-top separa do form acima (soon-main não tem gap). */
+   ver @media). margin-top separa do form acima (soon-main não tem gap).
+   overflow:visible (não hidden) aqui na base: os float-cards estouram a
+   caixa do .phone-stage de propósito (.float-card-cnae tem top:-108px,
+   .phone-ground-shadow tem bottom:-6%) — no desktop isso nunca cortava
+   porque a coluna tem 100vh de sobra, mas no mobile a caixa é auto-height
+   e ficava justa, cortando os cards em cima/embaixo. padding compensa o
+   estouro (120px cobre o card CNAE + folga; 64px cobre a sombra do chão);
+   desktop restaura overflow:hidden (ver @media), que lá nunca foi problema. */
 .soon-col-visual {
   display:flex; align-items:center; justify-content:center;
   background:var(--ink-50);
-  position:relative; overflow:hidden;
-  margin-top:32px; padding:24px 0;
+  position:relative; overflow:visible;
+  margin-top:32px; padding:120px 0 64px;
 }
 
 /* escala responsiva: nunca deixa a composição (phone + cards flutuantes)
@@ -211,12 +218,12 @@ body.soon-body { min-height:100dvh; display:flex; flex-direction:column; }
    note 1536x639). Encolhe suave em telas menores em vez de cortar.
    Aqui embaixo é o valor BASE (mobile): usa 100vw, não 50vw — não tem
    coluna dividida em mobile, é a largura inteira. Desktop sobrescreve pra
-   voltar a usar 50vw (ver @media). Fator 0.72 (mais conservador que o
-   0.815 do desktop) porque não dava pra testar visualmente ao vivo — se
-   sobrar espaço demais nas laterais, é seguro subir esse número. */
+   voltar a usar 50vw (ver @media). Fator 0.95 (quase a largura toda da
+   tela) — subido de 0.72 porque ficou pequeno demais; cards flutuantes
+   ficam bem perto da margem do celular de propósito. */
 .phone-stage {
   perspective:1400px;
-  transform:scale(min(1, calc(0.72 * 100vw / 473px)));
+  transform:scale(min(1, calc(0.95 * 100vw / 473px)));
   position:relative;
 }
 
@@ -403,6 +410,7 @@ body.soon-body { min-height:100dvh; display:flex; flex-direction:column; }
    do phone: o stage não tem largura própria além do phone-mock). Escala
    junto com o resto da composição por herdar o transform do .phone-stage. */
 .phone-tagline {
+  display:none; /* some no mobile — volta no desktop (ver @media) */
   position:absolute; z-index:2; left:calc(100% + 14px); top:74%; width:200px;
   color:var(--ink-50); font-weight:800; letter-spacing:-.01em;
   font-size:clamp(.85rem, 1.9vh, 1.09rem); line-height:1.22;
@@ -622,10 +630,18 @@ body.soon-body { min-height:100dvh; display:flex; flex-direction:column; }
      Chrome local. vh é bem mais previsível pra essa faixa. */
   html, body.soon-body { height:100vh; overflow:hidden; }
 
+  /* rodapé saiu do HTML de dentro de .soon-col-form (agora vem depois de
+     .soon-col-visual no dom, pra ficar embaixo do celular no mobile — ver
+     .soon-footer global) — no desktop, grid-template-areas devolve ele
+     visualmente pra coluna esquerda, abaixo do form, como sempre foi. */
   .soon-main {
-    display:grid; grid-template-columns:1fr 1fr; grid-template-rows:100%;
+    display:grid; grid-template-columns:1fr 1fr; grid-template-rows:1fr auto;
+    grid-template-areas:"form visual" "footer visual";
     padding:0; overflow:hidden; height:100%;
   }
+  .soon-col-form { grid-area:form; }
+  .soon-footer { grid-area:footer; }
+  .soon-col-visual { grid-area:visual; }
 
   /* FLUIDO, não "medir e encolher": tipografia/espaçamento do form usam
      clamp() preso em vh (ver .soon-logo, .soon-form-title, .soon-price-*,
@@ -658,10 +674,11 @@ body.soon-body { min-height:100dvh; display:flex; flex-direction:column; }
      bloco global lá em cima) — cor de fundo (coral em vez de creme) e a
      fórmula de escala usando 50vw (metade da tela, já que aqui É colunas
      divididas — no mobile virou 100vw, tela inteira). */
-  .soon-col-visual { background:var(--coral-500); }
+  .soon-col-visual { background:var(--coral-500); overflow:hidden; padding:24px 0; }
   .phone-stage {
     transform:scale(min(1.43, calc(0.815 * 50vw / 473px), calc(0.815 * 100vh / 497px)));
   }
+  .phone-tagline { display:block; }
 
 
   /* daqui pra baixo: tipografia/espaçamento FLUIDOS via clamp() preso em vh
