@@ -578,6 +578,14 @@ body.soon-body { min-height:100dvh; display:flex; flex-direction:column; }
     padding:clamp(9px, 1.4vh, 13px) clamp(12px, 1.2vw, 16px);
     font-size:clamp(.85rem, 1.75vh, 1rem);
   }
+  /* e-mail e WhatsApp lado a lado em QUALQUER desktop (≥900px) — não só
+     abaixo de uma altura específica. O gate por altura (max-height:820px)
+     dependia de bater exato com a tela do notebook de quem testava; fixo
+     assim é previsível em qualquer monitor largo, sem "não apareceu na
+     minha tela". Mobile continua empilhado (.soon-field-row só vira flex
+     aqui dentro do media query desktop). */
+  .soon-field-row { display:flex; gap:14px; }
+  .soon-field-row input { flex:1; min-width:0; }
   .soon-submit { padding:clamp(10px, 1.4vh, 13px) 22px; margin-top:clamp(12px, 2vh, 22px); }
 
   .soon-price-card { padding:clamp(8px, 1.2vh, 10px); }
@@ -591,18 +599,4 @@ body.soon-body { min-height:100dvh; display:flex; flex-direction:column; }
   .soon-footer nav { gap:10px; margin-bottom:4px; }
   .soon-footer nav a { font-size:.66rem; }
   .soon-footer p { font-size:.6rem; }
-}
-
-/* ---------- estágio intermediário "notebook" ----------
-   Breakpoint por CONTEÚDO, não por device: telas de notebook (mesma
-   largura de desktop, altura mais curta — 768/800px são as mais comuns)
-   têm menos vh sobrando pros clamp() acima respirarem. Antes de deixar
-   tudo no piso do clamp(), muda o LAYOUT — e-mail e WhatsApp viram uma
-   linha só (.soon-field-row sai de display:contents pra display:flex) —
-   pra reduzir a altura total do form primeiro. Monitor alto nem entra
-   aqui (sobra vh, os clamp() já ficam no teto sozinhos); mobile (<900px)
-   nem entra na conta, rolagem normal já resolve. */
-@media (min-width:900px) and (min-height:600px) and (max-height:820px) {
-  .soon-field-row { display:flex; gap:14px; }
-  .soon-field-row input { flex:1; min-width:0; }
 }
