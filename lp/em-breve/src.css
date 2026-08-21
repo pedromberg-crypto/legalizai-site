@@ -83,8 +83,21 @@ input { font:inherit; color:var(--ink-900); }
    a partir de 900px" nela) — fica em @layer components, junto com a versão
    desktop no media query lá embaixo, os dois sempre no mesmo lugar. */
 .wait-form { padding:18px; }
-.wait-form p { font-size:.95rem; }
-.soon-form-title-accent { color:var(--coral-600); font-size:1.2em; }
+/* :not() nos <p> com classe própria de tamanho — sem isso, ".wait-form p"
+   (classe+elemento, especificidade 0,1,1) vence QUALQUER regra escrita só
+   com classe (0,1,0), tipo .soon-price-value, .soon-price-then e
+   .soon-form-title — travava elas em .95rem não importava o valor que eu
+   colocasse na regra "certa". Era o bug real por trás do card de preço
+   não aumentar por mais que eu mudasse o font-size dele. */
+.wait-form p:not(.soon-price-value):not(.soon-price-then):not(.soon-form-title) { font-size:.95rem; }
+/* base explícita agora — antes herdava por acidente do .wait-form p que
+   acabou de virar :not(), então precisa existir por conta própria. */
+.soon-form-title { font-size:1.045rem; }
+/* antes era 1.2em (relativo ao pai) — virou rem absoluto: "aumenta a de
+   cima 20%, a de baixo 10%" são dois aumentos INDEPENDENTES um do outro,
+   se ficasse em em% o aumento da linha escura (base) ia somar de novo
+   dentro do cálculo da linha coral sem querer. */
+.soon-form-title-accent { color:var(--coral-600); font-size:1.368rem; }
 .wait-form small { color:var(--ink-500); font-size:.82rem; }
 
 /* ---------- card de preço (oferta principal) ---------- */
@@ -95,7 +108,7 @@ input { font:inherit; color:var(--ink-900); }
    desfocar. */
 .soon-price-card {
   position:relative; overflow:hidden;
-  margin-top:14px; padding:10px; border-radius:16px;
+  margin-top:18px; padding:18px 10px; border-radius:16px;
   background:linear-gradient(155deg, #fff 0%, var(--coral-50) 60%, #fff 100%);
   border:1px solid var(--ink-100);
   box-shadow:0 10px 26px rgba(27,30,36,.08);
@@ -128,8 +141,8 @@ input { font:inherit; color:var(--ink-900); }
 .soon-price-icon svg { width:11px; height:11px; }
 .soon-price-plan-name { flex:1; min-width:0; font-size:.66rem; font-weight:700; color:var(--ink-600); white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
 .soon-price-value-row { display:flex; align-items:baseline; flex-wrap:wrap; gap:5px; }
-.soon-price-value { margin:0; font-size:1.2rem; font-weight:800; color:var(--ink-900); letter-spacing:-.02em; line-height:1; }
-.soon-price-value em { font-style:normal; font-size:.62rem; font-weight:700; color:var(--ink-500); margin-left:1px; }
+.soon-price-value { margin:0; font-size:2.016rem; font-weight:800; color:var(--coral-600); letter-spacing:-.02em; line-height:1; }
+.soon-price-value em { font-style:normal; font-size:.744rem; font-weight:700; color:var(--ink-500); margin-left:1px; }
 /* liga o valor grande ao "por quanto tempo" — pílula coral coladinha ao lado
    do preço, pra ninguém ler só "R$19/mês" e achar que é o preço fixo */
 .soon-price-duration {
@@ -137,9 +150,9 @@ input { font:inherit; color:var(--ink-900); }
   background:var(--coral-500); color:#fff; font-size:.56rem; font-weight:700;
   line-height:1.4;
 }
-.soon-price-then { margin:4px 0 0; font-size:.7rem; color:var(--ink-500); }
-.soon-price-then-label { font-size:.6rem; font-weight:500; color:var(--ink-400); }
-.soon-price-then strong { color:var(--coral-600); font-weight:700; }
+.soon-price-then { margin:4px 0 0; font-size:.62rem; color:var(--ink-500); }
+.soon-price-then-label { font-size:.54rem; font-weight:500; color:var(--ink-400); }
+.soon-price-then strong { color:var(--ink-900); font-weight:700; }
 .soon-price-card small.soon-price-validity { position:relative; display:block; margin-top:8px; text-align:center; color:var(--ink-500); font-size:.66rem; }
 
 /* ============================================================ LAYOUT (coming soon) */
@@ -158,10 +171,10 @@ body.soon-body { min-height:100dvh; display:flex; flex-direction:column; }
 .soon-col-visual { display:none; }
 
 .soon-card {
-  width:100%; max-width:480px; margin:0 auto; text-align:center;
+  width:100%; max-width:523px; margin:0 auto; text-align:center;
 }
 
-.soon-logo { height:39px; width:auto; margin:0 auto 20px; }
+.soon-logo { height:51.48px; width:auto; margin:14px auto 20px; }
 
 .soon-card h1 {
   font-size:clamp(1.7rem, 3.4vw + 1rem, 2.5rem);
@@ -174,7 +187,7 @@ body.soon-body { min-height:100dvh; display:flex; flex-direction:column; }
 .soon-form { margin-top:28px; text-align:left; }
 .soon-form .wait-form { background:var(--ink-100); }
 
-.soon-fields { display:flex; flex-direction:column; gap:22px; margin-top:14px; }
+.soon-fields { display:flex; flex-direction:column; gap:30px; margin-top:14px; }
 /* display:contents por padrão: o wrapper não existe pro layout, e-mail e
    WhatsApp continuam empilhados normalmente como se não estivessem num div.
    Só vira row de verdade dentro do @media de notebook (ver bloco desktop). */
@@ -186,12 +199,28 @@ body.soon-body { min-height:100dvh; display:flex; flex-direction:column; }
    reage a JS). Border-radius/bg/outline/transition já viraram utility
    class no HTML (nenhum estado disputa essas). Padding/font-size ficam
    fluidos (clamp() no bloco desktop mais abaixo). */
+/* espessura igual parada/focada de propósito (só a cor muda no :focus,
+   nunca a largura) — se ainda parecer "fina vira grossa", é a cor ink-200
+   (bem clara) contra fundo branco somando pouco contraste em repouso vs. o
+   coral vivo saltando no foco; por isso a largura subiu pra 2px, pra ter
+   presença igual nos dois estados mesmo com cores tão diferentes. */
 .soon-fields input, .soon-fields .soon-select-trigger, .soon-field-row input {
-  flex:1; min-width:0; border:1.5px solid var(--ink-200);
+  flex:1; min-width:0; border:2px solid var(--ink-200);
   padding:13px 16px; font-size:1rem;
 }
+/* fino e sutil, não o anel grosso de antes: só a borda troca de cor, sem
+   glow largo em volta (mesma ideia do destaque do price-card selecionado).
+   outline:none aqui é pra desligar o :focus-visible global (outline:3px +
+   offset:3px, lá em cima na base) especificamente nesses campos — sem isso
+   os DOIS indicadores apareciam juntos (borda fina + anel grosso por trás),
+   e o anel grosso era o que ainda parecia "forte".
+   border-radius:14px também precisa ficar EXPLÍCITO aqui: o :focus-visible
+   global também seta border-radius:6px, empata em especificidade com a
+   utility rounded-[14px] do HTML, e às vezes ganhava — cantos ficavam
+   quadrados só quando focado. Repetir o valor aqui, numa regra mais
+   específica que o :focus-visible, garante que nunca mais disputa. */
 .soon-fields input:focus, .soon-fields .soon-select-trigger:focus, .soon-field-row input:focus {
-  border-color:var(--coral-500); box-shadow:0 0 0 4px rgba(242,100,60,.12);
+  border-color:var(--coral-500); box-shadow:none; outline:none; border-radius:14px;
 }
 
 /* ---------- autocomplete de cidade ---------- */
@@ -252,7 +281,11 @@ body.soon-body { min-height:100dvh; display:flex; flex-direction:column; }
   accent-color:var(--coral-500); cursor:pointer;
 }
 
-.soon-submit { width:100%; margin-top:22px; padding:13px 22px; }
+/* font-weight explícito aqui, não só a utility font-bold no HTML: o reset
+   global "button { font:inherit; ... }" mexe no font-weight (via shorthand
+   font) e já causou perda de estilo por especificidade nessa página antes
+   — travar aqui garante o negrito independente disso. */
+.soon-submit { width:100%; margin-top:22px; padding:13px 22px; font-weight:700; }
 
 .soon-footer { padding:16px 20px 20px; text-align:center; flex:none; }
 .soon-footer nav { display:flex; justify-content:center; flex-wrap:wrap; gap:16px; margin-bottom:8px; }
@@ -594,16 +627,17 @@ body.soon-body { min-height:100dvh; display:flex; flex-direction:column; }
      sem transform:scale no bloco inteiro. É o "conserto de raiz" pedido:
      pra aumentar/reduzir algo no futuro, mexe só no clamp() daquele
      elemento — não precisa mais caçar 5 valores espalhados. */
-  .soon-card { max-width:500px; }
+  .soon-card { max-width:545px; }
   /* h1 na base só reage a vw (largura) — em desktop isso não protege nada
      numa tela curta, então aqui ele também passa a reagir a vh. */
   .soon-card h1 { font-size:clamp(1.05rem, 1.9vh, 1.6rem); }
-  .soon-logo { height:clamp(20px, 3vh, 30px); margin-bottom:clamp(4px, 2vh, 18px); }
+  .soon-logo { height:clamp(26px, 3.96vh, 40px); margin-top:clamp(4px, .8vh, 10px); margin-bottom:clamp(4px, 2vh, 18px); }
   .soon-sub { margin-top:10px; font-size:.92rem; }
   .soon-form { margin-top:clamp(4px, 1vh, 10px); }
   .wait-form { padding:clamp(6px, 1.1vh, 12px); }
-  .soon-form-title { font-size:clamp(.7rem, 1.3vh, .85rem); }
-  .soon-fields { gap:clamp(4px, .85vh, 12px); margin-top:clamp(3px, .6vh, 8px); }
+  .soon-form-title { font-size:clamp(.77rem, 1.43vh, .935rem); }
+  .soon-form-title-accent { font-size:clamp(1.01rem, 1.87vh, 1.22rem); }
+  .soon-fields { gap:clamp(6px, 1.25vh, 18px); margin-top:clamp(3px, .6vh, 8px); }
   .soon-fields input, .soon-fields .soon-select-trigger, .soon-field-row input {
     padding:clamp(5px, .9vh, 9px) clamp(10px, 1.1vw, 14px);
     font-size:clamp(.78rem, 1.35vh, .92rem);
@@ -618,11 +652,11 @@ body.soon-body { min-height:100dvh; display:flex; flex-direction:column; }
   .soon-field-row input { flex:1; min-width:0; }
   .soon-submit { padding:clamp(6px, .95vh, 10px) 20px; margin-top:clamp(5px, 1.1vh, 12px); }
 
-  .soon-price-card { margin-top:clamp(4px, .9vh, 10px); padding:clamp(4px, .8vh, 7px); }
+  .soon-price-card { margin-top:clamp(6px, 1.1vh, 14px); padding:clamp(8px, 1.4vh, 14px) clamp(6px, .8vh, 9px); }
   .soon-price-plan-card { padding:clamp(4px, .7vh, 7px) 8px; }
-  .soon-price-value { font-size:clamp(.85rem, 1.5vh, 1.02rem); }
+  .soon-price-value { font-size:clamp(1.37rem, 2.45vh, 1.7rem); }
   .soon-price-duration { font-size:clamp(.44rem, .85vh, .5rem); }
-  .soon-price-then { font-size:clamp(.52rem, .85vh, .62rem); }
+  .soon-price-then { font-size:clamp(.46rem, .72vh, .54rem); }
   .soon-price-plan-name { font-size:clamp(.52rem, .85vh, .6rem); }
 
   .soon-consent { margin-top:clamp(3px, .8vh, 12px); padding:clamp(5px, .7vh, 10px) 12px; }
