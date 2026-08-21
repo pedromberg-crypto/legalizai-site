@@ -158,7 +158,7 @@ body.soon-body { min-height:100dvh; display:flex; flex-direction:column; }
 .soon-col-visual { display:none; }
 
 .soon-card {
-  width:100%; max-width:581px; margin:0 auto; text-align:center;
+  width:100%; max-width:480px; margin:0 auto; text-align:center;
 }
 
 .soon-logo { height:39px; width:auto; margin:0 auto 20px; }
@@ -594,7 +594,7 @@ body.soon-body { min-height:100dvh; display:flex; flex-direction:column; }
      sem transform:scale no bloco inteiro. É o "conserto de raiz" pedido:
      pra aumentar/reduzir algo no futuro, mexe só no clamp() daquele
      elemento — não precisa mais caçar 5 valores espalhados. */
-  .soon-card { max-width:605px; }
+  .soon-card { max-width:500px; }
   /* h1 na base só reage a vw (largura) — em desktop isso não protege nada
      numa tela curta, então aqui ele também passa a reagir a vh. */
   .soon-card h1 { font-size:clamp(1.05rem, 1.9vh, 1.6rem); }
