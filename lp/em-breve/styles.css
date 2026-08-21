@@ -573,16 +573,16 @@ body.soon-body { min-height:100dvh; display:flex; flex-direction:column; }
      pra aumentar/reduzir algo no futuro, mexe só no clamp() daquele
      elemento — não precisa mais caçar 5 valores espalhados. */
   .soon-card { max-width:500px; }
-  .soon-logo { height:clamp(30px, 5vh, 40px); margin-bottom:clamp(18px, 4.6vh, 46px); }
+  .soon-logo { height:clamp(28px, 3.6vh, 34px); margin-bottom:clamp(14px, 2.8vh, 26px); }
   .soon-card h1 { font-size:clamp(1.4rem, 1.6vw + 1rem, 1.9rem); }
   .soon-sub { margin-top:10px; font-size:.92rem; }
-  .soon-form { margin-top:clamp(10px, 1.8vh, 18px); }
-  .wait-form { padding:clamp(12px, 1.8vh, 18px); }
-  .soon-form-title { font-size:clamp(.82rem, 1.7vh, .95rem); }
-  .soon-fields { gap:clamp(12px, 2vh, 22px); margin-top:clamp(8px, 1.4vh, 14px); }
+  .soon-form { margin-top:clamp(8px, 1.2vh, 12px); }
+  .wait-form { padding:clamp(10px, 1.3vh, 14px); }
+  .soon-form-title { font-size:clamp(.8rem, 1.5vh, .9rem); }
+  .soon-fields { gap:clamp(9px, 1.4vh, 15px); margin-top:clamp(6px, 1vh, 10px); }
   .soon-fields input, .soon-fields .soon-select-trigger, .soon-field-row input {
-    padding:clamp(9px, 1.4vh, 13px) clamp(12px, 1.2vw, 16px);
-    font-size:clamp(.85rem, 1.75vh, 1rem);
+    padding:clamp(8px, 1.15vh, 11px) clamp(12px, 1.2vw, 16px);
+    font-size:clamp(.85rem, 1.6vh, .96rem);
   }
   /* e-mail e WhatsApp lado a lado em QUALQUER desktop (≥900px) — não só
      abaixo de uma altura específica. O gate por altura (max-height:820px)
@@ -592,16 +592,17 @@ body.soon-body { min-height:100dvh; display:flex; flex-direction:column; }
      aqui dentro do media query desktop). */
   .soon-field-row { display:flex; gap:14px; }
   .soon-field-row input { flex:1; min-width:0; }
-  .soon-submit { padding:clamp(10px, 1.4vh, 13px) 22px; margin-top:clamp(12px, 2vh, 22px); }
+  .soon-submit { padding:clamp(9px, 1.15vh, 12px) 22px; margin-top:clamp(9px, 1.5vh, 16px); }
 
-  .soon-price-card { padding:clamp(8px, 1.2vh, 10px); }
-  .soon-price-plan-card { padding:clamp(7px, 1vh, 9px) 10px; }
-  .soon-price-value { font-size:clamp(1rem, 2.2vh, 1.2rem); }
-  .soon-price-duration { font-size:clamp(.5rem, 1vh, .56rem); }
-  .soon-price-then { font-size:clamp(.62rem, 1.1vh, .7rem); }
-  .soon-price-plan-name { font-size:clamp(.6rem, 1.1vh, .66rem); }
+  .soon-price-card { margin-top:clamp(8px, 1.2vh, 12px); padding:clamp(7px, 1vh, 9px); }
+  .soon-price-plan-card { padding:clamp(6px, .9vh, 8px) 9px; }
+  .soon-price-value { font-size:clamp(1rem, 1.9vh, 1.12rem); }
+  .soon-price-duration { font-size:clamp(.5rem, 1vh, .55rem); }
+  .soon-price-then { font-size:clamp(.6rem, 1vh, .68rem); }
+  .soon-price-plan-name { font-size:clamp(.58rem, 1vh, .64rem); }
 
-  .soon-footer { flex:none; padding:clamp(8px, 1.4vh, 16px) 0 clamp(10px, 1.8vh, 20px); }
+  .soon-consent { margin-top:clamp(9px, 1.4vh, 16px); padding:clamp(9px, 1.1vh, 12px) 14px; }
+  .soon-footer { flex:none; padding:clamp(6px, 1vh, 10px) 0 clamp(8px, 1.2vh, 14px); }
   .soon-footer nav { gap:10px; margin-bottom:4px; }
   .soon-footer nav a { font-size:.66rem; }
   .soon-footer p { font-size:.6rem; }
