@@ -734,7 +734,25 @@ body.soon-modal-open { overflow:hidden; }
   background:rgba(255,255,255,.16); border:1px solid rgba(255,255,255,.4);
   display:flex; align-items:center; justify-content:center; color:#fff;
 }
-.obrigado-badge svg { width:28px; height:28px; }
+/* classe no <svg>, não seletor descendente genérico (.obrigado-badge svg)
+   — o container também recebe o <svg> que o runtime do Lottie injeta (ver
+   script.js), e um seletor descendente pegaria os DOIS, forçando o confete
+   pra 28x28px. */
+.obrigado-badge-icon { width:28px; height:28px; }
+
+/* confete Lottie substitui o check estático quando motion é permitido
+   (script.js troca a classe + o innerHTML). Precisa de bem mais espaço que
+   o círculo do fallback: a "explosão" já vem desenhada dentro do próprio
+   canvas do JSON (mesmo arquivo do modal de sucesso — .soon-modal-lottie
+   usa 150x150 sem moldura nenhuma) e em 60px ela fica minúscula e
+   ilegível. Sem círculo/borda por trás: aqui cortaria a explosão visualmente,
+   e o fundo já É o coral da página — não precisa de superfície fingindo
+   fundo como o badge estático (que existe só pra dar contraste ao ícone
+   fino do check). */
+.obrigado-badge.obrigado-badge-lottie {
+  width:132px; height:132px; margin:-10px auto 4px;
+  background:none; border:none; border-radius:0;
+}
 
 .obrigado-title {
   font-size:clamp(1.6rem, 3.4vw + 1rem, 2.3rem);
@@ -749,6 +767,11 @@ body.soon-modal-open { overflow:hidden; }
    (que vivem sobre fundo claro). */
 .obrigado-plan { margin:26px auto 0; max-width:220px; }
 .obrigado-plan .soon-price-plan-card {
+  /* faltava — sem isso o pill de duração (position:absolute logo abaixo)
+     usa o ancestral posicionado mais próximo que existir, que vira o body;
+     ele "flutua" em relação à JANELA, não ao card, e some do lugar certo.
+     Ver o mesmo padrão já correto em .soon-modal-price .soon-price-plan-card. */
+  position:relative;
   background:rgba(255,255,255,.16); border:1px solid rgba(255,255,255,.4);
   backdrop-filter:blur(14px) saturate(160%); -webkit-backdrop-filter:blur(14px) saturate(160%);
   box-shadow:0 10px 30px rgba(0,0,0,.18);
@@ -763,6 +786,11 @@ body.soon-modal-open { overflow:hidden; }
 .obrigado-plan .soon-price-value { color:#fff; font-size:2.2176rem; }
 .obrigado-plan .soon-price-value em { color:rgba(255,255,255,.8); }
 .obrigado-plan .soon-price-duration {
+  /* faltava — top/left/transform não fazem nada em position:static (o
+     default herdado de .soon-price-duration não tem position declarado
+     aqui, então cai em fluxo normal). Sem isso o pill fica em fluxo,
+     quebra linha e sobrepõe o "depois R$139/mês" abaixo dele. */
+  position:absolute;
   background:#fff; color:var(--coral-700);
   top:-9px; left:50%; right:auto; transform:translateX(-50%);
   padding:2.4px 8px; font-size:.62rem;
@@ -788,7 +816,7 @@ body.soon-modal-open { overflow:hidden; }
 
 /* verde oficial da marca WhatsApp — reconhecimento imediato do botão vale
    mais aqui do que amarrar na paleta coral do site */
-.obrigado-share-whatsapp { background:#25D366; color:#08381e; box-shadow:0 10px 24px rgba(0,0,0,.18); }
+.obrigado-share-whatsapp { background:#25D366; color:#fff; box-shadow:0 10px 24px rgba(0,0,0,.18); }
 .obrigado-share-whatsapp:hover { background:#22c55e; }
 
 .obrigado-share-copy { background:rgba(255,255,255,.14); color:#fff; border:1.5px solid rgba(255,255,255,.5); }

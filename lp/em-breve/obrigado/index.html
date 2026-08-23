@@ -65,8 +65,12 @@
   </svg>
 
   <div class="obrigado-card">
-    <div class="obrigado-badge" aria-hidden="true">
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="m5 12 4.5 4.5L19 7"/></svg>
+    <!-- fallback estático de fábrica: script.js troca o conteúdo por um
+         Lottie de confete quando motion é permitido (mesmo JSON do modal
+         de sucesso do form). Sem JS, ou com prefers-reduced-motion, fica
+         este check parado. -->
+    <div class="obrigado-badge" id="obrigado-badge" aria-hidden="true">
+      <svg class="obrigado-badge-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="m5 12 4.5 4.5L19 7"/></svg>
     </div>
 
     <h1 class="obrigado-title" id="obrigado-title">Combinado!</h1>

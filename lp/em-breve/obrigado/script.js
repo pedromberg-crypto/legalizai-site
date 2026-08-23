@@ -60,6 +60,49 @@
     }
   }
 
+  /* ---------- confete (Lottie) no lugar do check estático ----------
+     Mesmo runtime e mesmo arquivo do modal de sucesso em ../script.js
+     (carregarLottieRuntime, ~15 linhas) — duplicado de propósito, ver
+     cabeçalho deste arquivo sobre por que copiar em vez de importar.
+     prefers-reduced-motion mantém o check estático já presente no HTML
+     em vez de mostrar a animação — é a mesma checagem que o modal de
+     origem faz antes de tocar o confete lá. */
+  var badgeEl = $('obrigado-badge');
+  var lottieRuntimeLoading = null;
+
+  function carregarLottieRuntime() {
+    if (window.lottie) return Promise.resolve(window.lottie);
+    if (lottieRuntimeLoading) return lottieRuntimeLoading;
+    lottieRuntimeLoading = new Promise(function (resolve, reject) {
+      var s = document.createElement('script');
+      s.src = '/em-breve/assets/lottie.min.js';
+      s.async = true;
+      s.onload = function () {
+        if (window.lottie) resolve(window.lottie);
+        else reject(new Error('lottie não inicializou'));
+      };
+      s.onerror = function () { reject(new Error('lottie falhou')); };
+      document.head.appendChild(s);
+    });
+    return lottieRuntimeLoading;
+  }
+
+  if (badgeEl && !window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+    badgeEl.classList.add('obrigado-badge-lottie');
+    badgeEl.innerHTML = '';
+    carregarLottieRuntime().then(function (rt) {
+      rt.loadAnimation({
+        container: badgeEl,
+        renderer: 'svg',
+        loop: false,
+        autoplay: true,
+        path: '/em-breve/assets/success-confetti-legalizei.json'
+      });
+    }).catch(function (err) {
+      console.log('[obrigado-debug] confete falhou ao carregar', err);
+    });
+  }
+
   /* ---------- compartilhar ---------- */
   var shareUrl = window.location.origin + '/em-breve';
   var waMsg = 'Oferta imperdível pra abrir empresa: 3 meses a partir de R$19/mês. ' + shareUrl;
