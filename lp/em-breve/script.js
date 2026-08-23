@@ -60,6 +60,13 @@
   var modalText = $('soon-success-text');
   var modalLottieAnim = null;
   var modalLottieRuntimeLoading = null;
+  /* nome/plano do cadastro que acabou de fechar — abrirModalSucesso() já
+     recebe os dois no escopo da função; guardados aqui pra os handlers de
+     fechar (clique no botão, clique no overlay, Esc) também alcançarem,
+     já que a decisão de produto agora é: fechar o modal SEMPRE navega pra
+     /em-breve/obrigado (não volta pro form vazio). */
+  var THANKS_STORAGE_KEY = 'legalizai_thanks';
+  var ultimoCadastro = null;
 
   /* mesmos números e ícones do card de preço do form (soon-price-mei/
      soon-price-me), pra o popup confirmar exatamente a condição que a
@@ -115,6 +122,7 @@
   }
 
   function abrirModalSucesso(primeiroNome, plano) {
+    ultimoCadastro = { nome: primeiroNome || '', plano: plano || '' };
     var planoInfo = PLANO_COPY[plano];
     modalTitle.textContent = primeiroNome ? 'Fechou, ' + primeiroNome + '!' : 'Fechou!';
 
@@ -151,9 +159,20 @@
     });
   }
 
+  /* fechar o modal agora SEMPRE leva pra /em-breve/obrigado — decisão de
+     produto: nunca mais volta pro form vazio (sensação de "callback
+     perdido"). sessionStorage (não localStorage) de propósito: a chave só
+     precisa atravessar ESTA navegação; obrigado/index.html lê e apaga na
+     hora, então dar F5 lá não reabre com dado de uma sessão antiga. */
   function fecharModalSucesso() {
     modal.classList.add('hidden');
     document.body.classList.remove('soon-modal-open');
+    try {
+      sessionStorage.setItem(THANKS_STORAGE_KEY, JSON.stringify(ultimoCadastro || {}));
+    } catch (e) {
+      console.log('[waitlist-debug] sessionStorage indisponível, seguindo sem salvar nome/plano', e);
+    }
+    window.location.href = '/em-breve/obrigado';
   }
 
   modalClose.addEventListener('click', fecharModalSucesso);

@@ -698,6 +698,109 @@ body.soon-modal-open { overflow:hidden; }
    é dado obrigatório de exibição, não copy, então vem um degrau abaixo do resto */
 .soon-footer p + p { margin-top:4px; font-size:.62rem; line-height:1.45; }
 
+/* ============================================================
+   LEGALIZAI · Obrigado (pós-cadastro) — /em-breve/obrigado
+   Mesma stylesheet compilada do /em-breve (compartilhada de propósito,
+   ver README) — só as classes novas desta página entram aqui, prefixo
+   obrigado-. Reaproveita .soon-price-plan-card (e filhas) pro card do
+   plano, só recolorindo pra branco/vidro em cima do fundo coral (ver
+   bloco ".obrigado-plan .soon-price-*" abaixo).
+   ============================================================ */
+.obrigado-body {
+  min-height:100dvh; display:flex; flex-direction:column;
+  /* mais saturado que o gradiente claro do form/hero (aquele existe pra
+     não brigar com o card branco por cima) — aqui a página INTEIRA é a
+     celebração, então o fundo pode ir mais forte: coral-600 pra
+     coral-500 pro centro (respiro) e de volta pra coral-700 embaixo. */
+  background:linear-gradient(160deg, var(--coral-600) 0%, var(--coral-500) 55%, var(--coral-700) 100%);
+}
+/* :focus-visible global (lá no topo do arquivo) usa outline coral-600 —
+   invisível sobre um fundo que É coral. Só nesta página, o anel de foco
+   vira branco, senão navegação por teclado perde o indicador visual
+   (WCAG 2.4.7) justo na página que devia estar mais fácil de usar. */
+.obrigado-body :focus-visible { outline-color:#fff; }
+
+.obrigado-main {
+  flex:1; display:flex; flex-direction:column; align-items:center; justify-content:center;
+  padding:clamp(28px, 6vh, 56px) 20px; text-align:center;
+}
+
+.obrigado-logo { height:38px; width:auto; margin:0 auto clamp(24px, 5vh, 40px); }
+
+.obrigado-card { width:100%; max-width:420px; }
+
+.obrigado-badge {
+  width:60px; height:60px; margin:0 auto 18px; border-radius:50%;
+  background:rgba(255,255,255,.16); border:1px solid rgba(255,255,255,.4);
+  display:flex; align-items:center; justify-content:center; color:#fff;
+}
+.obrigado-badge svg { width:28px; height:28px; }
+
+.obrigado-title {
+  font-size:clamp(1.6rem, 3.4vw + 1rem, 2.3rem);
+  font-weight:800; color:#fff; line-height:1.2; letter-spacing:-.02em;
+}
+.obrigado-sub { margin-top:14px; color:rgba(255,255,255,.86); font-size:1.02rem; line-height:1.6; }
+
+/* card do plano: mesma casca "vidro" do .soon-price-card/.soon-modal-price
+   do form, mas sem o wrapper de gradiente claro por trás — aqui o fundo
+   já É coral (a página inteira), o blur desfoca a própria página, não
+   precisa de um fundo próprio fingindo cor como nos outros dois lugares
+   (que vivem sobre fundo claro). */
+.obrigado-plan { margin:26px auto 0; max-width:220px; }
+.obrigado-plan .soon-price-plan-card {
+  background:rgba(255,255,255,.16); border:1px solid rgba(255,255,255,.4);
+  backdrop-filter:blur(14px) saturate(160%); -webkit-backdrop-filter:blur(14px) saturate(160%);
+  box-shadow:0 10px 30px rgba(0,0,0,.18);
+  text-align:center; padding:18px 16px 14px;
+}
+.obrigado-plan .soon-price-plan-head { justify-content:center; margin-top:14px; margin-bottom:8px; }
+.obrigado-plan .soon-price-value-row { justify-content:center; }
+.obrigado-plan .soon-price-then { text-align:center; }
+.obrigado-plan .soon-price-icon { width:20.4px; height:20.4px; background:rgba(255,255,255,.3); color:#fff; }
+.obrigado-plan .soon-price-icon svg { width:13.2px; height:13.2px; }
+.obrigado-plan .soon-price-plan-name { color:#fff; font-size:.792rem; }
+.obrigado-plan .soon-price-value { color:#fff; font-size:2.2176rem; }
+.obrigado-plan .soon-price-value em { color:rgba(255,255,255,.8); }
+.obrigado-plan .soon-price-duration {
+  background:#fff; color:var(--coral-700);
+  top:-9px; left:50%; right:auto; transform:translateX(-50%);
+  padding:2.4px 8px; font-size:.62rem;
+}
+.obrigado-plan .soon-price-then { color:rgba(255,255,255,.85); font-size:.8184rem; margin-top:6px; }
+.obrigado-plan .soon-price-then-label { color:rgba(255,255,255,.65); }
+.obrigado-plan .soon-price-then strong { color:#fff; }
+
+.obrigado-share { margin-top:clamp(32px, 6vh, 48px); width:100%; max-width:420px; }
+.obrigado-share-title { color:#fff; font-weight:700; font-size:1rem; }
+.obrigado-share-actions { margin-top:16px; display:flex; flex-direction:column; gap:12px; }
+
+.obrigado-share-btn {
+  display:inline-flex; align-items:center; justify-content:center; gap:9px;
+  width:100%; padding:14px 22px; border-radius:14px; border:0;
+  font-family:inherit; font-weight:700; font-size:1rem; cursor:pointer;
+  text-decoration:none;
+  transition:transform 160ms var(--ease-out), background-color 160ms var(--ease-out), color 160ms var(--ease-out), border-color 160ms var(--ease-out);
+}
+.obrigado-share-btn svg { width:20px; height:20px; flex:none; }
+.obrigado-share-btn:hover { transform:translateY(-1px); }
+.obrigado-share-btn:active { transform:translateY(0) scale(.99); }
+
+/* verde oficial da marca WhatsApp — reconhecimento imediato do botão vale
+   mais aqui do que amarrar na paleta coral do site */
+.obrigado-share-whatsapp { background:#25D366; color:#08381e; box-shadow:0 10px 24px rgba(0,0,0,.18); }
+.obrigado-share-whatsapp:hover { background:#22c55e; }
+
+.obrigado-share-copy { background:rgba(255,255,255,.14); color:#fff; border:1.5px solid rgba(255,255,255,.5); }
+.obrigado-share-copy:hover { background:rgba(255,255,255,.22); }
+/* feedback de "copiado" (classe ligada por script.js, 2.2s): inverte pra
+   branco sólido — o mesmo tratamento que o card de preço usa pra "selecionado" */
+.obrigado-share-copy.is-copied { background:#fff; color:var(--coral-700); border-color:#fff; }
+
+.obrigado-footer { flex:none; padding:20px; text-align:center; }
+.obrigado-footer a { color:rgba(255,255,255,.75); font-size:.85rem; text-decoration:none; }
+.obrigado-footer a:hover { color:#fff; text-decoration:underline; }
+
 /* ---------- desktop: 2 colunas, tudo cabe em 100vh, sem scroll ---------- */
 @media (min-width:900px) and (min-height:600px) {
   /* explícito nos dois — html E body — pra travar o scroll do documento
