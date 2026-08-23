@@ -156,8 +156,7 @@
         </label>
         <button class="soon-submit inline-flex items-center justify-center gap-2 rounded-2xl border-0 no-underline font-bold text-[1.2rem] text-white bg-coral-600 shadow-[0_8px_24px_rgba(242,100,60,.28)] transition-[transform,box-shadow,background-color] duration-[160ms] ease-[cubic-bezier(.22,1,.36,1)] hover:bg-coral-700 hover:-translate-y-0.5 hover:shadow-[0_12px_30px_rgba(242,100,60,.36)] active:translate-y-0 active:scale-[0.99]" type="submit">Garantir minha condição de lançamento</button>
 
-        <p class="hidden mt-3 text-[0.9rem] font-semibold text-success-700" id="soon-done">Garantido! Sua condição de lançamento tá reservada. Avisamos assim que abrir.</p>
-        <p class="hidden mt-3 text-[0.9rem] font-semibold text-coral-700" id="soon-error">Não deu pra enviar agora. Tenta de novo em instantes.</p>
+        <p class="hidden text-[0.9rem] font-semibold text-coral-700" id="soon-error">Não deu pra enviar agora. Tenta de novo em instantes.</p>
       </form>
     </div>
   </div>
@@ -329,6 +328,17 @@
     <p>Responsabilidade técnica: Legalize Auditoria e Consultoria Contábil LTDA · CNPJ 12.423.332/0001-68 · CRC-MG 007900/O · Contador responsável: Mauro Lopes de Faria, CRC-MG 094967/O-0</p>
   </footer>
 </main>
+
+<div class="soon-modal-overlay hidden" id="soon-success-modal" role="dialog" aria-modal="true" aria-labelledby="soon-success-title">
+  <div class="soon-modal">
+    <div class="soon-modal-lottie" id="soon-success-lottie" data-lottie-path="/em-breve/assets/success-confetti-legalizei.json" aria-hidden="true"></div>
+    <h3 class="soon-modal-title" id="soon-success-title">Fechou!</h3>
+    <p class="soon-modal-lead hidden" id="soon-modal-lead">Você travou o</p>
+    <div class="soon-modal-price hidden" id="soon-modal-price"></div>
+    <p class="soon-modal-text" id="soon-success-text">Sua condição de lançamento tá garantida. Assim que abrir, a gente te chama primeiro.</p>
+    <button type="button" class="soon-modal-close" id="soon-success-close">Combinado</button>
+  </div>
+</div>
 
 <script src="/em-breve/script.js" defer></script>
 <script src="/em-breve/chat.js" defer></script>

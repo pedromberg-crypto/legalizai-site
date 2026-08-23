@@ -48,11 +48,121 @@
   var tipo = $('soon-tipo');
   var acList = $('soon-cidade-list');
   var consent = $('soon-consent');
-  var done = $('soon-done');
   var error = $('soon-error');
   var submitBtn = form.querySelector('.soon-submit');
 
+  var modal = $('soon-success-modal');
+  var modalClose = $('soon-success-close');
+  var modalLottieEl = $('soon-success-lottie');
+  var modalTitle = $('soon-success-title');
+  var modalLead = $('soon-modal-lead');
+  var modalPrice = $('soon-modal-price');
+  var modalText = $('soon-success-text');
+  var modalLottieAnim = null;
+  var modalLottieRuntimeLoading = null;
+
+  /* mesmos números e ícones do card de preço do form (soon-price-mei/
+     soon-price-me), pra o popup confirmar exatamente a condição que a
+     pessoa acabou de travar em vez de um "obrigado" genérico. Reaproveita
+     as classes soon-price-* (ver src.css) só que fora do grid de duas
+     colunas: aqui sobra um único card, sempre no tratamento "destaque". */
+  var PLANO_COPY = {
+    mei: {
+      rotulo: 'MEI', valor: 'R$19', depois: 'R$49',
+      icone: '<svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 7h-9m0 0 3-3m-3 3 3 3M4 17h9m0 0-3-3m3 3-3 3"/></svg>'
+    },
+    me: {
+      rotulo: 'ME&nbsp;/&nbsp;Simples', valor: 'R$79', depois: 'R$139',
+      icone: '<svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 21V5a1 1 0 0 1 1-1h9a1 1 0 0 1 1 1v16"/><path d="M15 9h4a1 1 0 0 1 1 1v11M9 8h2M9 12h2M9 16h2"/></svg>'
+    }
+  };
+
+  function montarCardPlano(plano) {
+    return '' +
+      '<div class="soon-price-plan-card soon-modal-price-boost">' +
+        '<div class="soon-price-plan-head">' +
+          '<span class="soon-price-icon" aria-hidden="true">' + plano.icone + '</span>' +
+          '<span class="soon-price-plan-name">' + plano.rotulo + '</span>' +
+        '</div>' +
+        '<div class="soon-price-value-row">' +
+          '<p class="soon-price-value">' + plano.valor + '<em>/mês</em></p>' +
+          '<span class="soon-price-duration">3 primeiros meses</span>' +
+        '</div>' +
+        '<p class="soon-price-then"><span class="soon-price-then-label">depois</span> <strong>' + plano.depois + '</strong>/mês</p>' +
+      '</div>';
+  }
+
   console.log('[waitlist-debug] script inicializado', { form: !!form, submitBtn: !!submitBtn });
+
+  /* mesmo padrão de carregamento sob-demanda do phone-lottie.js: se o
+     runtime já foi injetado por ele (window.lottie), reaproveita — só
+     baixa de novo se o popup de sucesso abrir antes do phone carregar. */
+  function carregarLottieRuntime() {
+    if (window.lottie) return Promise.resolve(window.lottie);
+    if (modalLottieRuntimeLoading) return modalLottieRuntimeLoading;
+    modalLottieRuntimeLoading = new Promise(function (resolve, reject) {
+      var s = document.createElement('script');
+      s.src = '/em-breve/assets/lottie.min.js';
+      s.async = true;
+      s.onload = function () {
+        if (window.lottie) resolve(window.lottie);
+        else reject(new Error('lottie não inicializou'));
+      };
+      s.onerror = function () { reject(new Error('lottie falhou')); };
+      document.head.appendChild(s);
+    });
+    return modalLottieRuntimeLoading;
+  }
+
+  function abrirModalSucesso(primeiroNome, plano) {
+    var planoInfo = PLANO_COPY[plano];
+    modalTitle.textContent = primeiroNome ? 'Fechou, ' + primeiroNome + '!' : 'Fechou!';
+
+    if (planoInfo) {
+      modalLead.classList.remove('hidden');
+      modalPrice.classList.remove('hidden');
+      modalPrice.innerHTML = montarCardPlano(planoInfo);
+    } else {
+      modalLead.classList.add('hidden');
+      modalPrice.classList.add('hidden');
+      modalPrice.innerHTML = '';
+    }
+    modalText.textContent = 'Assim que abrir, a gente te chama primeiro. Sem contabilês, sem enrolação.';
+
+    modal.classList.remove('hidden');
+    document.body.classList.add('soon-modal-open');
+
+    if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+
+    carregarLottieRuntime().then(function (rt) {
+      if (!modalLottieAnim) {
+        modalLottieAnim = rt.loadAnimation({
+          container: modalLottieEl,
+          renderer: 'svg',
+          loop: false,
+          autoplay: false,
+          path: modalLottieEl.getAttribute('data-lottie-path')
+        });
+      }
+      modalLottieAnim.stop();
+      modalLottieAnim.play();
+    }).catch(function (err) {
+      console.log('[waitlist-debug] confete falhou ao carregar', err);
+    });
+  }
+
+  function fecharModalSucesso() {
+    modal.classList.add('hidden');
+    document.body.classList.remove('soon-modal-open');
+  }
+
+  modalClose.addEventListener('click', fecharModalSucesso);
+  modal.addEventListener('click', function (e) {
+    if (e.target === modal) fecharModalSucesso();
+  });
+  document.addEventListener('keydown', function (e) {
+    if (e.key === 'Escape' && !modal.classList.contains('hidden')) fecharModalSucesso();
+  });
 
   function digits(s) { return (s || '').replace(/\D/g, ''); }
 
@@ -425,6 +535,8 @@
         window.dataLayer = window.dataLayer || [];
         window.dataLayer.push({ event: 'waitlist_signup', form_id: 'soon-form', lgpd_consent: true });
 
+        var planoEscolhido = tipoIndex >= 0 ? tipoOptions[tipoIndex].getAttribute('data-plan') : null;
+
         nome.value = '';
         email.value = '';
         whatsapp.value = '';
@@ -432,7 +544,7 @@
         resetTipoSelect();
         cidadeUf = '';
         consent.checked = false;   /* o próximo envio precisa de consentimento novo */
-        done.classList.remove('hidden');
+        abrirModalSucesso(partesNome.nome, planoEscolhido);
       })
       .catch(function (err) {
         console.log('[waitlist-debug] erro no fetch', err);
