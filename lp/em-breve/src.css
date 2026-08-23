@@ -73,7 +73,7 @@ input { font:inherit; color:var(--ink-900); }
 /* .hidden não precisa mais de regra própria: a utility "hidden" do
    Tailwind (display:none) já resolve, nenhuma outra regra daqui compete
    com ela pra essa propriedade nos elementos que o script.js alterna via
-   classList (#soon-error, #soon-cidade-list, #soon-tipo-list, #soon-success-modal). */
+   classList (#soon-error, #soon-cidade-list, #soon-tipo-list). */
 :focus-visible { outline:3px solid var(--coral-600); outline-offset:3px; border-radius:6px; }
 
 /* .wait-form: só o padding fica aqui (tem versão diferente pro breakpoint
@@ -610,86 +610,6 @@ body.soon-body { min-height:100dvh; display:flex; flex-direction:column; }
    — travar aqui garante o negrito independente disso. */
 .soon-submit { width:100%; margin-top:22px; padding:13px 22px; font-weight:700; }
 #soon-error { margin-top:20px; text-align:center; }
-
-/* popup de sucesso do envio — antes era um texto embaixo do form
-   (#soon-done), trocado por modal com o mesmo texto + lottie de
-   confete. body.soon-modal-open trava o scroll da página quando o
-   modal tá aberto (necessário no mobile — no desktop html/body já
-   fica com overflow:hidden por padrão, ver @media). */
-body.soon-modal-open { overflow:hidden; }
-
-.soon-modal-overlay {
-  position:fixed; inset:0; z-index:50;
-  display:flex; align-items:center; justify-content:center;
-  padding:20px;
-  background:rgba(27,30,36,.56);
-  animation:soonModalFade .2s ease-out;
-}
-.soon-modal-overlay.hidden { display:none; }
-
-.soon-modal {
-  width:100%; max-width:340px;
-  background:#fff; border-radius:20px;
-  padding:8px 28px 28px;
-  box-shadow:0 24px 60px -16px rgba(27,30,36,.4);
-  text-align:center;
-  animation:soonModalPop .28s cubic-bezier(.22,1,.36,1);
-}
-.soon-modal-lottie { width:150px; height:150px; margin:0 auto; }
-.soon-modal-title { margin:2px 0 8px; font-size:1.32rem; font-weight:800; color:var(--ink-900); line-height:1.3; }
-.soon-modal-lead { margin:0 0 8px; font-size:.94rem; font-weight:500; color:var(--ink-500); }
-.soon-modal-text { margin:0 0 22px; font-size:.94rem; font-weight:500; color:var(--ink-500); line-height:1.5; }
-
-/* mini versão do .soon-price-card do form, reaproveitando as mesmas classes
-   (soon-price-plan-card etc) — só o card do plano que a pessoa escolheu,
-   sempre no tratamento "destaque" (ícone/preço maiores, pílula flutuando
-   em cima), já que aqui ele é o único, não precisa competir com outro do
-   lado. soon-modal-price-boost duplica a regra #soon-price-mei/#soon-price-me
-   do form (escopada por id lá, por classe aqui — não dá pra repetir os ids).
-   Vidro de verdade precisa de fundo colorido atrás pra ter o que desfocar
-   — por isso o wrapper (gradiente + glow, igual ao .soon-price-card do
-   form) e só o card interno é que fica translúcido/blur por cima dele. */
-.soon-modal-price {
-  position:relative; overflow:hidden; max-width:220px; margin:6px auto 24px;
-  padding:18px 10px 10px; border-radius:18px;
-  background:linear-gradient(155deg, #fff 0%, var(--coral-50) 60%, #fff 100%);
-  border:1px solid var(--ink-100);
-  box-shadow:0 10px 26px rgba(27,30,36,.08);
-}
-.soon-modal-price::before {
-  content:''; position:absolute; top:-36px; right:-28px; width:130px; height:130px;
-  background:radial-gradient(circle, rgba(242,100,60,.32), rgba(242,100,60,0) 70%);
-  pointer-events:none;
-}
-.soon-modal-price .soon-price-plan-card {
-  position:relative; text-align:center; padding:18px 16px 14px;
-  background:rgba(255,255,255,.55); border:1px solid rgba(255,255,255,.75);
-  backdrop-filter:blur(10px) saturate(160%); -webkit-backdrop-filter:blur(10px) saturate(160%);
-  box-shadow:0 4px 14px rgba(27,30,36,.06), inset 0 1px 0 rgba(255,255,255,.6);
-}
-.soon-modal-price .soon-price-plan-head { justify-content:center; margin-top:14px; margin-bottom:8px; }
-.soon-modal-price .soon-price-value-row { justify-content:center; }
-.soon-modal-price .soon-price-then { text-align:center; }
-.soon-modal-price-boost .soon-price-icon { width:20.4px; height:20.4px; }
-.soon-modal-price-boost .soon-price-icon svg { width:13.2px; height:13.2px; }
-.soon-modal-price-boost .soon-price-plan-name { font-size:.792rem; }
-.soon-modal-price-boost .soon-price-duration { position:absolute; top:-9px; left:50%; right:auto; transform:translateX(-50%); padding:2.4px 8px; font-size:.62rem; }
-.soon-modal-price-boost .soon-price-then { font-size:.8184rem; margin-top:6px; }
-.soon-modal-price-boost .soon-price-value { font-size:2.2176rem; }
-.soon-modal-close {
-  width:100%; padding:12px 22px; border:0; border-radius:14px;
-  background:var(--coral-600); color:#fff; font-weight:700; font-size:1rem;
-  transition:background-color 160ms var(--ease-out), transform 160ms var(--ease-out);
-}
-.soon-modal-close:hover { background:var(--coral-700); }
-.soon-modal-close:active { transform:scale(.99); }
-
-@keyframes soonModalFade { from{opacity:0} to{opacity:1} }
-@keyframes soonModalPop { from{opacity:0; transform:scale(.92) translateY(8px)} to{opacity:1; transform:scale(1) translateY(0)} }
-
-@media (prefers-reduced-motion: reduce) {
-  .soon-modal-overlay, .soon-modal { animation:none; }
-}
 
 .soon-footer { padding:16px 20px 20px; text-align:center; flex:none; }
 .soon-footer nav { display:flex; justify-content:center; flex-wrap:wrap; gap:16px; margin-bottom:8px; }
