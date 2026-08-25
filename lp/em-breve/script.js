@@ -50,6 +50,9 @@
   var consent = $('soon-consent');
   var error = $('soon-error');
   var submitBtn = form.querySelector('.soon-submit');
+  /* texto padrão do HTML — guardado pra restaurar depois de um 409 (que
+     troca a mensagem pra avisar sobre o WhatsApp já cadastrado) */
+  var ERRO_PADRAO = error.textContent;
 
   /* sessionStorage (não localStorage) de propósito: a chave só precisa
      atravessar ESTA navegação; obrigado/index.html lê e apaga na hora,
@@ -69,10 +72,12 @@
 
   function digits(s) { return (s || '').replace(/\D/g, ''); }
 
-  /* separa "Nome completo" em nome/sobrenome pro contrato existente do backend */
+  /* separa "Nome completo" em nome/sobrenome pro contrato existente do backend.
+     Quem digita só um nome (sem sobrenome) manda sobrenome vazio — o backend
+     grava null em vez de duplicar o nome como sobrenome. */
   function splitNome(fullName) {
     var parts = fullName.trim().split(/\s+/);
-    return { nome: parts[0], sobrenome: parts.slice(1).join(' ') || parts[0] };
+    return { nome: parts[0], sobrenome: parts.slice(1).join(' ') };
   }
 
   /* ---------- autocomplete de cidade (lista oficial do IBGE) ----------
@@ -398,6 +403,7 @@
 
     console.log('[waitlist-debug] validacao passou, enviando fetch...');
     error.classList.add('hidden');
+    error.textContent = ERRO_PADRAO;
     submitBtn.disabled = true;
 
     var partesNome = splitNome(nome.value);
@@ -423,6 +429,16 @@
     })
       .then(function (res) {
         console.log('[waitlist-debug] resposta recebida', res.status);
+        /* 409 = WhatsApp já cadastrado (backend recusa, não mescla) — lê a
+           mensagem do corpo pra mostrar exatamente o motivo em vez do erro
+           genérico de "não deu pra enviar". */
+        if (res.status === 409) {
+          return res.json()
+            .catch(function () { return null; })
+            .then(function (body) {
+              throw { duplicado: true, mensagem: (body && body.error) || 'Esse número de WhatsApp já está cadastrado.' };
+            });
+        }
         if (!res.ok) throw new Error('request_failed');
 
         /* conversão pro GTM — sem PII, só o sinal do evento */
@@ -434,6 +450,7 @@
       })
       .catch(function (err) {
         console.log('[waitlist-debug] erro no fetch', err);
+        error.textContent = (err && err.duplicado) ? err.mensagem : ERRO_PADRAO;
         error.classList.remove('hidden');
       })
       .finally(function () {
