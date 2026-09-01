@@ -28,6 +28,27 @@
   })();
   </script>
 
+  <!-- Meta Pixel Code -->
+  <!-- Só dispara quando o guard acima deixou a chave em window.__legalizaiThanks:
+       quem caiu aqui por acesso direto já está sendo redirecionado e não
+       pode contar como PageView/Lead. -->
+  <script>
+  if (window.__legalizaiThanks) {
+    !function(f,b,e,v,n,t,s)
+    {if(f.fbq)return;n=f.fbq=function(){n.callMethod?
+    n.callMethod.apply(n,arguments):n.queue.push(arguments)};
+    if(!f._fbq)f._fbq=n;n.push=n;n.loaded=!0;n.version='2.0';
+    n.queue=[];t=b.createElement(e);t.async=!0;
+    t.src=v;s=b.getElementsByTagName(e)[0];
+    s.parentNode.insertBefore(t,s)}(window, document,'script',
+    'https://connect.facebook.net/en_US/fbevents.js');
+    fbq('init', '1491545112739294');
+    fbq('track', 'PageView');
+    fbq('track', 'Lead', { content_name: window.__legalizaiThanks.plano || '' });
+  }
+  </script>
+  <!-- End Meta Pixel Code -->
+
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="robots" content="noindex, nofollow">
   <title>Legalizai · Combinado!</title>
@@ -40,6 +61,14 @@
   <link rel="stylesheet" href="/em-breve/styles.css">
 </head>
 <body class="obrigado-body">
+
+  <!-- Meta Pixel Code (noscript) -->
+  <noscript><img height="1" width="1" style="display:none"
+  src="https://www.facebook.com/tr?id=1491545112739294&ev=PageView&noscript=1"
+  /><img height="1" width="1" style="display:none"
+  src="https://www.facebook.com/tr?id=1491545112739294&ev=Lead&noscript=1"
+  /></noscript>
+  <!-- End Meta Pixel Code (noscript) -->
 
 <main class="obrigado-main">
   <!-- mesma marca do form, recolorida pra ler bem sobre o fundo coral:
