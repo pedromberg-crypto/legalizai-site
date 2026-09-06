@@ -1,0 +1,435 @@
+/* ============================================================
+   LEGALIZAI · /atendimento — "A gente consegue te atender?"
+   Simulador do trecho E3.2 → E5F do flow de ABRIR.
+
+   Depende de /styles.css (tokens, .container, .btn, .eyebrow,
+   .site-header, .site-footer, .sr-only). Aqui só o que é desta página.
+
+   Linguagem visual: as telas do app. O cartão-tela reproduz a estrutura de
+   3 partes do wizard (título fixo / corpo que rola / CTA fixo), e os cards
+   de escolha reproduzem o CardIconeSelecao / CardFaixa (ícone em cima,
+   rótulo embaixo, fundo coral sólido + badge de check quando selecionado).
+   ============================================================ */
+
+/* ---------- página ---------- */
+.sim-body { background:var(--ink-100); }
+
+/* o header/rodapé são os de produção (styles.css) — nada a sobrescrever aqui.
+   `.is-active` marca o item da página atual, que a LP ainda não tinha. */
+.header-nav a.is-active { color:var(--coral-700); }
+
+/* ---------- hero ---------- */
+.sim-hero {
+  padding:104px 0 84px;
+  background:
+    radial-gradient(90% 120% at 88% 0%, rgba(255,255,255,.20), transparent 60%),
+    linear-gradient(168deg, var(--coral-500) 0%, var(--coral-600) 62%, var(--coral-700) 100%);
+  color:#fff;
+  /* a barriga côncava da base repete o gesto do campo coral da home */
+  border-radius:0 0 34px 34px;
+}
+.sim-hero h1 { font-size:clamp(1.9rem, 3vw + 1.1rem, 2.9rem); }
+.sim-hero-eyebrow {
+  color:#fff; background:rgba(255,255,255,.16); border-color:rgba(255,255,255,.30);
+  margin-bottom:18px;
+}
+.sim-hero-sub {
+  margin-top:16px; max-width:56ch; font-size:1.05rem;
+  color:rgba(255,255,255,.90);
+}
+.sim-hero-sub strong { color:#fff; font-weight:700; }
+
+/* ---------- grade: trilha + palco ---------- */
+.sim-wrap { padding:0 0 88px; }
+.sim-grid { display:grid; gap:24px; margin-top:-56px; }
+@media (min-width:1000px) {
+  .sim-grid { grid-template-columns:280px minmax(0,1fr); gap:32px; align-items:start; }
+}
+
+/* ---------- trilha lateral (só desktop) ---------- */
+/* 🔄 Superfície BRANCA OPACA, igual à do cartão-tela ao lado — era vidro
+   translúcido (branco a 72% + backdrop-filter). Sobre o campo coral da home o
+   coral atravessava e derrubava o contraste do texto ink: o rótulo cinza da
+   trilha e os itens ainda não visitados ficavam ilegíveis. Duas superfícies
+   lado a lado, mesma função (conteúdo), mesma matéria. */
+.sim-rail {
+  display:none;
+  position:sticky; top:96px;
+  background:#fff;
+  border:1px solid var(--ink-200);
+  border-radius:22px; padding:22px 20px;
+  box-shadow:var(--shadow-card);
+}
+@media (min-width:1000px) { .sim-rail { display:block; } }
+
+.sim-rail-title {
+  font-size:.72rem; font-weight:700; letter-spacing:.09em; text-transform:uppercase;
+  color:var(--ink-500); margin-bottom:14px;
+}
+.sim-rail-list { list-style:none; margin:0; padding:0; display:flex; flex-direction:column; gap:2px; }
+.sim-rail-item {
+  display:flex; align-items:center; gap:11px;
+  padding:9px 8px; border-radius:12px;
+  font-size:.92rem; font-weight:600; color:var(--ink-400);
+  transition:background-color .2s var(--ease-out), color .2s;
+}
+/* 🔄 etapa ATIVA vira cartão coral cheio (era coral-50, um tingido tão claro
+   que sumia no branco do painel). Fill é coral-700, não 600: o rótulo é
+   ~14,7px semibold, ou seja, texto NORMAL pra régua da WCAG — branco sobre
+   coral-600 dá 4,04:1 e falha AA; sobre coral-700 dá 5,64:1 e passa. Mesma
+   regra travada em 12/07 que criou o token `action-primary-sm` no app. */
+.sim-rail-item.is-active { background:var(--coral-700); color:#fff; }
+.sim-rail-item.is-done { color:var(--ink-600); }
+.sim-rail-mark {
+  flex:none; width:24px; height:24px; border-radius:50%;
+  display:grid; place-items:center;
+  border:1.6px solid var(--ink-300); color:var(--ink-500);
+  font-size:.74rem; font-weight:700;
+}
+/* dentro do cartão coral o marcador inverte: círculo branco, número coral —
+   coral-sobre-coral não teria contorno nenhum. */
+.sim-rail-item.is-active .sim-rail-mark { border-color:#fff; background:#fff; color:var(--coral-700); }
+.sim-rail-item.is-done .sim-rail-mark { border-color:var(--success-500); background:var(--success-500); color:#fff; }
+.sim-rail-mark svg { width:13px; height:13px; }
+
+.sim-rail-trust {
+  list-style:none; margin:18px 0 0; padding:16px 0 0;
+  border-top:1px solid var(--ink-200);
+  display:flex; flex-direction:column; gap:10px;
+}
+.sim-rail-trust li {
+  display:flex; gap:9px; align-items:flex-start;
+  font-size:.82rem; line-height:1.45; color:var(--ink-600);
+}
+.sim-rail-trust svg { flex:none; width:15px; height:15px; margin-top:3px; color:var(--success-500); }
+
+/* ---------- palco ---------- */
+.sim-stage { min-width:0; }
+
+/* barra de progresso (mobile; some quando a trilha lateral aparece) */
+.sim-bar { margin-bottom:12px; }
+@media (min-width:1000px) { .sim-bar { display:none; } }
+.sim-bar-track { height:6px; border-radius:999px; background:rgba(255,255,255,.55); overflow:hidden; }
+.sim-bar-fill {
+  display:block; height:100%; width:0; border-radius:999px;
+  background:var(--coral-600); transition:width .32s var(--ease-out);
+}
+/* a barra vive SOBRE o campo coral (a grade sobe -56px pra encaixar o cartão
+   na barriga do hero), então o rótulo é branco, não ink. */
+.sim-bar-label { margin-top:8px; font-size:.8rem; font-weight:600; color:rgba(255,255,255,.92); }
+
+/* ---------- o cartão-tela ---------- */
+.sim-screen {
+  background:#fff; border:1px solid var(--ink-200); border-radius:24px;
+  box-shadow:var(--shadow-card);
+  padding:26px 22px 22px;
+  display:flex; flex-direction:column;
+  /* mínimo pra o cartão não "pular" de altura entre passos curtos e longos.
+     Não é altura fixa: passo longo cresce, e quem rola é a PÁGINA (o app rola
+     dentro da tela porque lá o viewport é o aparelho; aqui não é). */
+  min-height:520px;
+}
+@media (min-width:700px) { .sim-screen { padding:32px 30px 26px; } }
+
+.sim-top {
+  display:flex; align-items:center; gap:10px;
+  margin-bottom:18px; min-height:28px;
+}
+.sim-back {
+  display:inline-flex; align-items:center; gap:6px;
+  background:none; border:0; padding:4px 8px 4px 4px; margin-left:-4px;
+  border-radius:10px; color:var(--ink-500);
+  font-size:.86rem; font-weight:600;
+}
+.sim-back:hover { color:var(--ink-900); background:var(--ink-100); }
+.sim-back svg { width:17px; height:17px; }
+.sim-meta { font-size:.78rem; font-weight:600; letter-spacing:.02em; color:var(--ink-400); }
+
+.sim-h1 {
+  font-size:1.55rem; font-weight:700; line-height:1.22; letter-spacing:-.01em;
+  color:var(--ink-900);
+}
+.sim-h1 .sim-h1-soft { color:var(--ink-400); }
+.sim-sub { margin-top:8px; color:var(--ink-500); font-size:1rem; }
+
+.sim-body-area { flex:1 1 auto; margin-top:22px; display:flex; flex-direction:column; gap:22px; }
+
+/* ─── DESKTOP: altura travada, corpo rolando por dentro ────────────────────
+   É a estrutura de 3 partes do app (título fixo / corpo rola / CTA fixo), que
+   aqui tinha virado página rolando inteira. Três problemas de uma vez:
+     · o cartão variava 1010px entre o passo mais curto e o mais longo, então
+       a seção da LP pulava de altura a cada clique;
+     · o CTA "Continuar" nascia a uma tela e meia de distância no passo do
+       endereço — a pessoa não via o botão que precisava apertar;
+     · a regra do projeto diz que no breakpoint desktop NADA rola de página
+       (`.claude/skills/design-responsivo`), e aqui rolava.
+   `vh` puro, nunca `dvh`: dvh existe pra barra de ferramentas de mobile e tem
+   cálculo inconsistente entre navegadores — já mordeu este repo antes.
+   Mobile fica de fora de propósito: lá rolagem de página é o esperado, e
+   prender o corpo num quadro pequeno numa tela pequena é pior. */
+@media (min-width:900px) {
+  .sim-screen { height:clamp(540px, 66vh, 700px); min-height:0; }
+  .sim-body-area {
+    overflow-y:auto; min-height:0;
+    /* reserva a calha da barra de rolagem: sem isso o conteúdo dá um pulo
+       lateral de ~15px toda vez que um passo passa a caber (ou deixa de). */
+    scrollbar-gutter:stable;
+    padding-right:6px; margin-right:-6px;
+  }
+  .sim-body-area::-webkit-scrollbar { width:8px; }
+  .sim-body-area::-webkit-scrollbar-thumb { background:var(--ink-200); border-radius:99px; }
+  .sim-body-area::-webkit-scrollbar-thumb:hover { background:var(--ink-300); }
+  .sim-body-area::-webkit-scrollbar-track { background:transparent; }
+}
+
+.sim-foot { margin-top:26px; padding-top:18px; border-top:1px solid var(--ink-100); }
+.sim-foot .btn { width:100%; padding:15px 20px; font-size:1.05rem; }
+.sim-foot .btn[disabled] { opacity:.42; cursor:not-allowed; box-shadow:none; }
+.sim-foot-link {
+  display:block; width:100%; text-align:center; margin-bottom:12px;
+  background:none; border:0; padding:6px;
+  font-size:.88rem; font-weight:500; color:var(--ink-500);
+  text-decoration:underline; text-underline-offset:4px;
+}
+.sim-foot-link:hover { color:var(--ink-900); }
+
+/* ---------- blocos de pergunta ---------- */
+.sim-q { display:flex; flex-direction:column; gap:12px; }
+.sim-q-label { font-size:1rem; font-weight:700; color:var(--ink-900); }
+.sim-q-hint { margin-top:-8px; font-size:.86rem; color:var(--ink-500); }
+
+/* grade de 2 cards ilustrados = CardIconeSelecao / CardFaixa do app */
+.sim-cards { display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:12px; }
+.sim-card {
+  position:relative; display:flex; flex-direction:column; align-items:center; gap:12px;
+  padding:20px 14px; text-align:center;
+  border:1px solid var(--ink-200); border-radius:18px; background:#fff;
+  transition:border-color .16s, background-color .16s, transform .16s var(--ease-out);
+}
+.sim-card:hover { border-color:var(--ink-300); transform:translateY(-2px); }
+.sim-card img { width:74px; height:74px; object-fit:contain; }
+.sim-card span { font-size:1rem; font-weight:600; color:var(--ink-900); }
+.sim-card[aria-pressed="true"] {
+  background:var(--coral-600); border-color:var(--coral-600); transform:none;
+}
+.sim-card[aria-pressed="true"] span { color:#fff; }
+/* ─── grade de faixas em modo RÉGUA (só quando o valor exato está aberto) ──
+   Mesmos cards, deitados: ícone pequeno à esquerda, rótulo à direita. A grade
+   deixa de ser a pergunta (quem responde é o campo de valor) e passa a ser
+   leitura — então não precisa do peso de um alvo de escolha primário. */
+.sim-cards--regua .sim-card { flex-direction:row; justify-content:flex-start; gap:10px; padding:11px 12px; text-align:left; }
+.sim-cards--regua .sim-card img { width:30px; height:30px; }
+.sim-cards--regua .sim-card span { font-size:.88rem; }
+.sim-cards--regua .sim-card-check { right:7px; top:7px; width:17px; height:17px; }
+.sim-cards--regua .sim-card-check svg { width:10px; height:10px; }
+/* o rótulo não pode correr por baixo do badge de check */
+.sim-cards--regua .sim-card[aria-pressed="true"] span { padding-right:16px; }
+
+.sim-card-check {
+  position:absolute; right:9px; top:9px;
+  width:22px; height:22px; border-radius:50%;
+  background:#fff;
+  display:none; place-items:center;
+}
+/* ⚠️ a cor precisa vir DEPOIS (e com a mesma especificidade) da regra que
+   pinta o rótulo de branco no card selecionado — senão o check fica
+   branco-no-branco e o badge some. */
+.sim-card[aria-pressed="true"] .sim-card-check { display:grid; color:var(--coral-700); }
+.sim-card-check svg { width:13px; height:13px; }
+
+/* linha de botões (sócios, sim/não, administração) */
+.sim-row { display:flex; gap:8px; flex-wrap:wrap; }
+.sim-pick {
+  flex:1 1 0; min-width:84px; min-height:48px; padding:0 12px;
+  border:1px solid var(--ink-200); border-radius:14px; background:#fff;
+  font-size:.98rem; font-weight:600; color:var(--ink-600);
+  transition:border-color .16s, background-color .16s, color .16s;
+}
+.sim-pick:hover { border-color:var(--ink-300); }
+.sim-pick[aria-pressed="true"] { background:var(--coral-600); border-color:var(--coral-600); color:#fff; }
+
+/* card de escolha larga (endereço próprio × fiscal)
+   🔄 os dois dividem UMA linha: empilhados custavam ~190px de altura pra duas
+   opções de 2 linhas cada. Só empilham abaixo de 560px, onde a coluna fica
+   estreita demais pro título de 4 palavras caber com a pill do lado. */
+.sim-wide-duo { display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:12px; align-items:stretch; }
+@media (max-width:559px) { .sim-wide-duo { grid-template-columns:1fr; } }
+
+.sim-wide {
+  display:block; width:100%; text-align:left;
+  border:1px solid var(--ink-200); border-radius:16px; background:#fff;
+  padding:16px; transition:border-color .16s, background-color .16s;
+}
+.sim-wide:hover { border-color:var(--ink-300); }
+/* lado a lado a coluna fica estreita e o título quebra em 2 linhas. A pill
+   NÃO desce junto (foi o 1º teste: virava uma 3ª linha e comia a economia da
+   dupla) — ela fica ancorada no topo à direita, e quem quebra é só o título. */
+.sim-wide-head { display:flex; align-items:flex-start; justify-content:space-between; gap:8px; }
+.sim-wide-title { min-width:0; }
+.sim-wide-pill { align-self:flex-start; }
+.sim-wide-title { font-size:1rem; font-weight:700; color:var(--ink-900); }
+.sim-wide-sub { margin-top:6px; font-size:.88rem; color:var(--ink-500); }
+.sim-wide-pill {
+  flex:none; border-radius:999px; padding:5px 11px;
+  font-size:.74rem; font-weight:700; color:#fff;
+  background:radial-gradient(120% 100% at 0% 0%, rgba(242,100,60,.45) 0%, transparent 55%), var(--ink-800);
+}
+.sim-wide[aria-pressed="true"] { background:var(--coral-600); border-color:var(--coral-600); }
+.sim-wide[aria-pressed="true"] .sim-wide-title { color:#fff; }
+.sim-wide[aria-pressed="true"] .sim-wide-sub { color:rgba(255,255,255,.82); }
+.sim-wide[aria-pressed="true"] .sim-wide-pill { background:rgba(255,255,255,.20); }
+
+/* campos */
+.sim-field { display:flex; flex-direction:column; gap:7px; }
+.sim-field-label { font-size:.86rem; font-weight:700; color:var(--ink-900); }
+.sim-field-hint { font-size:.8rem; color:var(--ink-500); }
+.sim-input, .sim-select {
+  width:100%; min-height:50px; padding:12px 14px;
+  border:1px solid var(--ink-200); border-radius:14px; background:#fff;
+  font-size:1rem; color:var(--ink-900);
+}
+.sim-input:focus, .sim-select:focus { border-color:var(--coral-600); outline:none; }
+.sim-input-prefix { position:relative; }
+.sim-input-prefix span {
+  position:absolute; left:14px; top:50%; transform:translateY(-50%);
+  color:var(--ink-500); pointer-events:none; font-size:1rem;
+}
+.sim-input-prefix .sim-input { padding-left:42px; }
+.sim-duo { display:flex; gap:12px; }
+.sim-duo > * { flex:1 1 0; min-width:0; }
+
+/* cartão de recado (CardNota do app): check verde, "!" amarelo, info azul */
+.sim-note {
+  display:flex; gap:11px; align-items:flex-start;
+  border:1px solid var(--ink-200); border-radius:14px; background:#fff; padding:15px;
+}
+.sim-note-mark {
+  flex:none; width:21px; height:21px; border-radius:50%; margin-top:1px;
+  display:grid; place-items:center; color:#fff;
+}
+.sim-note-mark svg { width:12px; height:12px; }
+.sim-note--ok    .sim-note-mark { background:var(--success-500); }
+.sim-note--warn  .sim-note-mark { background:var(--warn-700); }
+.sim-note--info  .sim-note-mark { background:var(--ink-700); }
+.sim-note-title { font-size:.94rem; font-weight:700; color:var(--ink-900); margin-bottom:3px; }
+.sim-note-text { font-size:.88rem; line-height:1.5; color:var(--ink-500); }
+.sim-note-text strong { color:var(--ink-900); font-weight:600; }
+/* lista de checks (o "Vale saber" / os checks do regime) */
+.sim-checks { display:flex; flex-direction:column; gap:9px; margin-top:2px; }
+.sim-checks li { display:flex; gap:10px; align-items:flex-start; list-style:none; }
+.sim-checks svg { flex:none; width:14px; height:14px; margin-top:4px; color:var(--success-500); }
+.sim-checks span { font-size:.88rem; line-height:1.5; color:var(--ink-500); }
+.sim-panel {
+  border:1px solid var(--ink-200); border-radius:16px; background:#fff; padding:16px;
+}
+.sim-panel-title { font-size:.98rem; font-weight:700; color:var(--ink-900); margin-bottom:10px; }
+
+/* painel expansível ("Vale saber"): fechado é uma linha só */
+.sim-exp { padding:0; }
+.sim-exp-head {
+  display:flex; align-items:center; justify-content:space-between; gap:12px;
+  width:100%; padding:14px 16px; background:none; border:0; border-radius:16px; text-align:left;
+}
+.sim-exp-head:hover { background:var(--ink-50); }
+.sim-exp-meta { display:inline-flex; align-items:center; gap:6px; font-size:.82rem; color:var(--ink-400); }
+.sim-exp-chevron { width:16px; height:16px; transition:transform .18s var(--ease-out); }
+.sim-exp-head[aria-expanded="true"] .sim-exp-chevron { transform:rotate(180deg); }
+.sim-exp .sim-checks { padding:0 16px 16px; }
+@media (prefers-reduced-motion:reduce) { .sim-exp-chevron { transition:none; } }
+.sim-panel ul { margin:0; padding:0; }
+
+/* bloco de resolução inline (fundo tingido) */
+.sim-inline {
+  border-radius:14px; padding:15px;
+  background:var(--success-50);
+}
+.sim-inline--warn { background:var(--warn-50); }
+.sim-inline-title { font-size:.94rem; font-weight:700; color:var(--ink-900); margin-bottom:4px; }
+.sim-inline-text { font-size:.88rem; line-height:1.5; color:var(--ink-600); }
+.sim-inline-link {
+  margin-top:11px; background:none; border:0; padding:0;
+  font-size:.88rem; font-weight:700; color:var(--ink-900);
+  text-decoration:underline; text-underline-offset:4px;
+}
+.sim-link {
+  align-self:flex-start; background:none; border:0; padding:2px 0;
+  font-size:.88rem; font-weight:500; color:var(--ink-500);
+  text-decoration:underline; text-underline-offset:4px;
+}
+.sim-link:hover { color:var(--ink-900); }
+
+.sim-endereco {
+  border:1px solid var(--ink-200); border-radius:14px; background:var(--ink-50); padding:13px 15px;
+}
+.sim-endereco-cidade { font-size:.98rem; font-weight:700; color:var(--ink-900); }
+.sim-endereco-rua { font-size:.86rem; color:var(--ink-500); margin-bottom:2px; }
+.sim-endereco-nota { font-size:.8rem; color:var(--ink-400); margin-top:2px; }
+
+/* ---------- veredito ---------- */
+.sim-selo {
+  display:flex; flex-direction:column; align-items:center; gap:14px; text-align:center;
+  padding:6px 0 4px;
+}
+.sim-selo-icon {
+  width:76px; height:76px; border-radius:50%; display:grid; place-items:center; color:#fff;
+}
+.sim-selo-icon svg { width:36px; height:36px; }
+.sim-selo--ok      .sim-selo-icon { background:var(--success-500); box-shadow:0 10px 28px rgba(23,160,106,.28); }
+.sim-selo--espera  .sim-selo-icon { background:var(--warn-500);    box-shadow:0 10px 28px rgba(245,165,36,.28); }
+.sim-selo--humano  .sim-selo-icon { background:var(--ink-800);     box-shadow:0 10px 28px rgba(27,30,36,.22); }
+.sim-selo h2 { font-size:1.5rem; font-weight:800; line-height:1.2; letter-spacing:-.01em; }
+.sim-selo p { font-size:1rem; color:var(--ink-500); max-width:44ch; }
+
+.sim-resumo { border:1px solid var(--ink-200); border-radius:16px; overflow:hidden; }
+.sim-resumo-row {
+  display:flex; align-items:baseline; justify-content:space-between; gap:14px;
+  padding:12px 15px; border-bottom:1px solid var(--ink-100);
+}
+.sim-resumo-row:last-child { border-bottom:0; }
+.sim-resumo-k { font-size:.82rem; font-weight:600; color:var(--ink-400); flex:none; }
+.sim-resumo-v { font-size:.92rem; font-weight:600; color:var(--ink-900); text-align:right; }
+
+.sim-actions { display:flex; flex-direction:column; gap:10px; }
+.sim-actions .btn { width:100%; padding:15px 20px; font-size:1.05rem; }
+.btn-ghost-ink {
+  background:transparent; color:var(--ink-600); border:1px solid var(--ink-200);
+}
+.btn-ghost-ink:hover { background:var(--ink-100); color:var(--ink-900); }
+
+.sim-disclaimer {
+  margin-top:14px; text-align:center; font-size:.8rem; color:var(--ink-400);
+}
+
+/* ---------- mobile ---------- */
+@media (max-width:699px) {
+  .sim-hero { padding:88px 0 72px; }
+  .sim-screen { border-radius:20px; min-height:0; }
+  .sim-cards { gap:10px; }
+  .sim-card { padding:16px 10px; }
+  .sim-card img { width:62px; height:62px; }
+  .sim-duo { flex-direction:column; }
+  .sim-h1 { font-size:1.4rem; }
+}
+
+/* ---------- motion ---------- */
+.sim-screen[data-anim="1"] { animation:sim-in .26s var(--ease-out) both; }
+@keyframes sim-in { from { opacity:0; transform:translateY(8px); } to { opacity:1; transform:none; } }
+@media (prefers-reduced-motion:reduce) {
+  .sim-screen[data-anim="1"] { animation:none; }
+  .sim-bar-fill { transition:none; }
+}
+
+/* ============================================================ EMBED NA HOME
+   A seção #validador da home usa a MESMA marcação e o MESMO js desta página —
+   só o entorno muda: lá o simulador vive dentro do campo coral (sem hero
+   próprio, sem fundo claro atrás), então o que precisa mudar é a cor do texto
+   solto e a margem negativa que aqui encaixa o cartão na barriga do hero. */
+.sim-embed .sim-grid { margin-top:0; }
+.sim-embed .sim-disclaimer { color:rgba(255,255,255,.72); }
+/* o rail e o cartão já são superfícies próprias (vidro/branco), então
+   continuam legíveis sobre o coral sem nenhum ajuste. */
+@media (min-width:1000px) {
+  /* na home o header some ao rolar pra baixo e volta ao subir; 96px é o mesmo
+     offset usado no scroll-padding-top do site. */
+  .sim-embed .sim-rail { top:96px; }
+}
