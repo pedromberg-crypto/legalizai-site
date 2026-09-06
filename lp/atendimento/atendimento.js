@@ -232,7 +232,7 @@
   function rotuloCategoria(id) {
     if (id === FORA_LISTA) return 'Não encontrei minha categoria';
     for (var i = 0; i < PILLS.length; i++) if (PILLS[i].id === id) return PILLS[i].label;
-    return '—';
+    return 'não informada';
   }
   function categoriaTemMei(id) { return CATEGORIAS_SEM_MEI.indexOf(id) === -1; }
   function ehMei() { return s.regime === 'mei'; }
@@ -402,7 +402,7 @@
     return {
       meta: meta(),
       titulo: 'Sobre a sua empresa',
-      sub: 'A lista tem só o que a gente atende hoje — se você se encontra nela, já passou por esse filtro.',
+      sub: 'A lista tem só o que a gente atende hoje. Se você se encontra nela, já passou por esse filtro.',
       corpo: corpo,
       cta: foraLista ? 'Me inscrever e garantir condição' : 'Continuar',
       pronto: foraLista ? prontoFora : (!!cat && !semMei)
@@ -504,7 +504,7 @@
       meta: meta(),
       titulo: 'Onde a empresa vai ficar?',
       sub: mei
-        ? 'É o endereço que fica no CNPJ — e o MEI abre de qualquer cidade do Brasil.'
+        ? 'É o endereço que fica no CNPJ, e o MEI abre de qualquer cidade do Brasil.'
         : 'Vale o endereço da SEDE, não onde você mora. Quem mora fora de BH também tem caminho.',
       corpo: corpo,
       cta: s.filaCidade ? 'Me inscrever e garantir condição' : 'Continuar',
@@ -549,7 +549,7 @@
     return {
       meta: meta(),
       titulo: 'Sobre o imóvel',
-      sub: 'Uma regra da Prefeitura de BH decide se o endereço é aceito — melhor descobrir agora, não depois de pagar.',
+      sub: 'Uma regra da Prefeitura de BH decide se o endereço é aceito. Melhor descobrir agora, não depois de pagar.',
       corpo: corpo,
       cta: 'Continuar',
       pronto: s.tipoImovel !== '' && s.reside !== null && !apeSemResidencia
@@ -649,13 +649,13 @@
   function telaImpedimentosMei() {
     var corpo =
       '<div class="sim-q"><p class="sim-q-label">Você já é sócio ou dono de outra empresa?</p>' +
-      '<p class="sim-q-hint">Quem já tem CNPJ não pode abrir MEI — é impedimento da lei, não regra nossa.</p>' +
+      '<p class="sim-q-hint">Quem já tem CNPJ não pode abrir MEI. É impedimento da lei, não regra nossa.</p>' +
       botoesLinha('meiOutraEmpresa', [{ v: 'false', label: 'Não' }, { v: 'true', label: 'Sim' }],
         s.meiOutraEmpresa === null ? '' : String(s.meiOutraEmpresa)) + '</div>';
 
     if (s.meiOutraEmpresa === true) {
       corpo += nota('warn', 'Com outra empresa no seu nome, o MEI não serve',
-        'Se o que você quer é trazer a empresa que já existe pra Legalizai, o caminho é a migração — e aí a gente atende.');
+        'Se o que você quer é trazer pra Legalizai a empresa que já existe, isso a gente atende.');
     }
 
     corpo += '<div class="sim-q"><p class="sim-q-label">Você é servidor público federal na ativa?</p>' +
@@ -665,14 +665,14 @@
 
     if (s.meiServidor === true) {
       corpo += nota('warn', 'Servidor federal não pode ser MEI',
-        'Nesse caso o caminho passa por uma conversa com o contador antes de abrir qualquer coisa — a gente te ajuda a achar a saída certa.');
+        'Nesse caso o caminho passa por uma conversa com o contador antes de abrir qualquer coisa. A gente te ajuda a achar a saída certa.');
     }
 
     // a coorte também saiu daqui — mesmo motivo do ramo ME, ver telaSocios.
     return {
       meta: meta(),
       titulo: 'Perguntas rápidas',
-      sub: 'No MEI não existe sócio — o que a gente confere aqui são os dois impedimentos da lei.',
+      sub: 'No MEI não existe sócio. O que a gente confere aqui são os dois impedimentos da lei.',
       corpo: corpo,
       cta: 'Continuar',
       pronto: s.meiOutraEmpresa !== null && s.meiServidor !== null
@@ -744,7 +744,7 @@
       return {
         tipo: 'humano',
         titulo: 'Seu caso é com um contador, não com o app',
-        texto: 'Sócio fora dos critérios do Simples (mora fora do Brasil, entra por CNPJ) não cabe no fluxo automatizado — mas cabe na Legalize Digital, que é o escritório por trás da Legalizai, pela contabilidade tradicional.',
+        texto: 'Sócio fora dos critérios do Simples (mora fora do Brasil, entra por CNPJ) não cabe no fluxo automatizado, mas cabe na Legalize Digital, que é o escritório por trás da Legalizai, pela contabilidade tradicional.',
         cta: { label: 'Falar com o time no WhatsApp', href: linkWhats('Oi! Simulei no site e meu sócio não atende um dos critérios. Queria falar com o time sobre a contabilidade tradicional.') }
       };
     }
@@ -756,7 +756,7 @@
       return {
         tipo: 'espera',
         titulo: 'Ainda não, mas você entrou na fila',
-        texto: 'Sua atividade é regulamentada e precisa de responsável técnico registrado no conselho — hoje isso fica fora do que o app resolve sozinho. A gente está em expansão' +
+        texto: 'Sua atividade é regulamentada e precisa de responsável técnico registrado no conselho. Hoje isso fica fora do que o app resolve sozinho. A gente está em expansão' +
           (emBh ? ', e quando abrir pra sua área você tem condição especial.'
                 : ', e quando chegar em ' + esc(cidade) + ' e na sua área você tem condição especial.'),
         cta: { label: 'Falar com o time no WhatsApp', href: linkWhats('Oi! Simulei no site, minha atividade é regulamentada e entrei na fila. Queria entender as opções.') }
@@ -767,23 +767,26 @@
       return {
         tipo: 'espera',
         titulo: 'A gente ainda não abriu em ' + esc(c),
-        texto: 'Por enquanto o app só abre empresa com sede em Belo Horizonte. Você entrou na fila e garante oferta especial quando a gente chegar aí — e, se quiser antecipar, dá pra abrir hoje mesmo usando o endereço fiscal da Legalizai em BH por ' + brl(ENDERECO_FISCAL) + '/mês.',
+        texto: 'Por enquanto o app só abre empresa com sede em Belo Horizonte. Você entrou na fila e garante oferta especial quando a gente chegar aí. E, se quiser antecipar, dá pra abrir hoje mesmo usando o endereço fiscal da Legalizai em BH por ' + brl(ENDERECO_FISCAL) + '/mês.',
         cta: { label: 'Quero saber do endereço em BH', href: linkWhats('Oi! Simulei no site, moro fora de BH e queria entender o endereço fiscal da Legalizai.') }
       };
     }
     if (ehMei() && s.meiOutraEmpresa === true) {
       return {
         tipo: 'humano',
-        titulo: 'MEI não dá — mas a gente atende do mesmo jeito',
-        texto: 'Quem já é sócio ou dono de outra empresa não pode abrir MEI. Se a ideia é trazer a empresa que já existe pra cá, o caminho é a migração — e essa a gente faz.',
-        cta: { label: 'Falar sobre migrar minha empresa', href: linkWhats('Oi! Simulei no site: já tenho uma empresa e queria entender como migrar pra Legalizai.') }
+        titulo: 'MEI não dá, mas a gente atende do mesmo jeito',
+        texto: 'Quem já é sócio ou dono de outra empresa não pode abrir MEI. Se a ideia é trazer pra cá a empresa que já existe, essa parte a gente faz.',
+        // UX-55: a copy pergunta pelo FATO ("já tenho empresa"), nunca pela
+        // operação. "Migrar" é jargão, e quem não tem contador nem se
+        // reconhece nela — e esse é justamente o melhor caso desse caminho.
+        cta: { label: 'Falar sobre a empresa que já tenho', href: linkWhats('Oi! Simulei no site: já tenho uma empresa e queria trazer ela pra Legalizai.') }
       };
     }
     if (ehMei() && s.meiServidor === true) {
       return {
         tipo: 'humano',
         titulo: 'Servidor federal não pode ser MEI',
-        texto: 'É vedação da lei, não regra nossa. Dependendo do seu vínculo pode existir caminho como ME — vale meia hora de conversa com o contador antes de abrir qualquer coisa.',
+        texto: 'É vedação da lei, não regra nossa. Dependendo do seu vínculo pode existir caminho como ME. Vale meia hora de conversa com o contador antes de abrir qualquer coisa.',
         cta: { label: 'Falar com o contador', href: linkWhats('Oi! Simulei no site, sou servidor federal e queria entender que caminho tenho pra abrir empresa.') }
       };
     }
@@ -791,8 +794,8 @@
       tipo: 'ok',
       titulo: 'Sim, a gente atende o seu caso',
       texto: ehMei()
-        ? 'Seu MEI entra no que a Legalizai abre hoje: atividade na lista, sem impedimento e dentro do teto. O próximo passo é no app — a abertura sai da sua mão e vem pra nossa.'
-        : 'Sua ME entra no que a Legalizai abre hoje: atividade na lista, sede resolvida em BH e faturamento dentro do Simples. O próximo passo é no app — a abertura sai da sua mão e vem pra nossa.',
+        ? 'Seu MEI entra no que a Legalizai abre hoje: atividade na lista, sem impedimento e dentro do teto. O próximo passo é no app. A abertura sai da sua mão e vem pra nossa.'
+        : 'Sua ME entra no que a Legalizai abre hoje: atividade na lista, sede resolvida em BH e faturamento dentro do Simples. O próximo passo é no app. A abertura sai da sua mão e vem pra nossa.',
       // embutido na home o #baixar está na própria página; na página
       // standalone precisa do caminho completo, senão a âncora não existe
       cta: { label: 'Baixar o app e começar', href: document.getElementById('baixar') ? '#baixar' : '/home#baixar' }
@@ -835,8 +838,8 @@
         return '<div class="sim-resumo-row"><span class="sim-resumo-k">' + esc(l[0]) + '</span><span class="sim-resumo-v">' + esc(l[1]) + '</span></div>';
       }).join('') + '</div>' +
       (v.tipo === 'ok'
-        ? nota('ok', '', 'Isso é uma triagem, não um contrato. Quem confirma o CNAE exato e o enquadramento é o contador, já dentro do app — e antes de qualquer cobrança.')
-        : nota('info', '', 'Simulação com as regras de hoje. Elas mudam quando a gente expande — por isso a fila existe.')) +
+        ? nota('ok', '', 'Isso é uma triagem, não um contrato. Quem confirma o CNAE exato e o enquadramento é o contador, já dentro do app, e antes de qualquer cobrança.')
+        : nota('info', '', 'Simulação com as regras de hoje. Elas mudam quando a gente expande, e por isso a fila existe.')) +
       // 🔄 a coorte mora AQUI desde que saiu da triagem: dado de marketing,
       // nunca gate. Depois do veredito ela não disputa atenção com nada — a
       // pessoa já tem a resposta que veio buscar. Respondida, encolhe pra uma
