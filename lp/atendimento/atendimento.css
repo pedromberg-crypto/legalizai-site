@@ -14,9 +14,14 @@
 /* ---------- página ---------- */
 .sim-body { background:var(--ink-100); }
 
-/* o header/rodapé são os de produção (styles.css) — nada a sobrescrever aqui.
-   `.is-active` marca o item da página atual, que a LP ainda não tinha. */
-.header-nav a.is-active { color:var(--coral-700); }
+/* Header de vidro sólido (mesma regra do blog): sem hero coral de altura
+   cheia atrás, logo e nav brancos ficariam invisíveis até rolar. */
+.site-header-blog {
+  background:rgba(242,100,60,.72);
+  backdrop-filter:blur(14px) saturate(140%); -webkit-backdrop-filter:blur(14px) saturate(140%);
+  border-bottom-color:rgba(255,255,255,.18);
+  box-shadow:0 6px 24px rgba(92,31,15,.14);
+}
 
 /* ---------- hero ---------- */
 .sim-hero {
@@ -46,6 +51,25 @@
   .sim-grid { grid-template-columns:280px minmax(0,1fr); gap:32px; align-items:start; }
 }
 
+/* ─── A MEDIDA-MESTRE DOS DOIS CARDS ──────────────────────────────────────
+   `--sim-h` é a altura da trilha de etapas (509px: 7 etapas + o bloco de
+   confiança + respiros) e vale pros DOIS cards. Nenhum dos dois se adapta ao
+   outro: os dois obedecem a mesma constante.
+
+   Por que constante e não `stretch`: com stretch, uma tela do wizard mais alta
+   esticaria a linha e arrastaria a trilha junto. O pedido é o contrário, a
+   trilha manda. Se uma tela crescer além disso, ela rola por dentro (o
+   overflow-y do corpo) em vez de empurrar o layout.
+
+   ⚠️ Mexeu no conteúdo da trilha? Remeça a altura dela e atualize aqui. */
+@media (min-width:900px) {
+  .sim-grid { --sim-h:509px; }
+  .sim-screen { height:var(--sim-h); }
+}
+@media (min-width:1000px) {
+  .sim-rail { height:var(--sim-h); align-self:start; }
+}
+
 /* ---------- trilha lateral (só desktop) ---------- */
 /* 🔄 Superfície BRANCA OPACA, igual à do cartão-tela ao lado — era vidro
    translúcido (branco a 72% + backdrop-filter). Sobre o campo coral da home o
@@ -54,10 +78,12 @@
    lado a lado, mesma função (conteúdo), mesma matéria. */
 .sim-rail {
   display:none;
-  position:sticky; top:96px;
+  /* era `position:sticky`: com as duas colunas esticando pra mesma altura não
+     há o que acompanhar, e sticky num item esticado não gruda em nada. */
+  position:static;
   background:#fff;
   border:1px solid var(--ink-200);
-  border-radius:22px; padding:22px 20px;
+  border-radius:22px; padding:18px 16px;
   box-shadow:var(--shadow-card);
 }
 @media (min-width:1000px) { .sim-rail { display:block; } }
@@ -68,8 +94,8 @@
 }
 .sim-rail-list { list-style:none; margin:0; padding:0; display:flex; flex-direction:column; gap:2px; }
 .sim-rail-item {
-  display:flex; align-items:center; gap:11px;
-  padding:9px 8px; border-radius:12px;
+  display:flex; align-items:center; gap:10px;
+  padding:7px 8px; border-radius:12px;
   font-size:.92rem; font-weight:600; color:var(--ink-400);
   transition:background-color .2s var(--ease-out), color .2s;
 }
@@ -91,6 +117,7 @@
 .sim-rail-item.is-active .sim-rail-mark { border-color:#fff; background:#fff; color:var(--coral-700); }
 .sim-rail-item.is-done .sim-rail-mark { border-color:var(--success-500); background:var(--success-500); color:#fff; }
 .sim-rail-mark svg { width:13px; height:13px; }
+
 
 .sim-rail-trust {
   list-style:none; margin:18px 0 0; padding:16px 0 0;
@@ -122,18 +149,18 @@
 .sim-screen {
   background:#fff; border:1px solid var(--ink-200); border-radius:24px;
   box-shadow:var(--shadow-card);
-  padding:26px 22px 22px;
+  padding:20px 18px 18px;
   display:flex; flex-direction:column;
   /* mínimo pra o cartão não "pular" de altura entre passos curtos e longos.
      Não é altura fixa: passo longo cresce, e quem rola é a PÁGINA (o app rola
      dentro da tela porque lá o viewport é o aparelho; aqui não é). */
-  min-height:520px;
+  min-height:0;
 }
-@media (min-width:700px) { .sim-screen { padding:32px 30px 26px; } }
+@media (min-width:700px) { .sim-screen { padding:18px 20px 16px; } }
 
 .sim-top {
   display:flex; align-items:center; gap:10px;
-  margin-bottom:18px; min-height:28px;
+  margin-bottom:9px; min-height:22px;
 }
 .sim-back {
   display:inline-flex; align-items:center; gap:6px;
@@ -144,15 +171,85 @@
 .sim-back:hover { color:var(--ink-900); background:var(--ink-100); }
 .sim-back svg { width:17px; height:17px; }
 .sim-meta { font-size:.78rem; font-weight:600; letter-spacing:.02em; color:var(--ink-400); }
+/* ação de navegação no topo (hoje só o "Refazer" do veredito): mesma família
+   do "Voltar", encostada à direita. */
+.sim-top-acao {
+  margin-left:auto; background:none; border:0; padding:4px 6px; border-radius:10px;
+  font-size:.82rem; font-weight:600; color:var(--ink-500);
+  text-decoration:underline; text-underline-offset:4px;
+}
+.sim-top-acao:hover { color:var(--ink-900); background:var(--ink-100); }
 
 .sim-h1 {
-  font-size:1.55rem; font-weight:700; line-height:1.22; letter-spacing:-.01em;
+  font-size:1.2rem; font-weight:700; line-height:1.2; letter-spacing:-.01em;
   color:var(--ink-900);
 }
 .sim-h1 .sim-h1-soft { color:var(--ink-400); }
-.sim-sub { margin-top:8px; color:var(--ink-500); font-size:1rem; }
+.sim-sub { margin-top:6px; color:var(--ink-500); font-size:.88rem; line-height:1.45; }
 
-.sim-body-area { flex:1 1 auto; margin-top:22px; display:flex; flex-direction:column; gap:22px; }
+.sim-body-area { flex:1 1 auto; margin-top:10px; display:flex; flex-direction:column; gap:9px; }
+
+/* ─── DESKTOP: CORPO EM 2 COLUNAS ─────────────────────────────────────────
+   O cartão tem ~768px de largura e empilhava tudo numa coluna só: era isso, e
+   não bloco gordo, que empurrava as telas pra 640px. Em 2 colunas as mesmas
+   peças cabem em ~450px, sem cortar conteúdo nem encolher fonte.
+
+   Regra de quem ocupa a linha inteira: peça que JÁ É uma grade de 2 (os
+   cartões de escolha, a dupla de endereço), o selo do veredito e botão de
+   ação. O resto pareia sozinho, na ordem do DOM.
+
+   `:has()` faz o trabalho de marcar o pai que contém uma grade — sem ele, eu
+   teria que carimbar classe na mão em cada tela do JS. Chrome 105+, Safari
+   15.4+, Firefox 121+; num navegador sem suporte a tela simplesmente volta a
+   empilhar, que é o comportamento de hoje.
+   ========================================================================= */
+@media (min-width:900px) {
+  .sim-body-area {
+    display:grid; grid-template-columns:1fr 1fr; gap:10px 14px;
+    align-content:start;
+  }
+  /* 🔄 o selo saiu da lista de "linha inteira" (teste do Pedro): agora ele
+     pareia com o cartão de resumo, um de cada lado. */
+  .sim-body-area > .sim-cards,
+  .sim-body-area > .sim-q:has(.sim-cards),
+  .sim-body-area > .sim-q:has(.sim-wide-duo),
+  .sim-body-area > .sim-q:has(.sim-wide),
+  .sim-body-area > .sim-trio,
+  .sim-body-area > .sim-endereco,
+  /* na tela de sócios cada bloco é uma linha inteira: quantidade, "Vale
+     saber", administração e o recado verde. Em meia coluna eles quebravam em
+     três linhas de texto cada e a tela ficava mais alta, não menor. */
+  .sim-body-area > .sim-panel.sim-exp,
+  .sim-body-area > .sim-inline,
+  /* o resumo também deixou de ocupar a linha: ele é o par do selo. A coorte
+     (que usa .sim-row) segue em linha inteira, abaixo dos dois. */
+  .sim-body-area > .sim-q:has(.sim-row) { grid-column:1 / -1; }
+
+  /* os 3 checks do "Vale saber" em 2 colunas: são frases curtas, e o painel
+     ocupa a linha inteira. O 3º item fica sozinho na 2ª fileira, o que é o
+     desenho que o Pedro pediu. */
+  .sim-exp .sim-checks { display:grid; grid-template-columns:1fr 1fr; gap:7px 16px; }
+  /* o botão de saída (trocar pro ME, usar o endereço fiscal) fica em MEIA
+     coluna, ao lado do aviso que o explica: os dois são a mesma ideia, e
+     empilhados custavam ~50px. */
+  .sim-body-area > .btn { align-self:start; }
+
+  /* Bloco SOZINHO na segunda linha volta a ocupar a largura inteira: meia
+     coluna sem par não economiza altura nenhuma, e ainda quebra mais linhas
+     de texto (medido: o painel de checks do P1 subia de 150 pra 194px). */
+  /* ⚠️ `.is-metade` fica de fora do gatilho: essa grade FOI FEITA pra dividir
+     a linha (faturamento), então o bloco seguinte tem que continuar em meia
+     coluna. Sem esta exceção ele virava linha inteira, empilhava e a tela
+     ganhava rolagem. */
+  .sim-body-area > :is(.sim-cards:not(.is-metade), .sim-selo, .sim-q:has(.sim-cards), .sim-q:has(.sim-wide-duo)) + :nth-child(2):last-child {
+    grid-column:1 / -1;
+  }
+  /* e, ocupando a linha inteira, a lista de checks dele vira 2 colunas também:
+     são frases curtas, e em coluna única elas viravam uma tira alta e magra. */
+  .sim-body-area > :is(.sim-cards:not(.is-metade), .sim-q:has(.sim-cards)) + :nth-child(2):last-child .sim-checks {
+    display:grid; grid-template-columns:1fr 1fr; gap:7px 16px;
+  }
+}
 
 /* ─── DESKTOP: altura travada, corpo rolando por dentro ────────────────────
    É a estrutura de 3 partes do app (título fixo / corpo rola / CTA fixo), que
@@ -168,8 +265,30 @@
    Mobile fica de fora de propósito: lá rolagem de página é o esperado, e
    prender o corpo num quadro pequeno numa tela pequena é pior. */
 @media (min-width:900px) {
-  .sim-screen { height:clamp(540px, 66vh, 700px); min-height:0; }
+  /* 🔒 ALTURA FIXA NO TAMANHO DA MAIOR TELA (pedido do Pedro): o cartão não
+     muda de altura quando o conteúdo muda.
+     660px = a maior tela medida (o resultado com a coorte ainda aberta,
+     644px) mais 16px de folga pra quebra de linha.
+     Histórico do número, porque ele já mudou três vezes: 1000 quando o
+     veredito custava 989px; 840 depois do 1º corte no veredito; 660 depois da
+     compactação geral de dentro do cartão (tipografia, campos, cartões,
+     respiros) somada aos cortes de copy que tiraram repetição. O pedido era
+     que da 1ª à 9ª tela ninguém passasse da 10ª, que media 647.
+     Medido em 1000, 1200, 1440 e 1920px: o pico não muda, porque o container
+     trava em 1120 e a coluna para de crescer.
+     ⚠️ Conteúdo novo em qualquer passo pede REMEDIÇÃO: passar de 660 traz a
+     rolagem interna de volta (o overflow-y abaixo é a rede, não o
+     mecanismo). */
+  /* 🔄 O NÚMERO MÁGICO SAIU. A altura do cartão não é mais uma constante: ela
+     é a altura da LINHA do grid, que é a do card lateral (a trilha de etapas,
+     509px de conteúdo fixo). Ver `align-items:stretch` no bloco de 1000px.
+     Assim os dois cards têm sempre exatamente a mesma altura, e se a trilha
+     ganhar ou perder uma etapa os dois acompanham juntos, sem eu remedir.
+     Entre 900 e 1000px a trilha não existe (display:none), então ali o cartão
+     volta a acompanhar o conteúdo. */
+  .sim-screen { min-height:0; }   /* a altura vem de --sim-h, acima */
   .sim-body-area {
+    /* continua rolando como REDE (o grid acima é quem resolve a altura) */
     overflow-y:auto; min-height:0;
     /* reserva a calha da barra de rolagem: sem isso o conteúdo dá um pulo
        lateral de ~15px toda vez que um passo passa a caber (ou deixa de). */
@@ -182,11 +301,11 @@
   .sim-body-area::-webkit-scrollbar-track { background:transparent; }
 }
 
-.sim-foot { margin-top:26px; padding-top:18px; border-top:1px solid var(--ink-100); }
-.sim-foot .btn { width:100%; padding:15px 20px; font-size:1.05rem; }
+.sim-foot { margin-top:10px; padding-top:9px; border-top:1px solid var(--ink-100); }
+.sim-foot .btn { display:block; width:100%; padding:12px 20px; font-size:1rem; text-align:center; text-decoration:none; }
 .sim-foot .btn[disabled] { opacity:.42; cursor:not-allowed; box-shadow:none; }
 .sim-foot-link {
-  display:block; width:100%; text-align:center; margin-bottom:12px;
+  display:block; width:100%; text-align:center; margin-bottom:9px;
   background:none; border:0; padding:6px;
   font-size:.88rem; font-weight:500; color:var(--ink-500);
   text-decoration:underline; text-underline-offset:4px;
@@ -194,21 +313,23 @@
 .sim-foot-link:hover { color:var(--ink-900); }
 
 /* ---------- blocos de pergunta ---------- */
-.sim-q { display:flex; flex-direction:column; gap:12px; }
-.sim-q-label { font-size:1rem; font-weight:700; color:var(--ink-900); }
-.sim-q-hint { margin-top:-8px; font-size:.86rem; color:var(--ink-500); }
+.sim-q { display:flex; flex-direction:column; gap:9px; }
+.sim-q-label { font-size:.94rem; font-weight:700; color:var(--ink-900); }
+.sim-q-hint { margin-top:-6px; font-size:.82rem; line-height:1.45; color:var(--ink-500); }
+/* dica embutida no próprio rótulo: mesma frase, sem custar uma linha inteira */
+.sim-q-label-soft { font-weight:400; font-size:.82rem; color:var(--ink-400); }
 
 /* grade de 2 cards ilustrados = CardIconeSelecao / CardFaixa do app */
-.sim-cards { display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:12px; }
+.sim-cards { display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:10px; }
 .sim-card {
-  position:relative; display:flex; flex-direction:column; align-items:center; gap:12px;
-  padding:20px 14px; text-align:center;
+  position:relative; display:flex; flex-direction:column; align-items:center; gap:9px;
+  padding:11px 10px; text-align:center;
   border:1px solid var(--ink-200); border-radius:18px; background:#fff;
   transition:border-color .16s, background-color .16s, transform .16s var(--ease-out);
 }
 .sim-card:hover { border-color:var(--ink-300); transform:translateY(-2px); }
-.sim-card img { width:74px; height:74px; object-fit:contain; }
-.sim-card span { font-size:1rem; font-weight:600; color:var(--ink-900); }
+.sim-card img { width:46px; height:46px; object-fit:contain; }
+.sim-card span { font-size:.92rem; font-weight:600; color:var(--ink-900); }
 .sim-card[aria-pressed="true"] {
   background:var(--coral-600); border-color:var(--coral-600); transform:none;
 }
@@ -220,10 +341,42 @@
 .sim-cards--regua .sim-card { flex-direction:row; justify-content:flex-start; gap:10px; padding:11px 12px; text-align:left; }
 .sim-cards--regua .sim-card img { width:30px; height:30px; }
 .sim-cards--regua .sim-card span { font-size:.88rem; }
+/* coorte no veredito: mesma regua deitada, mas com folga de altura sobrando na
+   tela — o icone 3D dobra de tamanho e o cartao ganha respiro. */
+.sim-cards--coorte .sim-card { padding:12px 14px; gap:14px; }
+.sim-cards--coorte .sim-card img { width:60px; height:60px; }
+.sim-cards--coorte .sim-card span { font-size:.95rem; }
 .sim-cards--regua .sim-card-check { right:7px; top:7px; width:17px; height:17px; }
 .sim-cards--regua .sim-card-check svg { width:10px; height:10px; }
 /* o rótulo não pode correr por baixo do badge de check */
 .sim-cards--regua .sim-card[aria-pressed="true"] span { padding-right:16px; }
+
+/* ─── cartão de comparação (tela MEI x ME) ─────────────────────────────────
+   O cartão deixa de ser só um rótulo e passa a carregar a lista do regime. Por
+   isso o conteúdo alinha à esquerda e o selecionado NÃO é preenchido de coral:
+   com 5 linhas de texto dentro, fundo cheio viraria bloco ilegível. Marca fica
+   na borda, no nome e no badge de check. */
+.sim-card--compara {
+  align-items:stretch; text-align:left; gap:11px; padding:13px 14px;
+}
+.sim-card-topo { display:flex; align-items:center; gap:10px; }
+.sim-card--compara img { width:80px; height:80px; }
+.sim-card-nome { font-size:.98rem; font-weight:700; color:var(--ink-900); }
+.sim-card--compara .sim-checks { display:flex; flex-direction:column; gap:7px; }
+.sim-card--compara .sim-checks-item { display:flex; gap:9px; align-items:flex-start; }
+.sim-card--compara .sim-checks-item svg { flex:none; width:13px; height:13px; margin-top:4px; color:var(--success-500); }
+.sim-card--compara .sim-checks-item > span { font-size:.8rem; line-height:1.4; font-weight:400; color:var(--ink-500); }
+/* os dois cartões ocupam a área livre do corpo: nada mais divide a tela com
+   eles, então esticam até o CTA em vez de deixar vão morto embaixo. */
+.sim-body-area:has(.sim-cards--compara) { align-content:stretch; }
+.sim-cards--compara { height:100%; }
+.sim-cards--compara .sim-card { justify-content:flex-start; }
+/* não selecionado: borda cinza. Selecionado: coral cheio, como nos outros
+   cartões de escolha do wizard — o texto de dentro vira creme/branco. */
+.sim-cards--compara .sim-card[aria-pressed="true"] .sim-card-nome { color:#fff; }
+.sim-cards--compara .sim-card[aria-pressed="true"] .sim-checks-item > span { color:rgba(255,255,255,.9); }
+.sim-cards--compara .sim-card[aria-pressed="true"] .sim-checks-item svg { color:#fff; }
+@media (max-width:559px) { .sim-cards--compara { grid-template-columns:1fr; height:auto; } }
 
 .sim-card-check {
   position:absolute; right:9px; top:9px;
@@ -240,7 +393,7 @@
 /* linha de botões (sócios, sim/não, administração) */
 .sim-row { display:flex; gap:8px; flex-wrap:wrap; }
 .sim-pick {
-  flex:1 1 0; min-width:84px; min-height:48px; padding:0 12px;
+  flex:1 1 0; min-width:80px; min-height:42px; padding:0 12px;
   border:1px solid var(--ink-200); border-radius:14px; background:#fff;
   font-size:.98rem; font-weight:600; color:var(--ink-600);
   transition:border-color .16s, background-color .16s, color .16s;
@@ -258,7 +411,7 @@
 .sim-wide {
   display:block; width:100%; text-align:left;
   border:1px solid var(--ink-200); border-radius:16px; background:#fff;
-  padding:16px; transition:border-color .16s, background-color .16s;
+  padding:10px 12px; transition:border-color .16s, background-color .16s;
 }
 .sim-wide:hover { border-color:var(--ink-300); }
 /* lado a lado a coluna fica estreita e o título quebra em 2 linhas. A pill
@@ -268,7 +421,7 @@
 .sim-wide-title { min-width:0; }
 .sim-wide-pill { align-self:flex-start; }
 .sim-wide-title { font-size:1rem; font-weight:700; color:var(--ink-900); }
-.sim-wide-sub { margin-top:6px; font-size:.88rem; color:var(--ink-500); }
+.sim-wide-sub { margin-top:4px; font-size:.82rem; line-height:1.4; color:var(--ink-500); }
 .sim-wide-pill {
   flex:none; border-radius:999px; padding:5px 11px;
   font-size:.74rem; font-weight:700; color:#fff;
@@ -280,28 +433,94 @@
 .sim-wide[aria-pressed="true"] .sim-wide-pill { background:rgba(255,255,255,.20); }
 
 /* campos */
-.sim-field { display:flex; flex-direction:column; gap:7px; }
-.sim-field-label { font-size:.86rem; font-weight:700; color:var(--ink-900); }
+.sim-field { display:flex; flex-direction:column; gap:5px; }
+.sim-field-label { font-size:.82rem; font-weight:700; color:var(--ink-900); }
 .sim-field-hint { font-size:.8rem; color:var(--ink-500); }
+/* CINZA DE SUPERFÍCIE (pedido do Pedro): um valor só pra toda caixa recuada do
+   simulador — cartão de regra, endereço lido do CEP, rodapé do resumo, campo
+   travado, CTA cinza. Antes conviviam três (#F4F4F4, #F7F7F7 e o creme
+   --ink-50 #FAF8F5) e a diferença aparecia quando dois encostavam. */
+:root { --sim-cinza:#F4F4F4; }
+
 .sim-input, .sim-select {
-  width:100%; min-height:50px; padding:12px 14px;
+  width:100%; min-height:44px; padding:10px 13px;
   border:1px solid var(--ink-200); border-radius:14px; background:#fff;
   font-size:1rem; color:var(--ink-900);
+  transition:border-color .16s, box-shadow .16s;
 }
-.sim-input:focus, .sim-select:focus { border-color:var(--coral-600); outline:none; }
+/* seta própria no lugar da nativa: a nativa muda de desenho a cada
+   navegador/SO e sai da identidade do resto do cartão. A LISTA aberta continua
+   sendo do sistema — CSS não alcança ela; por isso perguntas com poucas opções
+   usam pill (.sim-pick), e o select só sobra onde a lista é longa mesmo. */
+.sim-select {
+  -webkit-appearance:none; appearance:none; padding-right:40px; cursor:pointer;
+  background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%236B6B6B' stroke-width='2.2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='m6 9 6 6 6-6'/%3E%3C/svg%3E");
+  background-repeat:no-repeat; background-position:right 13px center; background-size:17px 17px;
+}
+.sim-select:hover { border-color:var(--ink-300); }
+/* placeholder em cinza, valor escolhido em tinta cheia */
+.sim-select:has(option[value=""]:checked) { color:var(--ink-400); }
+
+/* LISTA ABERTA. Em CSS clássico a lista de um <select> é desenhada pelo SO e
+   não aceita estilo (o azul chapado do Windows). O `appearance:base-select`
+   entrega o picker pro CSS — onde existe, a lista passa a ser nossa; onde não
+   existe, tudo acima continua valendo e a lista cai na nativa de sempre. */
+@supports (appearance: base-select) {
+  .sim-select, .sim-select::picker(select) { appearance:base-select; }
+  .sim-select { display:flex; align-items:center; justify-content:space-between; gap:10px; text-align:left; background-image:none; padding-right:13px; }
+  .sim-select::picker-icon {
+    content:''; width:17px; height:17px; flex:none; color:var(--ink-500);
+    background:currentColor; transition:transform .18s;
+    -webkit-mask:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23000' stroke-width='2.2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='m6 9 6 6 6-6'/%3E%3C/svg%3E") center/contain no-repeat;
+    mask:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23000' stroke-width='2.2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='m6 9 6 6 6-6'/%3E%3C/svg%3E") center/contain no-repeat;
+  }
+  .sim-select:open::picker-icon { transform:rotate(180deg); }
+  .sim-select::picker(select) {
+    border:1px solid var(--ink-200); border-radius:14px; background:#fff;
+    box-shadow:0 18px 40px rgba(28, 22, 20, .14); padding:6px;
+    margin-top:6px; width:anchor-size(width);
+  }
+  .sim-select option {
+    display:flex; align-items:center; gap:10px; padding:10px 12px;
+    border-radius:10px; font-size:.95rem; color:var(--ink-900);
+    background:#fff; cursor:pointer;
+  }
+  .sim-select option:hover, .sim-select option:focus { background:var(--sim-cinza); outline:none; }
+  .sim-select option:checked { background:var(--coral-50); color:var(--coral-700); font-weight:600; }
+  .sim-select option[value=""] { color:var(--ink-400); }
+  .sim-select option::checkmark { order:1; margin-left:auto; color:var(--coral-600); }
+}
+.sim-input:hover { border-color:var(--ink-300); }
+.sim-input:focus, .sim-select:focus {
+  border-color:var(--coral-600); outline:none;
+  box-shadow:0 0 0 3px rgba(214, 74, 45, .14);
+}
 .sim-input-prefix { position:relative; }
 .sim-input-prefix span {
   position:absolute; left:14px; top:50%; transform:translateY(-50%);
   color:var(--ink-500); pointer-events:none; font-size:1rem;
 }
 .sim-input-prefix .sim-input { padding-left:42px; }
-.sim-duo { display:flex; gap:12px; }
+/* as duas perguntas lado a lado vinham de moldes diferentes (.sim-field e
+   .sim-q): rótulo de tamanho e respiro distintos, controle de 44px contra
+   42px. Aqui os dois viram a MESMA régua, senão nada bate de linha. */
+.sim-duo > .sim-field, .sim-duo > .sim-q { gap:5px; justify-content:flex-start; }
+.sim-duo > .sim-q > .sim-q-label { font-size:.82rem; }
+.sim-duo .sim-row { flex:1 1 auto; align-items:stretch; }
+.sim-duo .sim-pick { min-height:44px; }
+.sim-duo { display:flex; gap:10px; align-items:start; }
+
+/* CEP + número + complemento na mesma linha. O CEP ganha mais espaço porque é
+   o único com máscara (00000-000) e não pode quebrar; os outros dois cabem em
+   pouco. Enquanto o CEP não resolve, a linha tem só ele e ocupa tudo. */
+.sim-trio { display:grid; grid-template-columns:1.4fr .8fr 1fr; gap:10px; }
+.sim-trio:has(> :only-child) { grid-template-columns:1fr; }
 .sim-duo > * { flex:1 1 0; min-width:0; }
 
 /* cartão de recado (CardNota do app): check verde, "!" amarelo, info azul */
 .sim-note {
-  display:flex; gap:11px; align-items:flex-start;
-  border:1px solid var(--ink-200); border-radius:14px; background:#fff; padding:15px;
+  display:flex; gap:10px; align-items:flex-start;
+  border:1px solid var(--ink-200); border-radius:14px; background:#fff; padding:11px 12px;
 }
 .sim-note-mark {
   flex:none; width:21px; height:21px; border-radius:50%; margin-top:1px;
@@ -312,17 +531,37 @@
 .sim-note--warn  .sim-note-mark { background:var(--warn-700); }
 .sim-note--info  .sim-note-mark { background:var(--ink-700); }
 .sim-note-title { font-size:.94rem; font-weight:700; color:var(--ink-900); margin-bottom:3px; }
-.sim-note-text { font-size:.88rem; line-height:1.5; color:var(--ink-500); }
+.sim-note-text { font-size:.82rem; line-height:1.45; color:var(--ink-500); }
 .sim-note-text strong { color:var(--ink-900); font-weight:600; }
 /* lista de checks (o "Vale saber" / os checks do regime) */
-.sim-checks { display:flex; flex-direction:column; gap:9px; margin-top:2px; }
+.sim-checks { display:flex; flex-direction:column; gap:7px; margin-top:2px; }
 .sim-checks li { display:flex; gap:10px; align-items:flex-start; list-style:none; }
 .sim-checks svg { flex:none; width:14px; height:14px; margin-top:4px; color:var(--success-500); }
-.sim-checks span { font-size:.88rem; line-height:1.5; color:var(--ink-500); }
+.sim-checks span { font-size:.82rem; line-height:1.42; color:var(--ink-500); }
 .sim-panel {
-  border:1px solid var(--ink-200); border-radius:16px; background:#fff; padding:16px;
+  border:1px solid var(--ink-200); border-radius:16px; background:#fff; padding:12px 13px;
 }
 .sim-panel-title { font-size:.98rem; font-weight:700; color:var(--ink-900); margin-bottom:10px; }
+
+/* 4ª célula da grade de checks: AÇÃO, não informação. Cinza claro pra não
+   competir com o CTA coral do rodapé e pra se distinguir dos 3 vistos verdes
+   que dividem a mesma grade. */
+.sim-check-acao { display:block; }
+.sim-btn-cinza {
+  display:flex; align-items:flex-start; gap:10px; width:100%; text-align:left;
+  /* #F4F4F4 (pedido do Pedro): cinza neutro, sem o calor do --ink-100, que
+     puxa pro creme da paleta. Aqui o botão precisa ler como superfície de
+     sistema, não como parte do tingido da marca. */
+  background:var(--sim-cinza); border:1px solid var(--ink-200); border-radius:10px;
+  padding:7px 10px; font-size:.8rem; font-weight:600; color:var(--ink-700);
+  transition:background-color .16s, border-color .16s, color .16s;
+}
+/* o ícone segue a régua dos checks (14px, mesmo recuo), só troca de família:
+   triângulo de alerta em vermelho no lugar do visto verde. É o par visual que
+   diz "isto aqui é exceção", ao lado de três fatos que estão certos. */
+.sim-btn-cinza svg { flex:none; width:14px; height:14px; margin-top:2px; color:var(--danger-500); }
+.sim-btn-cinza:hover svg { color:var(--danger-700); }
+.sim-btn-cinza:hover { background:#EAEAEA; border-color:var(--ink-300); color:var(--ink-900); }
 
 /* painel expansível ("Vale saber"): fechado é uma linha só */
 .sim-exp { padding:0; }
@@ -330,7 +569,7 @@
   display:flex; align-items:center; justify-content:space-between; gap:12px;
   width:100%; padding:14px 16px; background:none; border:0; border-radius:16px; text-align:left;
 }
-.sim-exp-head:hover { background:var(--ink-50); }
+.sim-exp-head:hover { background:var(--sim-cinza); }
 .sim-exp-meta { display:inline-flex; align-items:center; gap:6px; font-size:.82rem; color:var(--ink-400); }
 .sim-exp-chevron { width:16px; height:16px; transition:transform .18s var(--ease-out); }
 .sim-exp-head[aria-expanded="true"] .sim-exp-chevron { transform:rotate(180deg); }
@@ -340,12 +579,12 @@
 
 /* bloco de resolução inline (fundo tingido) */
 .sim-inline {
-  border-radius:14px; padding:15px;
+  border-radius:14px; padding:10px 11px;
   background:var(--success-50);
 }
 .sim-inline--warn { background:var(--warn-50); }
 .sim-inline-title { font-size:.94rem; font-weight:700; color:var(--ink-900); margin-bottom:4px; }
-.sim-inline-text { font-size:.88rem; line-height:1.5; color:var(--ink-600); }
+.sim-inline-text { font-size:.82rem; line-height:1.45; color:var(--ink-600); }
 .sim-inline-link {
   margin-top:11px; background:none; border:0; padding:0;
   font-size:.88rem; font-weight:700; color:var(--ink-900);
@@ -359,38 +598,140 @@
 .sim-link:hover { color:var(--ink-900); }
 
 .sim-endereco {
-  border:1px solid var(--ink-200); border-radius:14px; background:var(--ink-50); padding:13px 15px;
+  border:1px solid var(--ink-200); border-radius:14px; background:var(--sim-cinza); padding:7px 11px;
 }
-.sim-endereco-cidade { font-size:.98rem; font-weight:700; color:var(--ink-900); }
+.sim-endereco-cidade { font-size:.9rem; font-weight:700; color:var(--ink-900); }
 .sim-endereco-rua { font-size:.86rem; color:var(--ink-500); margin-bottom:2px; }
 .sim-endereco-nota { font-size:.8rem; color:var(--ink-400); margin-top:2px; }
 
-/* ---------- veredito ---------- */
+/* coluna interna: empilha blocos que devem dividir a MESMA metade do grid
+   (no veredito, a nota e a pergunta de coorte, ao lado do resumo). */
+.sim-col { display:flex; flex-direction:column; gap:10px; }
+
+/* cartão de contexto: a regra que justifica a pergunta ao lado. Fundo recuado
+   e sem borda pra ficar claro que é leitura, não campo. */
+.sim-regra {
+  display:flex; flex-direction:column; gap:8px; align-self:start;
+  background:var(--sim-cinza); border-radius:16px; padding:13px 14px;
+}
+/* título recuado até a coluna do texto dos itens (check 14px + gap 10px), pra
+   "POR QUE A GENTE PERGUNTA" e as frases começarem no mesmo x. */
+.sim-regra-titulo {
+  font-size:.7rem; font-weight:700; letter-spacing:.07em; text-transform:uppercase;
+  color:var(--ink-400);
+}
+/* lista sem o recuo nativo do <ul>: o check nasce no mesmo x do "POR". */
+.sim-regra .sim-checks { padding-left:0; margin:0; }
+/* na tela do imóvel o cartão e o veredito ocupam a linha inteira, logo acima
+   do CTA; as duas perguntas é que dividem a linha de cima. */
+.sim-body-area > .sim-regra,
+.sim-body-area > .sim-full,
+.sim-body-area > .sim-duo { grid-column:1 / -1; }
+/* variante lateral do mesmo cartao: ocupa so a coluna da direita, ao lado da
+   pergunta (tela da atividade). */
+@media (min-width:900px) { .sim-body-area > .sim-regra.is-lado { grid-column:auto; } }
+/* selo de veredito em largura inteira (usado nos "nao": texto longo, resumo
+   curto ao lado nao equilibrava). */
+.sim-body-area > .sim-selo.is-larga { grid-column:1 / -1; }
+/* campo que fica na coluna livre ao lado do anterior (nao estica pra linha
+   inteira, como .sim-field solto faria). */
+.sim-campo-lado { display:flex; flex-direction:column; gap:5px; }
+
+/* campo travado: ainda não é a vez dele. Continua ocupando o lugar (o layout
+   não salta) mas sai do caminho visual e do foco por teclado. */
+.sim-input:disabled, .sim-select:disabled {
+  background:var(--sim-cinza); border-color:var(--ink-100); color:var(--ink-300);
+  cursor:not-allowed; box-shadow:none;
+}
+.sim-select:disabled { opacity:1; }
+.sim-input:disabled::placeholder { color:var(--ink-300); }
+.is-travado .sim-field-label { color:var(--ink-300); }
+.is-travado .sim-field-hint { color:var(--ink-300); }
+
+/* ─── faturamento: faixas à esquerda, valor exato à direita ───────────────
+   O campo mora num cartão de borda, mesma família do resumo e do selo do
+   veredito, pra ler como "o outro caminho" e não como um campo solto no meio
+   da tela. */
+.sim-valor {
+  display:flex; flex-direction:column; gap:7px;
+  border:1px solid var(--ink-200); border-radius:16px; padding:13px 14px;
+}
+.sim-valor-titulo { font-size:.88rem; font-weight:700; color:var(--ink-900); }
+.sim-valor-eco { font-size:.8rem; line-height:1.4; color:var(--ink-600); }
+.sim-valor-eco strong { color:var(--ink-900); }
+.sim-valor-eco.is-vazio { color:var(--ink-400); }
+.sim-valor-nota { font-size:.76rem; line-height:1.45; color:var(--ink-500); }
+/* grade que divide a linha com o cartão do valor (as outras telas seguem
+   ocupando a largura inteira) */
+@media (min-width:900px) {
+  .sim-body-area > .sim-cards.is-metade { grid-column:auto; align-self:start; }
+}
+
+/* ---------- veredito ----------
+   🔄 COMPACTADO: a tela de resultado era a maior do wizard (989px) e puxava
+   sozinha a altura fixa do cartão. Selo menor, resumo mais apertado e a coorte
+   em modo régua derrubam ~165px sem tirar nenhuma informação. */
+/* 🔄 selo DEITADO (era coluna centralizada): ícone à esquerda, título e frase
+   à direita. Centralizado, ele empilhava três elementos e custava ~40px numa
+   tela que é a mais alta do wizard. O peso do momento continua no ícone e no
+   tamanho do título, não no alinhamento. */
+/* 🔄 o selo virou CARTÃO, com a mesma borda e o mesmo raio do resumo ao lado:
+   dois blocos pareados, um com moldura e outro solto, liam como peças de
+   sistemas diferentes. Agora são o mesmo objeto em dois papéis. */
 .sim-selo {
-  display:flex; flex-direction:column; align-items:center; gap:14px; text-align:center;
-  padding:6px 0 4px;
+  display:flex; flex-direction:row; align-items:center; gap:14px; text-align:left;
+  border:1px solid var(--ink-200); border-radius:16px; padding:13px 14px;
 }
+.sim-selo > span:not(.sim-selo-icon) { display:flex; flex-direction:column; gap:3px; }
+@media (min-width:900px) {
+  .sim-selo { flex-direction:column; align-items:flex-start; gap:8px; justify-content:center; }
+}
+/* ícone + título lado a lado; a frase ocupa a linha de baixo inteira. O título
+   fica com a largura da coluna menos o ícone, o que dá 2 linhas em meia
+   coluna, em vez das 4 de quando o texto todo dividia espaço com ele. */
+.sim-selo-topo { display:flex; align-items:center; gap:11px; }
+.sim-selo-topo h2 { margin:0; }
 .sim-selo-icon {
-  width:76px; height:76px; border-radius:50%; display:grid; place-items:center; color:#fff;
+  width:48px; height:48px; border-radius:50%; display:grid; place-items:center; color:#fff;
 }
-.sim-selo-icon svg { width:36px; height:36px; }
+.sim-selo-icon svg { width:24px; height:24px; }
+/* o símbolo da marca já traz o próprio quadrado coral: sem círculo por trás,
+   sem sombra colorida, e ele ocupa o selo inteiro. */
+.sim-selo-icon.is-marca { background:none; box-shadow:none; border-radius:12px; overflow:hidden; }
+.sim-selo-icon.is-marca svg { width:100%; height:100%; }
 .sim-selo--ok      .sim-selo-icon { background:var(--success-500); box-shadow:0 10px 28px rgba(23,160,106,.28); }
+/* 🐛 vinha DEPOIS da regra .is-marca e com a mesma especificidade, então o
+   verde voltava por cima do símbolo da marca. Aqui ela vence pelas duas
+   coisas: mais específica e mais abaixo. */
+.sim-selo--ok .sim-selo-icon.is-marca { background:none; box-shadow:none; }
 .sim-selo--espera  .sim-selo-icon { background:var(--warn-500);    box-shadow:0 10px 28px rgba(245,165,36,.28); }
 .sim-selo--humano  .sim-selo-icon { background:var(--ink-800);     box-shadow:0 10px 28px rgba(27,30,36,.22); }
-.sim-selo h2 { font-size:1.5rem; font-weight:800; line-height:1.2; letter-spacing:-.01em; }
-.sim-selo p { font-size:1rem; color:var(--ink-500); max-width:44ch; }
+.sim-selo h2 { font-size:1.18rem; font-weight:800; line-height:1.2; letter-spacing:-.01em; }
+.sim-selo p { font-size:.85rem; line-height:1.45; color:var(--ink-500); max-width:60ch; }
 
 .sim-resumo { border:1px solid var(--ink-200); border-radius:16px; overflow:hidden; }
 .sim-resumo-row {
   display:flex; align-items:baseline; justify-content:space-between; gap:14px;
-  padding:12px 15px; border-bottom:1px solid var(--ink-100);
+  padding:5px 13px; border-bottom:1px solid var(--ink-100);
 }
 .sim-resumo-row:last-child { border-bottom:0; }
-.sim-resumo-k { font-size:.82rem; font-weight:600; color:var(--ink-400); flex:none; }
-.sim-resumo-v { font-size:.92rem; font-weight:600; color:var(--ink-900); text-align:right; }
+/* rodapé do cartão de resumo: mesma caixa, tom recuado, ícone pequeno. */
+.sim-resumo-nota {
+  display:flex; gap:9px; align-items:flex-start;
+  padding:9px 13px; background:var(--sim-cinza); border-top:1px solid var(--ink-100);
+  font-size:.78rem; line-height:1.45; color:var(--ink-500);
+}
+.sim-resumo-nota-ico {
+  flex:none; width:16px; height:16px; margin-top:1px; border-radius:50%;
+  display:grid; place-items:center; background:var(--success-500); color:#fff;
+}
+.sim-resumo-nota-ico.is-info { background:var(--ink-700); }
+.sim-resumo-nota-ico svg { width:9px; height:9px; }
+.sim-resumo-k { font-size:.78rem; font-weight:600; color:var(--ink-400); flex:none; }
+.sim-resumo-v { font-size:.86rem; font-weight:600; color:var(--ink-900); text-align:right; }
 
-.sim-actions { display:flex; flex-direction:column; gap:10px; }
-.sim-actions .btn { width:100%; padding:15px 20px; font-size:1.05rem; }
+.sim-actions { display:flex; flex-direction:column; gap:8px; }
+.sim-actions .btn { width:100%; padding:11px 18px; font-size:.96rem; }
 .btn-ghost-ink {
   background:transparent; color:var(--ink-600); border:1px solid var(--ink-200);
 }
@@ -428,8 +769,4 @@
 .sim-embed .sim-disclaimer { color:rgba(255,255,255,.72); }
 /* o rail e o cartão já são superfícies próprias (vidro/branco), então
    continuam legíveis sobre o coral sem nenhum ajuste. */
-@media (min-width:1000px) {
-  /* na home o header some ao rolar pra baixo e volta ao subir; 96px é o mesmo
-     offset usado no scroll-padding-top do site. */
-  .sim-embed .sim-rail { top:96px; }
-}
+
