@@ -35,7 +35,7 @@
   var ENDERECO_FISCAL = 60;      // R$/mês, CUSTOS.ENDERECO_FISCAL
 
   // 🔴 PLACEHOLDER, igual ao app (lib/contato.ts): trocar quando existir o
-  // número real de atendimento da Legalizai.
+  // número real de atendimento da Legalizaí.
   var WHATSAPP = '5531999999999';
 
   // As 14 categorias derivadas dos 87 CNAEs "atendemos com certeza".
@@ -79,8 +79,12 @@
   // A grade termina EXATAMENTE no teto do regime. "Não sei ainda" cobre 0–30k
   // nas DUAS grades de propósito: o gate do MEI precisa ler "incerto", nunca
   // "seguro" — é o que faz o aviso do teto aparecer pra quem não sabe.
+  // ⚠️ Ordem e cortes vindos do ADR 01/09 (faixas do E5 redesenhadas pro teto do
+  // ME): até 5k · 5-10k · 10-20k · 20-30k. A faixa de ENTRADA faltava aqui, e
+  // quem fatura R$3 mil não tinha onde clicar.
   var FAIXAS_ME = [
     { id: 'nao-sei', label: 'Não sei ainda', min: 0,     max: 30000, desconhecida: true },
+    { id: 'ate-5k',  label: 'Até R$ 5 mil',  min: 0,     max: 5000 },
     { id: '5-10k',   label: 'R$ 5 a 10 mil', min: 5000,  max: 10000 },
     { id: '10-20k',  label: 'R$ 10 a 20 mil', min: 10000, max: 20000 },
     { id: '20-30k',  label: 'R$ 20 a 30 mil', min: 20000, max: 30000 }
@@ -185,7 +189,7 @@
     categoria: null,         // id de PILLS | FORA_LISTA
     regulamentada: null,
     outraAtividade: '',
-    enderecoProprio: null,   // true = meu endereço · false = fiscal da Legalizai
+    enderecoProprio: null,   // true = meu endereço · false = fiscal da Legalizaí
     cep: '',
     cepInfo: null,           // { municipio, uf, logradouro, bairro }
     numero: '',
@@ -376,7 +380,7 @@
       titulo: 'Você será MEI ou ME?',
       sub: 'Compare os dois e toque no que se parece com o seu caso. A escolha define o resto da abertura.',
       corpo: corpo,
-      rodapeLink: { label: 'Tirar dúvida no WhatsApp', href: linkWhats('Oi! Estou vendo no site se a Legalizai me atende e travei na escolha entre MEI e ME. Podem me ajudar?') },
+      rodapeLink: { label: 'Tirar dúvida no WhatsApp', href: linkWhats('Oi! Estou vendo no site se a Legalizaí me atende e travei na escolha entre MEI e ME. Podem me ajudar?') },
       cta: 'Continuar',
       pronto: !!r
     };
@@ -520,9 +524,9 @@
       // dois cartões dizem as duas respostas possíveis.
       corpo += '<div class="sim-q">' +
         '<div class="sim-wide-duo">' +
-        // ordem da tela do app: o endereço da Legalizai vem primeiro
+        // ordem da tela do app: o endereço da Legalizaí vem primeiro
         '<button type="button" class="sim-wide" data-set="enderecoProprio" data-valor="false" aria-pressed="' + (fiscal ? 'true' : 'false') + '">' +
-          '<span class="sim-wide-head"><span class="sim-wide-title">Quero um endereço da Legalizai</span>' +
+          '<span class="sim-wide-head"><span class="sim-wide-title">Quero um endereço da Legalizaí</span>' +
           '<span class="sim-wide-pill">' + brl(ENDERECO_FISCAL) + '/mês</span></span>' +
           '<span class="sim-wide-sub">O endereço do nosso escritório em BH vira a sede da sua empresa.</span>' +
         '</button>' +
@@ -568,7 +572,7 @@
             'Clicando abaixo, você garante oferta especial quando a gente conseguir te atender.');
         } else {
           corpo += '<div class="sim-inline"><p class="sim-inline-title">Ainda não chegamos na sua cidade</p>' +
-            '<p class="sim-inline-text">Mas isso não te trava: clica em <strong>“Quero um endereço da Legalizai”</strong> aqui em cima, e a empresa nasce em BH do mesmo jeito.</p>' +
+            '<p class="sim-inline-text">Mas isso não te trava: clica em <strong>“Quero um endereço da Legalizaí”</strong> aqui em cima, e a empresa nasce em BH do mesmo jeito.</p>' +
             '<button type="button" class="sim-inline-link" data-acao="fila-cidade">Quero abrir na minha cidade mesmo assim</button></div>';
         }
       } else if (cepOk && s.cepInfo) {
@@ -630,7 +634,7 @@
     var veredito = '';
     if (apeSemResidencia) {
       veredito = nota('warn', 'Esse apartamento não serve como sede',
-        'Sem sócio morando nele, a Prefeitura indefere. Use outro endereço seu, ou o da Legalizai.');
+        'Sem sócio morando nele, a Prefeitura indefere. Use outro endereço seu, ou o da Legalizaí.');
     } else if (s.tipoImovel !== '' && s.reside !== null) {
       veredito = nota('ok', '', 'Endereço aprovado pela regra da Prefeitura. É esse que vai no seu CNPJ.');
     }
@@ -661,7 +665,7 @@
         [
           'Casa, sala, loja ou galpão: a Prefeitura aceita direto',
           'Apartamento só é aceito se um dos sócios morar nele',
-          'Se não for o seu caso, o endereço da Legalizai resolve por ' + brl(ENDERECO_FISCAL) + '/mês'
+          'Se não for o seu caso, o endereço da Legalizaí resolve por ' + brl(ENDERECO_FISCAL) + '/mês'
         ].map(function (t) { return '<li>' + CHECK_SVG + '<span>' + esc(t) + '</span></li>'; }).join('') +
       '</ul></div>';
 
@@ -674,7 +678,7 @@
       titulo: 'Sobre o imóvel',
       sub: 'Melhor descobrir agora, não depois de pagar.',
       corpo: corpo,
-      cta: apeSemResidencia ? 'Usar o endereço da Legalizai' : 'Continuar',
+      cta: apeSemResidencia ? 'Usar o endereço da Legalizaí' : 'Continuar',
       acaoCta: apeSemResidencia ? 'usar-fiscal' : 'avancar',
       pronto: apeSemResidencia || (s.tipoImovel !== '' && s.reside !== null)
     };
@@ -809,7 +813,7 @@
 
     if (s.meiOutraEmpresa === true) {
       corpo += '<div class="sim-full">' + nota('warn', 'Com outra empresa no seu nome, o MEI não serve',
-        'Se o que você quer é trazer pra Legalizai a empresa que já existe, isso a gente atende.') + '</div>';
+        'Se o que você quer é trazer pra Legalizaí a empresa que já existe, isso a gente atende.') + '</div>';
     }
 
     if (s.meiServidor === true) {
@@ -860,7 +864,10 @@
        Os dois caminhos conversam: digitar acende a faixa correspondente na
        grade, tocar numa faixa limpa o campo. Isso já era assim, só estava
        escondido atrás do link. */
-    var corpo = '<div class="sim-cards is-metade">' + faixas().map(function (fx, i) {
+    // 5 faixas (ME) não cabem na grade de cartões altos sem estourar a altura do
+    // cartão: acima de 4, a grade vira régua deitada (ícone pequeno à esquerda).
+    var lista = faixas();
+    var corpo = '<div class="sim-cards is-metade' + (lista.length > 4 ? ' sim-cards--regua' : '') + '">' + lista.map(function (fx, i) {
       return cardIcone(fx.id, 'faixa', fx.label, 'faixa-' + (i + 1), selecionada === fx.id);
     }).join('') + '</div>';
 
@@ -872,7 +879,7 @@
         ? '<p class="sim-valor-eco">Isso é a faixa <strong>' + esc(f.label) + '</strong>.</p>'
         : '<p class="sim-valor-eco is-vazio">A faixa acende sozinha aqui do lado.</p>') +
       (v >= TETO_ME_MENSAL
-        ? '<p class="sim-valor-nota">Teto do ME: ' + brl(TETO_ME_MENSAL) + ' por mês. Acima disso a empresa vira EPP, e aí a gente conversa antes de abrir.</p>'
+        ? '<p class="sim-valor-nota">Acima de ' + brl(TETO_ME_MENSAL) + ' por mês a empresa vira EPP com o tempo. Não trava a abertura: a gente acompanha e avisa quando chegar lá.</p>'
         : '') +
       '</div>';
 
@@ -905,13 +912,19 @@
      contabilidade tradicional, migração). Ordem importa — o caso mais
      específico ganha do mais genérico. */
 
+  // Destino de todo veredito que não é "sim": a lista de espera de verdade
+  // (/em-breve), a mesma que a home usa. O WhatsApp saiu daqui — ele serve pra
+  // dúvida no meio do caminho (ver `rodapeLink` no passo 1), não pra registrar
+  // quem a gente ainda não atende.
+  var LISTA_ESPERA = '/em-breve';
+
   function calcularVeredito() {
     if (s.socioNaoAtende) {
       return {
         tipo: 'humano',
         titulo: 'Seu caso é com um contador, não com o app',
-        texto: 'Sócio fora dos critérios do Simples (mora fora do Brasil, entra por CNPJ) não cabe no fluxo automatizado, mas cabe na Legalize Digital, que é o escritório por trás da Legalizai, pela contabilidade tradicional.',
-        cta: { label: 'Falar com o time no WhatsApp', href: linkWhats('Oi! Simulei no site e meu sócio não atende um dos critérios. Queria falar com o time sobre a contabilidade tradicional.') }
+        texto: 'Sócio fora dos critérios do Simples (mora fora do Brasil, entra por CNPJ) não cabe no fluxo automatizado, mas cabe na Legalize Digital, que é o escritório por trás da Legalizaí, pela contabilidade tradicional.',
+        cta: { label: 'Entrar na lista de espera', href: LISTA_ESPERA }
       };
     }
     if (s.categoria === FORA_LISTA) {
@@ -925,7 +938,7 @@
         texto: 'Sua atividade é regulamentada e precisa de responsável técnico registrado no conselho. Hoje isso fica fora do que o app resolve sozinho. A gente está em expansão' +
           (emBh ? ', e quando abrir pra sua área você tem condição especial.'
                 : ', e quando chegar em ' + esc(cidade) + ' e na sua área você tem condição especial.'),
-        cta: { label: 'Falar com o time no WhatsApp', href: linkWhats('Oi! Simulei no site, minha atividade é regulamentada e entrei na fila. Queria entender as opções.') }
+        cta: { label: 'Entrar na lista de espera', href: LISTA_ESPERA }
       };
     }
     if (s.filaCidade) {
@@ -933,8 +946,8 @@
       return {
         tipo: 'espera',
         titulo: 'A gente ainda não abriu em ' + esc(c),
-        texto: 'Por enquanto o app só abre empresa com sede em Belo Horizonte. Você entrou na fila e garante oferta especial quando a gente chegar aí. E, se quiser antecipar, dá pra abrir hoje mesmo usando o endereço fiscal da Legalizai em BH por ' + brl(ENDERECO_FISCAL) + '/mês.',
-        cta: { label: 'Quero saber do endereço em BH', href: linkWhats('Oi! Simulei no site, moro fora de BH e queria entender o endereço fiscal da Legalizai.') }
+        texto: 'Por enquanto o app só abre empresa com sede em Belo Horizonte. Você entrou na fila e garante oferta especial quando a gente chegar aí. E, se quiser antecipar, dá pra abrir hoje mesmo usando o endereço fiscal da Legalizaí em BH por ' + brl(ENDERECO_FISCAL) + '/mês.',
+        cta: { label: 'Entrar na lista de espera', href: LISTA_ESPERA }
       };
     }
     if (ehMei() && s.meiOutraEmpresa === true) {
@@ -945,7 +958,7 @@
         // UX-55: a copy pergunta pelo FATO ("já tenho empresa"), nunca pela
         // operação. "Migrar" é jargão, e quem não tem contador nem se
         // reconhece nela — e esse é justamente o melhor caso desse caminho.
-        cta: { label: 'Falar sobre a empresa que já tenho', href: linkWhats('Oi! Simulei no site: já tenho uma empresa e queria trazer ela pra Legalizai.') }
+        cta: { label: 'Entrar na lista de espera', href: LISTA_ESPERA }
       };
     }
     if (ehMei() && s.meiServidor === true) {
@@ -953,7 +966,7 @@
         tipo: 'humano',
         titulo: 'Servidor federal não pode ser MEI',
         texto: 'É vedação da lei, não regra nossa. Dependendo do seu vínculo pode existir caminho como ME. Vale meia hora de conversa com o contador antes de abrir qualquer coisa.',
-        cta: { label: 'Falar com o contador', href: linkWhats('Oi! Simulei no site, sou servidor federal e queria entender que caminho tenho pra abrir empresa.') }
+        cta: { label: 'Entrar na lista de espera', href: LISTA_ESPERA }
       };
     }
     return {
@@ -962,8 +975,8 @@
       // o resumo logo abaixo já lista regime, sede e faturamento: repetir em
       // prosa custava 2 linhas na tela mais alta do wizard.
       texto: ehMei()
-        ? 'Seu MEI entra no que a Legalizai abre hoje. O próximo passo é no app: a abertura sai da sua mão e vem pra nossa.'
-        : 'Sua ME entra no que a Legalizai abre hoje. O próximo passo é no app: a abertura sai da sua mão e vem pra nossa.',
+        ? 'Seu MEI entra no que a Legalizaí abre hoje. O próximo passo é no app: a abertura sai da sua mão e vem pra nossa.'
+        : 'Sua ME entra no que a Legalizaí abre hoje. O próximo passo é no app: a abertura sai da sua mão e vem pra nossa.',
       // embutido na home o #baixar está na própria página; na página
       // standalone precisa do caminho completo, senão a âncora não existe
       cta: { label: 'Baixar o app e começar', href: document.getElementById('baixar') ? '#baixar' : '/home#baixar' }
@@ -973,7 +986,7 @@
   function telaResultado() {
     var v = calcularVeredito();
     /* 🔄 O SÍMBOLO DA MARCA no lugar do check verde genérico (pedido do Pedro):
-       quando a resposta é sim, quem assina o veredito é a Legalizai. É o mesmo
+       quando a resposta é sim, quem assina o veredito é a Legalizaí. É o mesmo
        SVG que já vive no header, no rodapé e no CTA final da página, inline e
        não como arquivo: o desenho é o mesmo do `Legalizai-Logo.png`, mas em
        vetor ele fica nítido em qualquer tamanho e não vira mais um asset pra
