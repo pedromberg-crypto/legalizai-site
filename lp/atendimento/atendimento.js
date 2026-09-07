@@ -977,8 +977,12 @@
       texto: ehMei()
         ? 'Seu MEI entra no que a Legalizaí abre hoje. O próximo passo é no app: a abertura sai da sua mão e vem pra nossa.'
         : 'Sua ME entra no que a Legalizaí abre hoje. O próximo passo é no app: a abertura sai da sua mão e vem pra nossa.',
-      // embutido na home o #baixar está na própria página; na página
-      // standalone precisa do caminho completo, senão a âncora não existe
+      // embutido na home a âncora está na própria página; na página standalone
+      // precisa do caminho completo, senão ela não existe.
+      // ⚠️ AQUI é `#baixar`, não `#rodape`: a home PUBLICADA ainda tem a dobra
+      // "Bora tirar a burocracia" (id=baixar). O `#rodape` existe só no
+      // redesenho do LAB — quando ele for publicado, trocar as duas pontas
+      // no mesmo commit.
       cta: { label: 'Baixar o app e começar', href: document.getElementById('baixar') ? '#baixar' : '/home#baixar' }
     };
   }

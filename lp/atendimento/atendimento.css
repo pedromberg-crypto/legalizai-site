@@ -2,7 +2,7 @@
    LEGALIZAI · /atendimento — "A gente consegue te atender?"
    Simulador do trecho E3.2 → E5F do flow de ABRIR.
 
-   Depende de /_lab/styles.css (tokens, .container, .btn, .eyebrow,
+   Depende de /styles.css (tokens, .container, .btn, .eyebrow,
    .site-header, .site-footer, .sr-only). Aqui só o que é desta página.
 
    Linguagem visual: as telas do app. O cartão-tela reproduz a estrutura de
@@ -69,6 +69,23 @@
 @media (min-width:1000px) {
   .sim-rail { height:var(--sim-h); align-self:start; }
 }
+
+/* ─── trilha em VIDRO MISTO (lp/_lab/vidro-liquido.js) ─────────────────────
+   O canvas pinta o fundo; aqui só sai o branco e o texto inverte. `position`
+   e `z-index` são obrigatórios: o canvas é posicionado e, sem eles, pintaria
+   por cima da lista.
+   ⚠️ Esta classe só existe quando o script do vidro roda (LAB). Na rota
+   /atendimento de produção ele não é carregado, então a trilha segue branca. */
+.sim-rail.is-vidro-misto { position:relative; background:none; border-color:transparent; }
+.sim-rail.is-vidro-misto > *:not(.step-vidro) { position:relative; z-index:1; }
+.sim-rail.is-vidro-misto .sim-rail-title { color:rgba(255,255,255,.66); }
+.sim-rail.is-vidro-misto .sim-rail-item { color:rgba(255,255,255,.66); }
+.sim-rail.is-vidro-misto .sim-rail-item.is-done { color:rgba(255,255,255,.9); }
+.sim-rail.is-vidro-misto .sim-rail-item.is-active { background:var(--coral-700); color:#fff; }
+.sim-rail.is-vidro-misto .sim-rail-mark { border-color:rgba(255,255,255,.36); color:rgba(255,255,255,.75); }
+.sim-rail.is-vidro-misto .sim-rail-item.is-active .sim-rail-mark { border-color:#fff; background:#fff; color:var(--coral-700); }
+.sim-rail.is-vidro-misto .sim-rail-trust { border-top-color:rgba(255,255,255,.18); }
+.sim-rail.is-vidro-misto .sim-rail-trust li { color:rgba(255,255,255,.86); }
 
 /* ---------- trilha lateral (só desktop) ---------- */
 /* 🔄 Superfície BRANCA OPACA, igual à do cartão-tela ao lado — era vidro
@@ -399,7 +416,9 @@
   transition:border-color .16s, background-color .16s, color .16s;
 }
 .sim-pick:hover { border-color:var(--ink-300); }
-.sim-pick[aria-pressed="true"] { background:var(--coral-600); border-color:var(--coral-600); color:#fff; }
+/* coral-700, não 600: o rótulo aqui é .98rem bold, abaixo do limite de "texto
+   grande" — sobre coral-600 o branco dá 4,04:1 e reprova AA. Regra de 12/07. */
+.sim-pick[aria-pressed="true"] { background:var(--coral-700); border-color:var(--coral-700); color:#fff; }
 
 /* card de escolha larga (endereço próprio × fiscal)
    🔄 os dois dividem UMA linha: empilhados custavam ~190px de altura pra duas
@@ -459,7 +478,8 @@
 }
 .sim-select:hover { border-color:var(--ink-300); }
 /* placeholder em cinza, valor escolhido em tinta cheia */
-.sim-select:has(option[value=""]:checked) { color:var(--ink-400); }
+/* ink-500, não 400: o placeholder precisa ser legível (400 dá 2,53:1) */
+.sim-select:has(option[value=""]:checked) { color:var(--ink-500); }
 
 /* LISTA ABERTA. Em CSS clássico a lista de um <select> é desenhada pelo SO e
    não aceita estilo (o azul chapado do Windows). O `appearance:base-select`
@@ -487,7 +507,8 @@
   }
   .sim-select option:hover, .sim-select option:focus { background:var(--sim-cinza); outline:none; }
   .sim-select option:checked { background:var(--coral-50); color:var(--coral-700); font-weight:600; }
-  .sim-select option[value=""] { color:var(--ink-400); }
+  /* ink-500: o placeholder da lista precisa passar AA sobre o painel branco */
+  .sim-select option[value=""] { color:var(--ink-500); }
   .sim-select option::checkmark { order:1; margin-left:auto; color:var(--coral-600); }
 }
 .sim-input:hover { border-color:var(--ink-300); }
@@ -498,7 +519,8 @@
 .sim-input-prefix { position:relative; }
 .sim-input-prefix span {
   position:absolute; left:14px; top:50%; transform:translateY(-50%);
-  color:var(--ink-500); pointer-events:none; font-size:1rem;
+  /* ink-600, não 500: sobre o branco do campo o 500 dá 3,30:1 e reprova AA */
+  color:var(--ink-600); pointer-events:none; font-size:1rem;
 }
 .sim-input-prefix .sim-input { padding-left:42px; }
 /* as duas perguntas lado a lado vinham de moldes diferentes (.sim-field e
