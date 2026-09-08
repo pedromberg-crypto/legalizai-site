@@ -852,7 +852,7 @@
     var fill = document.getElementById('sim-bar-fill');
     var label = document.getElementById('sim-bar-label');
     var pct = Math.round((pos / (vis.length - 1)) * 100);
-    if (fill) fill.style.width = pct + '%';
+    if (fill) fill.style.transform = 'scaleX(' + (pct / 100) + ')';
     if (label) {
       label.textContent = PASSOS[s.passo].rotulo;
     }
