@@ -230,7 +230,7 @@
   function cardIcone(valor, campo, label, base, selecionado) {
     var src = base.charAt(0) === '/'
       ? base
-      : '/atendimento/icones/' + base + (selecionado ? '-creme' : '-coral') + '.png';
+      : '/atendimento/icones/' + base + (selecionado ? '-creme' : '-coral') + '.webp';
     return '<button type="button" class="sim-card" aria-pressed="' + (selecionado ? 'true' : 'false') + '"' +
       ' data-set="' + campo + '" data-valor="' + valor + '">' +
       '<span class="sim-card-check">' + CHECK_SVG + '</span>' +
@@ -287,7 +287,7 @@
       ' data-set="regime" data-valor="' + valor + '">' +
       '<span class="sim-card-check">' + CHECK_SVG + '</span>' +
       '<span class="sim-card-topo">' +
-        '<img src="/atendimento/icones/' + base + (selecionado ? '-creme' : '-coral') + '.png" alt="" aria-hidden="true">' +
+        '<img src="/atendimento/icones/' + base + (selecionado ? '-creme' : '-coral') + '.webp" alt="" aria-hidden="true">' +
         '<span class="sim-card-nome">' + esc(d.nome) + '</span>' +
       '</span>' +
       '<span class="sim-checks">' + d.checks.map(function (t) {
