@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Legalizaí · gerado em 2026-09-08.
+     ⚠️ /em-breve fica FORA do sitemap de propósito: é uma página de espera,
+     não conteúdo. E /blog/post é o post de demonstração — quando o blog tiver
+     posts de verdade, troque esta entrada pelas URLs reais. -->
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+  <!-- a LP — hoje redireciona pra /em-breve; vira a home no lançamento -->
+  <url>
+    <loc>https://legalizai.com.br/</loc>
+    <lastmod>2026-09-08</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>1.0</priority>
+  </url>
+  <!-- simulador "a gente consegue te atender?" -->
+  <url>
+    <loc>https://legalizai.com.br/atendimento</loc>
+    <lastmod>2026-09-08</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <!-- índice do blog -->
+  <url>
+    <loc>https://legalizai.com.br/blog</loc>
+    <lastmod>2026-09-08</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <!-- post de exemplo — trocar pelas URLs reais quando o blog tiver posts -->
+  <url>
+    <loc>https://legalizai.com.br/blog/post</loc>
+    <lastmod>2026-09-08</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.5</priority>
+  </url>
+  <url>
+    <loc>https://legalizai.com.br/termos</loc>
+    <lastmod>2026-09-08</lastmod>
+    <changefreq>yearly</changefreq>
+    <priority>0.2</priority>
+  </url>
+  <url>
+    <loc>https://legalizai.com.br/privacidade</loc>
+    <lastmod>2026-09-08</lastmod>
+    <changefreq>yearly</changefreq>
+    <priority>0.2</priority>
+  </url>
+</urlset>
