@@ -4,6 +4,7 @@
   var secao = document.querySelector('.steps');
   if (!secao) return;
   if (window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+  if ((window.innerWidth || 0) < 900) return;
   var cards = secao.querySelectorAll('.step');
   if (!cards.length) return;
   var VS = 'attribute vec2 p; void main(){ gl_Position = vec4(p, 0.0, 1.0); }';
