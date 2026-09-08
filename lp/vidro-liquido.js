@@ -187,7 +187,9 @@
     canvas.setAttribute('aria-hidden', 'true');
     var ctx = canvas.getContext('2d');
     if (!ctx) return false;
+    var revelado = false;
     function desenhar() {
+      if (!revelado) return;
       var b = el.getBoundingClientRect();
       if (b.width < 2 || b.height < 2) return;
       var dpr = Math.min(window.devicePixelRatio || 1, 2);
@@ -220,7 +222,32 @@
       ctx.drawImage(glCanvas, 0, 0);
     }
     el.insertBefore(canvas, el.firstChild);
-    desenhar();
+    function revelar() {
+      if (revelado) return;
+      revelado = true;
+      desenhar();
+    }
+    var margem = 300;
+    if (el.getBoundingClientRect().top < (window.innerHeight || 0) + margem) {
+      revelar();
+    } else {
+      if (window.IntersectionObserver) {
+        var io = new IntersectionObserver(function (entradas) {
+          for (var k = 0; k < entradas.length; k++) {
+            if (entradas[k].isIntersecting) { io.disconnect(); revelar(); break; }
+          }
+        }, { rootMargin: margem + 'px 0px' });
+        io.observe(el);
+      }
+      var conferir = function () {
+        if (revelado) { removeEventListener('scroll', conferir); return; }
+        if (el.getBoundingClientRect().top < (window.innerHeight || 0) + margem) {
+          removeEventListener('scroll', conferir);
+          revelar();
+        }
+      };
+      addEventListener('scroll', conferir, { passive: true });
+    }
     if (opcoes.persistente && window.MutationObserver) {
       new MutationObserver(function () {
         if (!canvas.parentNode) {
