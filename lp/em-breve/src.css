@@ -258,7 +258,7 @@ body.soon-body { min-height:100dvh; display:flex; flex-direction:column; }
    sem CSS a desenhar titânio/botões/ilha — tudo isso já vem na foto. */
 .phone-frame {
   width:100%; height:100%; position:relative;
-  background-image:url('assets/iphone-frame.png');
+  background-image:url('assets/iphone-frame.webp');
   background-size:100% 100%; background-repeat:no-repeat;
   filter:
     drop-shadow(0 40px 60px rgba(27,30,36,.42))
@@ -266,7 +266,7 @@ body.soon-body { min-height:100dvh; display:flex; flex-direction:column; }
 }
 
 /* tela: preenche o frame inteiro e usa MÁSCARA (screen-mask.png, recorte
-   exato do Screen.png real do Figma — mesmo crop do iphone-frame.png) pra
+   exato do Screen.png real do Figma — mesmo crop do iphone-frame.webp) pra
    clipar no formato preciso da tela fotografada, ilha dinâmica incluída.
    Zero frestinha: nada de border-radius aproximado tentando adivinhar a
    curva do canto. */
