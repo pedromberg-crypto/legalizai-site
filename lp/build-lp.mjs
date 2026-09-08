@@ -53,27 +53,6 @@ const MINIFICAR = !process.argv.includes('--raw');
 const COPIAR = ['index.html', 'styles.css', 'script.js', 'vidro-liquido.js',
                 'atendimento', 'blog', 'assets'];
 
-/* ─── CSS CRÍTICO ─────────────────────────────────────────────────────────
-   `_lab/critico.css` é o estilo da PRIMEIRA DOBRA, extraído com penthouse nas
-   duas larguras (412 e 1440) e unido. O build embute ele inline no <head> da
-   home e passa o `styles.css` completo a carregar SEM BLOQUEAR.
-
-   Por quê: medido com Lighthouse, o `styles.css` segurava a primeira pintura
-   por 1.043 ms. Ele é o último recurso bloqueante da página.
-
-   ⚠️ REGENERAR quando o HERO ou o HEADER mudarem. O arquivo não se atualiza
-   sozinho, e crítico desatualizado = dobra piscando sem estilo. O comando está
-   no DEPLOY.md. Duas armadilhas já mordidas e resolvidas na geração:
-     · o penthouse descarta @font-face e @keyframes (eles não "casam" com
-       elemento). Sem o @keyframes, a regra `animation:revelar-css` do hero
-       fica sem destino e o hero inteiro nasce em opacity:0 — a página abria
-       vazia. Os dois blocos são reanexados na mão.
-     · o crítico é a UNIÃO das duas larguras: só a de desktop quebrava o
-       mobile e vice-versa.
-   Validado por screenshot: a página só com o crítico renderiza idêntica à
-   página com a folha completa. */
-const CRITICO = 'critico.css';
-
 /* material de trabalho do sandbox: nunca vai junto */
 const IGNORAR = new Set(['_inbox', 'arquivo-morto']);
 
@@ -190,7 +169,7 @@ function minHtml(codigo) {
 
 /* ─── travessia ──────────────────────────────────────────────────────────── */
 
-const conta = { arquivos: 0, caminhos: 0, min: 0, crus: [], criticoEm: [] };
+const conta = { arquivos: 0, caminhos: 0, min: 0, crus: [] };
 let antes = 0, depois = 0;
 
 function anda(rel) {
@@ -216,24 +195,6 @@ function anda(rel) {
   s = s.replace(/\/_lab\//g, () => { conta.caminhos++; return '/'; });
   // 2 · rede contra a tarja de sandbox voltar
   s = s.replace(/^.*lab-flag.*$\n?/gm, '');
-
-  // 3 · CSS crítico inline + folha completa sem bloquear (só nas páginas HTML
-  //     que carregam o styles.css na raiz)
-  // SÓ a home: o crítico foi extraído dela. Nas outras páginas a primeira
-  // dobra é outra, e crítico errado + folha não-bloqueante = conteúdo
-  // piscando sem estilo. Lá o styles.css continua bloqueando, que é o
-  // comportamento seguro.
-  if (rel === 'index.html' && existsSync(join(FONTE, CRITICO))) {
-    const antesCss = s;
-    s = s.replace(
-      /<link rel="stylesheet" href="\/styles\.css\?v=(\d+)">/,
-      (_m, v) =>
-        '<style>' + readFileSync(join(FONTE, CRITICO), 'utf8').trim() + '</style>\n' +
-        `  <link rel="stylesheet" href="/styles.css?v=${v}" media="print" onload="this.media='all';this.onload=null">\n` +
-        `  <noscript><link rel="stylesheet" href="/styles.css?v=${v}"></noscript>`
-    );
-    if (s !== antesCss) conta.criticoEm.push(rel);
-  }
 
   const bruto = s;
   antes += bruto.length;
@@ -275,7 +236,6 @@ const kb = (n) => (n / 1024).toFixed(1).padStart(7) + ' KB';
 console.log(`\nBuild da LP concluído${MINIFICAR ? '' : '  (--raw: sem minificar)'}.`);
 console.log(`  arquivos copiados        : ${conta.arquivos}`);
 console.log(`  caminhos /_lab/ trocados : ${conta.caminhos}`);
-console.log(`  CSS crítico embutido em  : ${conta.criticoEm.join(', ') || '(nenhum)'}`);
 if (MINIFICAR) {
   console.log(`  arquivos minificados     : ${conta.min}`);
   console.log(`  texto publicado          : ${kb(antes)} -> ${kb(depois)}   (-${(100 * (1 - depois / antes)).toFixed(1)}%)`);
