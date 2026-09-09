@@ -6,7 +6,7 @@
 (function () {
   'use strict';
 
-  var WAITLIST_ENDPOINT = 'https://api.legalizai.com.br/waitlist';
+  var WAITLIST_ENDPOINT = 'https://wygqjkfsc7qzc3chhzwztorula0kuzbw.lambda-url.sa-east-1.on.aws/waitlist';
   var MUNICIPIOS_URL = '/em-breve/assets/municipios.json';
   var UTM_KEYS = ['utm_source', 'utm_medium', 'utm_campaign', 'utm_content', 'utm_term'];
   var UTM_STORAGE_KEY = 'legalizai_utm';

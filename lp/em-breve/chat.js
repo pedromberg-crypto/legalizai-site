@@ -9,7 +9,7 @@
 (function () {
   'use strict';
 
-  var API = 'https://api.legalizai.com.br/site-chat/messages';
+  var API = 'https://wygqjkfsc7qzc3chhzwztorula0kuzbw.lambda-url.sa-east-1.on.aws/site-chat/messages';
   var VISITOR_KEY = 'legalizai_chat_visitor';
 
   function visitorId() {
