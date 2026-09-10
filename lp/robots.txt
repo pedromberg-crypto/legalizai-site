@@ -1,19 +1,17 @@
 # Legalizaí — https://legalizai.com.br
 #
-# ⚠️ ATÉ O LANÇAMENTO a raiz redireciona pra /em-breve (ver vercel.json), e a
-# LP mora em /home. Enquanto isso for verdade, a LP fica FORA do índice: o
-# Google indexaria /home como se fosse a página principal e depois teria que
-# reaprender a raiz — trocar a URL canônica de uma página já indexada custa
-# semanas de posição.
+# 🚀 11/09/2026 — A LP VIROU A RAIZ. O redirect de "/" pra /em-breve saiu do
+# vercel.json, e com ele saiu o "Disallow: /home" que existia só pra impedir o
+# Google de indexar a LP numa URL que ia mudar. Agora ela mora na raiz, que é a
+# URL do canonical e do sitemap desde sempre — não há mais o que reaprender.
+# "/home" continua respondendo por rewrite: é atalho antigo, não URL nova.
 #
-# NO DIA DO LANÇAMENTO, junto com a troca do redirect:
-#   1. apague a linha "Disallow: /home" abaixo;
-#   2. confirme que o sitemap lista a raiz (já lista);
-#   3. peça a indexação da raiz no Search Console.
+# /em-breve segue FORA do índice de propósito. Ela continua no ar e continua
+# sendo onde a fila de espera é captada, mas é página de captura, não conteúdo:
+# indexá-la criaria uma segunda porta competindo com a raiz pelo mesmo termo.
 
 User-agent: *
 Allow: /
-Disallow: /home
 Disallow: /em-breve
 
 Sitemap: https://legalizai.com.br/sitemap.xml

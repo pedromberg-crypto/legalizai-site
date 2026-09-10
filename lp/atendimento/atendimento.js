@@ -6,7 +6,7 @@
   var TETO_ME_MENSAL = 30000;
   var TETO_MEI_ANUAL = 81000;
   var TETO_MEI_MENSAL = 6750;
-  var ENDERECO_FISCAL = 60;
+  var ENDERECO_FISCAL = 49;
   var WHATSAPP = '5531999999999';
   var PILLS = [
     { id: 'tech',       label: 'Tecnologia e software',            curto: 'Tecnologia' },
