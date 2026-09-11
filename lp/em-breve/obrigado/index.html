@@ -1,5 +1,10 @@
 <!doctype html>
-<html lang="pt-BR">
+<!-- obrigado-html: alvo pro overflow:hidden do <html> no desktop. A
+     stylesheet é compartilhada com /em-breve, então o seletor precisa de
+     algo que só exista nesta página — e tem que estar no <html>, não só na
+     <body>: propagação de overflow body→viewport é inconsistente entre
+     navegadores (ver "html, body.soon-body" em src.css). -->
+<html lang="pt-BR" class="obrigado-html">
 <head>
   <meta charset="utf-8">
 
@@ -16,6 +21,24 @@
        com dado velho de uma sessão anterior. -->
   <script>
   (function () {
+    /* Atalho de preview pra trabalhar layout: ?preview (opcional
+       &plano=mei|me e &nome=Fulano) entrega dado falso sem passar pelo
+       formulário, e sem consumir chave nenhuma — então F5 continua aqui.
+       Só vale em localhost: em produção o host nunca bate e o guard
+       normal abaixo roda igual. __legalizaiPreview desliga o Pixel. */
+    var host = location.hostname;
+    if (host === 'localhost' || host === '127.0.0.1' || host === '[::1]') {
+      var q = new URLSearchParams(location.search);
+      if (q.has('preview')) {
+        window.__legalizaiPreview = true;
+        window.__legalizaiThanks = {
+          nome: q.get('nome') || 'Pedro',
+          plano: q.get('plano') || 'mei'
+        };
+        return;
+      }
+    }
+
     var raw;
     try { raw = sessionStorage.getItem('legalizai_thanks'); } catch (e) { raw = null; }
     if (!raw) { location.replace('/em-breve'); return; }
@@ -31,9 +54,10 @@
   <!-- Meta Pixel Code -->
   <!-- Só dispara quando o guard acima deixou a chave em window.__legalizaiThanks:
        quem caiu aqui por acesso direto já está sendo redirecionado e não
-       pode contar como PageView/Lead. -->
+       pode contar como PageView/Lead. Preview de layout (?preview em
+       localhost) também não conta: seria Lead falso no Pixel. -->
   <script>
-  if (window.__legalizaiThanks) {
+  if (window.__legalizaiThanks && !window.__legalizaiPreview) {
     !function(f,b,e,v,n,t,s)
     {if(f.fbq)return;n=f.fbq=function(){n.callMethod?
     n.callMethod.apply(n,arguments):n.queue.push(arguments)};
@@ -103,7 +127,10 @@
     </div>
 
     <h1 class="obrigado-title" id="obrigado-title">Combinado!</h1>
-    <p class="obrigado-sub">Sua condição de lançamento tá garantida. Assim que abrir, a gente te chama primeiro. Sem contabilês, sem enrolação.</p>
+    <!-- a última frase sai no mobile (ver .obrigado-sub-extra em src.css):
+         com ela o parágrafo ocupa 4 linhas na tela do celular, e só
+         diminuir a fonte pra caber em 2 exigiria ~11px, ilegível. -->
+    <p class="obrigado-sub">Sua condição de lançamento tá garantida. Assim que abrir, a gente te chama primeiro.<span class="obrigado-sub-extra"> Sem contabilês, sem enrolação.</span></p>
 
     <!-- populado por script.js a partir de window.__legalizaiThanks; fica
          vazio (e some, ver script.js) se por algum motivo não houver plano
@@ -116,7 +143,13 @@
     <div class="obrigado-share-actions">
       <a class="obrigado-share-btn obrigado-share-whatsapp" id="obrigado-whatsapp" href="https://wa.me/" target="_blank" rel="noopener">
         <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.198.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.076 4.487.709.306 1.263.489 1.694.626.712.227 1.36.194 1.872.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347zM12.05 21.785h-.004a9.87 9.87 0 0 1-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 0 1-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 0 1 2.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884zm8.413-18.297A11.815 11.815 0 0 0 12.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 0 0 5.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 0 0-3.48-8.413z"/></svg>
-        <span>Chamar no WhatsApp</span>
+        <!-- dois rótulos, um por faixa (ver .obrigado-wa-* em src.css): no
+             mobile o título acima do bloco some, então o botão precisa dizer
+             o que está sendo compartilhado; no desktop o título continua lá
+             e o botão pode nomear o canal. Um fica sempre em display:none,
+             fora do fluxo e fora do leitor de tela. -->
+        <span class="obrigado-wa-longa">Compartilhar pelo WhatsApp</span>
+        <span class="obrigado-wa-curta">Compartilhar oferta</span>
       </a>
       <button type="button" class="obrigado-share-btn obrigado-share-copy" id="obrigado-copy">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"/><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"/></svg>

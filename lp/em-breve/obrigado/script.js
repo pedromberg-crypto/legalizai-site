@@ -41,17 +41,31 @@
   var planoInfo = PLANO_COPY[data.plano];
   if (planEl) {
     if (planoInfo) {
+      /* Marcação idêntica à do card de preço do /em-breve, wrapper
+         .soon-price-card incluso: é o mesmo CSS servindo as duas páginas,
+         então copiar a estrutura inteira (em vez de só o .soon-price-plan-card
+         solto, como era antes) é o que faz o card sair pixel a pixel igual
+         ao do formulário — casca clara, brilho coral e pill no canto.
+         O id (#soon-price-mei / #soon-price-me) não é decoração: o bloco
+         "destaque" do CSS é escopado por ele. Continua único no documento,
+         esta página não tem o formulário.
+         Sai de propósito o <small class="soon-price-validity">: aqui a
+         condição já está garantida, não há mais nada a validar. */
       planEl.innerHTML =
-        '<div class="soon-price-plan-card">' +
-          '<div class="soon-price-plan-head">' +
-            '<span class="soon-price-icon" aria-hidden="true">' + planoInfo.icone + '</span>' +
-            '<span class="soon-price-plan-name">' + planoInfo.rotulo + '</span>' +
+        '<div class="soon-price-card">' +
+          '<div class="soon-price-grid">' +
+            '<div class="soon-price-plan-card" id="soon-price-' + data.plano + '">' +
+              '<div class="soon-price-plan-head">' +
+                '<span class="soon-price-icon" aria-hidden="true">' + planoInfo.icone + '</span>' +
+                '<span class="soon-price-plan-name">' + planoInfo.rotulo + '</span>' +
+              '</div>' +
+              '<div class="soon-price-value-row">' +
+                '<p class="soon-price-value">' + planoInfo.valor + '<em>/mês</em></p>' +
+                '<span class="soon-price-duration">3 primeiros meses</span>' +
+              '</div>' +
+              '<p class="soon-price-then"><span class="soon-price-then-label">depois</span> <strong>' + planoInfo.depois + '</strong>/mês</p>' +
+            '</div>' +
           '</div>' +
-          '<div class="soon-price-value-row">' +
-            '<p class="soon-price-value">' + planoInfo.valor + '<em>/mês</em></p>' +
-            '<span class="soon-price-duration">3 primeiros meses</span>' +
-          '</div>' +
-          '<p class="soon-price-then"><span class="soon-price-then-label">depois</span> <strong>' + planoInfo.depois + '</strong>/mês</p>' +
         '</div>';
     } else {
       /* sem plano salvo (cadastro antigo sem essa info, ou tipo não
@@ -87,7 +101,13 @@
     return lottieRuntimeLoading;
   }
 
-  if (badgeEl && !window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+  /* No mobile o selo inteiro está oculto por CSS (ver @media max-width:899px
+     em src.css) — sem esta checagem o runtime do Lottie + o JSON seriam
+     baixados assim mesmo, pra animar uma caixa com display:none. */
+  var semConfete = window.matchMedia('(prefers-reduced-motion: reduce)').matches ||
+                   window.matchMedia('(max-width:899px)').matches;
+
+  if (badgeEl && !semConfete) {
     badgeEl.classList.add('obrigado-badge-lottie');
     badgeEl.innerHTML = '';
     carregarLottieRuntime().then(function (rt) {

@@ -622,9 +622,8 @@ body.soon-body { min-height:100dvh; display:flex; flex-direction:column; }
    LEGALIZAI · Obrigado (pós-cadastro) — /em-breve/obrigado
    Mesma stylesheet compilada do /em-breve (compartilhada de propósito,
    ver README) — só as classes novas desta página entram aqui, prefixo
-   obrigado-. Reaproveita .soon-price-plan-card (e filhas) pro card do
-   plano, só recolorindo pra branco/vidro em cima do fundo coral (ver
-   bloco ".obrigado-plan .soon-price-*" abaixo).
+   obrigado-. O card do plano é o card de preço do /em-breve reaproveitado
+   inteiro, sem recolorir nada (ver .obrigado-plan mais abaixo).
    ============================================================ */
 .obrigado-body {
   min-height:100dvh; display:flex; flex-direction:column;
@@ -632,7 +631,15 @@ body.soon-body { min-height:100dvh; display:flex; flex-direction:column; }
      não brigar com o card branco por cima) — aqui a página INTEIRA é a
      celebração, então o fundo pode ir mais forte: coral-600 pra
      coral-500 pro centro (respiro) e de volta pra coral-700 embaixo. */
-  background:linear-gradient(160deg, var(--coral-600) 0%, var(--coral-500) 55%, var(--coral-700) 100%);
+  /* no-repeat + cor de fundo matam a tarja coral avulsa que aparecia
+     embaixo do rodapé: o fundo da <body> propaga pro canvas, mas a área
+     de posicionamento passa a ser a caixa do <html>. Quando ela fica mais
+     alta que o gradiente, o padrão REPETE (background-repeat é repeat por
+     padrão) e o começo do segundo ladrilho — coral-600, mais claro que o
+     coral-700 do fim do primeiro — vira aquela faixa. Sem repetição, o que
+     sobra é pintado com a cor sólida, que é justamente a do fim do
+     gradiente: emenda invisível em qualquer altura. */
+  background:var(--coral-700) linear-gradient(160deg, var(--coral-600) 0%, var(--coral-500) 55%, var(--coral-700) 100%) no-repeat;
 }
 /* :focus-visible global (lá no topo do arquivo) usa outline coral-600 —
    invisível sobre um fundo que É coral. Só nesta página, o anel de foco
@@ -674,59 +681,141 @@ body.soon-body { min-height:100dvh; display:flex; flex-direction:column; }
   background:none; border:none; border-radius:0;
 }
 
+/* mobile: o selo de sucesso sai inteiro, pra liberar altura pro resto.
+   Pega as DUAS variantes (confete de 132px e check estático de 60px) de
+   propósito: esconder só o confete deixaria a página com duas alturas
+   diferentes conforme a preferência de movimento de quem abre, e aí não
+   dá pra avaliar um layout só. script.js também nem carrega o runtime do
+   Lottie nesta faixa — display:none esconde, mas não deixa de baixar.
+   <900px é a faixa mobile do projeto (ver o @media de desktop no fim do
+   arquivo, que usa min-width:900px). */
+@media (max-width:899px) {
+  .obrigado-badge { display:none; }
+
+  /* subtítulo em 2 linhas: some com a última frase (o <span> no HTML) e
+     desce a fonte de 1.02rem pra .9rem. Só a fonte não resolvia — as 112
+     letras do texto inteiro só caberiam em 2 linhas a ~11px numa tela de
+     ~350px úteis. Sem a frase sobram 83 letras, que a .9rem dão ~44 por
+     linha. O texto completo continua no desktop. */
+  .obrigado-sub-extra { display:none; }
+  .obrigado-sub { font-size:.9rem; line-height:1.5; }
+
+  /* abaixo do card sobram só os dois botões: o título "Compartilhe essa
+     oferta incrível com alguém" sai, e o rótulo do verde passa a dizer o
+     que se compartilha, papel que era do título. */
+  .obrigado-share-title { display:none; }
+  .obrigado-wa-longa { display:none; }
+}
+/* o par do bloco acima: fora do mobile vale o inverso. Fica aqui, e não
+   dentro do @media de desktop no fim do arquivo, porque aquele exige
+   min-height:600px também — uma janela larga e baixa cairia sem rótulo
+   nenhum no botão. */
+@media (min-width:900px) {
+  .obrigado-wa-curta { display:none; }
+}
+
 .obrigado-title {
   font-size:clamp(1.6rem, 3.4vw + 1rem, 2.3rem);
   font-weight:800; color:#fff; line-height:1.2; letter-spacing:-.02em;
 }
 .obrigado-sub { margin-top:14px; color:rgba(255,255,255,.86); font-size:1.02rem; line-height:1.6; }
 
-/* card do plano: mesma casca "vidro" do .soon-price-card/.soon-modal-price
-   do form, mas sem o wrapper de gradiente claro por trás — aqui o fundo
-   já É coral (a página inteira), o blur desfoca a própria página, não
-   precisa de um fundo próprio fingindo cor como nos outros dois lugares
-   (que vivem sobre fundo claro). */
-.obrigado-plan { margin:26px auto 0; max-width:220px; }
-.obrigado-plan .soon-price-plan-card {
-  /* faltava — sem isso o pill de duração (position:absolute logo abaixo)
-     usa o ancestral posicionado mais próximo que existir, que vira o body;
-     ele "flutua" em relação à JANELA, não ao card, e some do lugar certo.
-     Ver o mesmo padrão já correto em .soon-modal-price .soon-price-plan-card. */
-  position:relative;
-  background:rgba(255,255,255,.16); border:1px solid rgba(255,255,255,.4);
-  backdrop-filter:blur(14px) saturate(160%); -webkit-backdrop-filter:blur(14px) saturate(160%);
-  box-shadow:0 10px 30px rgba(0,0,0,.18);
-  text-align:center; padding:18px 16px 14px;
+/* card do plano: o MESMO card do formulário, sem recolorir nada.
+   script.js desta página monta a marcação idêntica à do /em-breve
+   (.soon-price-card > .soon-price-grid > .soon-price-plan-card, com o id
+   #soon-price-mei/#soon-price-me), então todas as regras lá de cima —
+   casca clara com o brilho coral, pill no canto no desktop e flutuando
+   em cima no mobile, tamanhos do bloco "destaque" — valem aqui sem
+   precisar de uma linha de CSS própria.
+   Antes existia um bloco ".obrigado-plan .soon-price-*" que repintava
+   tudo de branco/vidro pra flutuar sobre o fundo coral; foi removido a
+   pedido — o card branco tem que ser idêntico ao do form. Só sobra o
+   posicionamento do wrapper. */
+/* text-align:left é obrigatório, não estética: .obrigado-main é
+   text-align:center e isso HERDA pra dentro do card, centralizando "MEI",
+   o preço e o "depois" — no form eles são alinhados à esquerda. Era o que
+   fazia o nome do plano parecer grudado na pill do canto. */
+.obrigado-plan { margin:26px auto 0; max-width:270px; text-align:left; }
+
+/* Escala: 260px × 0,8 (estreitar 20%) × 1,3 (aumentar 30%) = 270px de
+   largura; o conteúdo leva só o × 1,3 em cima dos valores do bloco
+   "destaque" lá de cima. Os seletores precisam do id (#soon-price-mei /
+   #soon-price-me) sempre que existir regra id-escopada equivalente —
+   especificidade de id ganha de qualquer quantidade de classe, então
+   ".obrigado-plan .soon-price-value" perderia pro
+   "#soon-price-mei .soon-price-value" do @media de desktop. */
+.obrigado-plan .soon-price-card { margin-top:0; padding:23px 13px; border-radius:21px; }
+.obrigado-plan .soon-price-plan-card { padding:12px 13px; border-radius:16px; }
+.obrigado-plan .soon-price-plan-head { margin-top:13px; margin-bottom:7px; gap:7px; }
+.obrigado-plan .soon-price-value-row { gap:7px; }
+.obrigado-plan .soon-price-value em { font-size:.967rem; }
+.obrigado-plan .soon-price-then-label { font-size:.702rem; }
+.obrigado-plan #soon-price-mei .soon-price-icon,
+.obrigado-plan #soon-price-me .soon-price-icon { width:26.5px; height:26.5px; }
+.obrigado-plan #soon-price-mei .soon-price-icon svg,
+.obrigado-plan #soon-price-me .soon-price-icon svg { width:17.2px; height:17.2px; }
+.obrigado-plan #soon-price-mei .soon-price-value,
+.obrigado-plan #soon-price-me .soon-price-value { font-size:2.883rem; }
+.obrigado-plan #soon-price-mei .soon-price-then,
+.obrigado-plan #soon-price-me .soon-price-then { font-size:1.064rem; margin-top:5px; }
+/* o nome do plano é a ÚNICA coisa que não leva o × 1,3: a 270px de
+   largura, "ME / Simples" a 1,03rem esbarra na pill do canto (desktop).
+   Fica no tamanho atual até a largura do card mudar. */
+.obrigado-plan #soon-price-mei .soon-price-plan-name,
+.obrigado-plan #soon-price-me .soon-price-plan-name { font-size:.792rem; }
+
+/* ---------- mobile: card do plano 20% menor, depois 15% maior ----------
+   Tudo × 0,8 × 1,15 = × 0,92 em cima dos valores logo acima — largura,
+   tipografia, espaçamento e a pill — pra escalar proporcional, sem
+   deformar. Os 15% entraram depois que o layout virou space-between e
+   sobrou altura de folga (ver o bloco de tela única no fim do arquivo).
+   Precisa vir DEPOIS do bloco base: as regras têm a mesma
+   especificidade, então quem decide é a ordem no arquivo. E não
+   atrapalha o desktop, que mora num @media disjunto (min-width:900px)
+   no fim do arquivo.
+   A pill entra na conta sem risco: nesta faixa ela flutua centralizada
+   ACIMA do card, não divide linha com o nome do plano como no desktop. */
+@media (max-width:899px) {
+  .obrigado-plan { max-width:248px; }
+  .obrigado-plan .soon-price-card { padding:21.2px 12px; border-radius:19.3px; }
+  .obrigado-plan .soon-price-plan-card { padding:11px 12px; border-radius:14.7px; }
+  .obrigado-plan .soon-price-plan-head { margin-top:12px; margin-bottom:6.4px; gap:6.4px; }
+  .obrigado-plan .soon-price-value-row { gap:6.4px; }
+  .obrigado-plan .soon-price-value em { font-size:.89rem; }
+  .obrigado-plan .soon-price-then-label { font-size:.646rem; }
+  .obrigado-plan #soon-price-mei .soon-price-icon,
+  .obrigado-plan #soon-price-me .soon-price-icon { width:24.4px; height:24.4px; }
+  .obrigado-plan #soon-price-mei .soon-price-icon svg,
+  .obrigado-plan #soon-price-me .soon-price-icon svg { width:15.9px; height:15.9px; }
+  .obrigado-plan #soon-price-mei .soon-price-value,
+  .obrigado-plan #soon-price-me .soon-price-value { font-size:2.652rem; }
+  .obrigado-plan #soon-price-mei .soon-price-then,
+  .obrigado-plan #soon-price-me .soon-price-then { font-size:.979rem; margin-top:4.6px; }
+  .obrigado-plan #soon-price-mei .soon-price-plan-name,
+  .obrigado-plan #soon-price-me .soon-price-plan-name { font-size:.729rem; }
+  .obrigado-plan #soon-price-mei .soon-price-duration,
+  .obrigado-plan #soon-price-me .soon-price-duration {
+    padding:2px 6.1px; font-size:.567rem; top:-7.4px;
+  }
 }
-.obrigado-plan .soon-price-plan-head { justify-content:center; margin-top:14px; margin-bottom:8px; }
-.obrigado-plan .soon-price-value-row { justify-content:center; }
-.obrigado-plan .soon-price-then { text-align:center; }
-.obrigado-plan .soon-price-icon { width:20.4px; height:20.4px; background:rgba(255,255,255,.3); color:#fff; }
-.obrigado-plan .soon-price-icon svg { width:13.2px; height:13.2px; }
-.obrigado-plan .soon-price-plan-name { color:#fff; font-size:.792rem; }
-.obrigado-plan .soon-price-value { color:#fff; font-size:2.2176rem; }
-.obrigado-plan .soon-price-value em { color:rgba(255,255,255,.8); }
-.obrigado-plan .soon-price-duration {
-  /* faltava — top/left/transform não fazem nada em position:static (o
-     default herdado de .soon-price-duration não tem position declarado
-     aqui, então cai em fluxo normal). Sem isso o pill fica em fluxo,
-     quebra linha e sobrepõe o "depois R$139/mês" abaixo dele. */
-  position:absolute;
-  background:#fff; color:var(--coral-700);
-  top:-9px; left:50%; right:auto; transform:translateX(-50%);
-  padding:2.4px 8px; font-size:.62rem;
-}
-.obrigado-plan .soon-price-then { color:rgba(255,255,255,.85); font-size:.8184rem; margin-top:6px; }
-.obrigado-plan .soon-price-then-label { color:rgba(255,255,255,.65); }
-.obrigado-plan .soon-price-then strong { color:#fff; }
 
 .obrigado-share { margin-top:clamp(32px, 6vh, 48px); width:100%; max-width:420px; }
 .obrigado-share-title { color:#fff; font-weight:700; font-size:1rem; }
 .obrigado-share-actions { margin-top:16px; display:flex; flex-direction:column; gap:12px; }
 
+/* padding/gap/fonte fluidos na horizontal: o rótulo mais longo daqui
+   ("Compartilhar pelo WhatsApp", 26 caracteres) não cabe em uma linha a
+   16px num viewport de 320px, e quebrava em duas. Os clamps só encolhem
+   abaixo de ~420px de largura — de 420px pra cima todos batem no teto e
+   o botão fica idêntico ao que era. O padding vertical continua fixo em
+   14px pra não estreitar o alvo de toque. */
 .obrigado-share-btn {
-  display:inline-flex; align-items:center; justify-content:center; gap:9px;
-  width:100%; padding:14px 22px; border-radius:14px; border:0;
-  font-family:inherit; font-weight:700; font-size:1rem; cursor:pointer;
+  display:inline-flex; align-items:center; justify-content:center;
+  gap:clamp(7px, 2vw, 9px);
+  width:100%; padding:14px clamp(12px, 4vw, 22px); border-radius:14px; border:0;
+  font-family:inherit; font-weight:700;
+  font-size:clamp(.9rem, 3.6vw, 1rem); line-height:1.25;
+  cursor:pointer;
   text-decoration:none;
   transition:transform 160ms var(--ease-out), background-color 160ms var(--ease-out), color 160ms var(--ease-out), border-color 160ms var(--ease-out);
 }
@@ -875,6 +964,277 @@ body.soon-body { min-height:100dvh; display:flex; flex-direction:column; }
      não bate com nenhum breakpoint padrão do Tailwind. */
   .soon-footer nav a { font-size:.66rem; }
   .soon-footer p { font-size:.6rem; }
+}
+
+/* ============================================================
+   /em-breve/obrigado · desktop — tudo em uma tela, sem rolagem
+   ============================================================
+   Mesma faixa do form (largura E altura juntas) e mesma técnica: cada
+   medida vira clamp(piso, valor-em-vh, teto), nada de transform:scale
+   calculado em JS. O teto é o tamanho de tela grande (idêntico ao que
+   já existia na base) e o piso é o que ainda fica legível em 600px de
+   altura — o menor tamanho que este media query alcança.
+
+   vh puro, nunca dvh: não existe barra de ferramentas dinâmica em
+   desktop pra justificar dvh, e o cálculo dele diverge entre
+   navegadores (foi a causa real de um scroll fantasma no Firefox nesta
+   mesma stylesheet). A base da página continua com 100dvh, que é o
+   certo no mobile.
+
+   Vem DEPOIS do @media do form de propósito: as duas regras de
+   .obrigado-plan .soon-price-plan-head têm a mesma especificidade
+   (0,2,0), então quem decide é a ordem no arquivo.
+
+   Este bloco fica em vh na faixa 600–900px+ e trava nos tetos acima
+   disso; some com o scroll no lugar de escondê-lo. Vem com rede de
+   segurança em .obrigado-main (overflow-y:auto): se ela chegar a
+   aparecer em alguma altura dentro da faixa, é sinal de piso alto
+   demais em algum clamp daqui — o conserto é o clamp, não aceitar a
+   rolagem.
+   ============================================================ */
+@media (min-width:900px) and (min-height:600px) {
+  /* explícito nos dois, html E body: propagação de overflow body→viewport
+     é inconsistente entre navegadores (mesmo motivo do comentário em
+     "html, body.soon-body" lá em cima). */
+  html.obrigado-html, body.obrigado-body {
+    height:100vh; min-height:0; overflow:hidden;
+  }
+
+  .obrigado-main {
+    padding:clamp(14px, 3vh, 44px) 20px;
+    /* min-height:0 porque .obrigado-main é flex:1 numa coluna: sem isso o
+       min-height:auto padrão do item flex impede que ele encolha abaixo do
+       conteúdo, e o estouro vaza pra fora da body em vez de acionar a rede
+       de segurança abaixo. */
+    min-height:0;
+    /* rede de segurança, não mecanismo: ver cabeçalho do bloco */
+    overflow-y:auto;
+    /* space-between no lugar de center — mesma razão do bloco mobile no
+       fim do arquivo: a sobra de altura é repartida entre logo, card e
+       botões em vez de virar vazio morto nas duas pontas. Também torna o
+       "safe" desnecessário: em caso de estouro isto já alinha pelo topo,
+       sem esconder o começo do conteúdo na rolagem. */
+    justify-content:space-between;
+  }
+
+  .obrigado-logo {
+    height:clamp(24px, 4.4vh, 38px);
+    margin-bottom:clamp(10px, 2.2vh, 24px);
+  }
+  .obrigado-badge {
+    width:clamp(40px, 7vh, 60px); height:clamp(40px, 7vh, 60px);
+    margin-bottom:clamp(8px, 1.6vh, 18px);
+  }
+  .obrigado-badge-icon { width:clamp(20px, 3.3vh, 28px); height:clamp(20px, 3.3vh, 28px); }
+  /* o confete é o elemento mais alto da página (132px contra 60px do check
+     estático) — sem este par ele passa batido pela regra acima, que tem
+     especificidade menor (0,1,0 contra 0,2,0), e sozinho já come 1/5 da
+     tela em 600px de altura. */
+  .obrigado-badge.obrigado-badge-lottie {
+    width:clamp(84px, 14.5vh, 132px); height:clamp(84px, 14.5vh, 132px);
+  }
+  .obrigado-title { font-size:clamp(1.25rem, 3.2vh, 2.05rem); }
+  .obrigado-sub {
+    margin-top:clamp(6px, 1.4vh, 14px);
+    font-size:clamp(.8rem, 1.6vh, 1.02rem);
+    line-height:1.5;
+    /* piso do respiro até o card: a margem auto dele vira 0 quando não
+       sobra altura (ver .obrigado-card logo abaixo). */
+    margin-bottom:clamp(10px, 2.6vh, 26px);
+  }
+
+  /* mesma mecânica do bloco mobile no fim do arquivo (o comentário longo
+     está lá): ::before come metade da sobra como vão acima do título, o
+     card come a outra metade e o plano se centra dentro dela. */
+  .obrigado-main::before { content:''; order:1; flex:1 1 0; }
+  .obrigado-logo { order:0; }
+  .obrigado-card { order:2; flex:1 0 auto; min-height:0; display:flex; flex-direction:column; }
+  .obrigado-share { order:3; }
+
+  /* card do plano: a largura não entra na conta de altura, então os 270px
+     do ajuste anterior ficam de pé; só o miolo encolhe. */
+  .obrigado-plan { margin-block:auto; }
+  .obrigado-plan .soon-price-card {
+    padding:clamp(10px, 2.3vh, 23px) 13px;
+    border-radius:clamp(14px, 2.1vh, 21px);
+  }
+  .obrigado-plan .soon-price-plan-card { padding:clamp(7px, 1.2vh, 12px) 13px; }
+  /* o par explícito é necessário: a regra .soon-price-plan-head do @media
+     do form perde pra .obrigado-plan .soon-price-plan-head da base (0,1,0
+     contra 0,2,0). O padding-right reserva a faixa da pill, que no desktop
+     volta pro canto — sem ele o nome do plano corre por baixo dela, já que
+     .soon-price-plan-name é flex:1. */
+  .obrigado-plan .soon-price-plan-head {
+    margin-top:0; padding-right:96px;
+    margin-bottom:clamp(4px, .7vh, 7px);
+  }
+  .obrigado-plan #soon-price-mei .soon-price-icon,
+  .obrigado-plan #soon-price-me .soon-price-icon {
+    width:clamp(18px, 2.65vh, 26.5px); height:clamp(18px, 2.65vh, 26.5px);
+  }
+  .obrigado-plan #soon-price-mei .soon-price-icon svg,
+  .obrigado-plan #soon-price-me .soon-price-icon svg {
+    width:clamp(12px, 1.72vh, 17.2px); height:clamp(12px, 1.72vh, 17.2px);
+  }
+  .obrigado-plan #soon-price-mei .soon-price-value,
+  .obrigado-plan #soon-price-me .soon-price-value { font-size:clamp(1.5rem, 4.8vh, 2.883rem); }
+  .obrigado-plan .soon-price-value em { font-size:clamp(.66rem, 1.61vh, .967rem); }
+  .obrigado-plan #soon-price-mei .soon-price-then,
+  .obrigado-plan #soon-price-me .soon-price-then {
+    font-size:clamp(.7rem, 1.77vh, 1.064rem);
+    margin-top:clamp(3px, .83vh, 5px);
+  }
+  .obrigado-plan .soon-price-then-label { font-size:clamp(.52rem, 1.17vh, .702rem); }
+
+  /* bloco de compartilhar: é o que estava sendo cortado embaixo */
+  .obrigado-share { margin-top:clamp(12px, 3vh, 48px); }
+  .obrigado-share-title { font-size:clamp(.8rem, 1.6vh, 1rem); }
+  .obrigado-share-actions {
+    margin-top:clamp(8px, 1.6vh, 16px);
+    gap:clamp(6px, 1.2vh, 12px);
+  }
+  /* o clamp horizontal da base (4vw) resolvia estreiteza de mobile e não
+     tem papel aqui — a 900px+ ele já está no teto. Só a altura encolhe.
+     Piso de 8px de padding-block com fonte de .8rem mantém o botão em
+     ~35px, acima do mínimo de alvo de clique. */
+  .obrigado-share-btn {
+    padding-block:clamp(8px, 1.6vh, 14px);
+    font-size:clamp(.8rem, 1.6vh, 1rem);
+  }
+  .obrigado-share-btn svg { width:clamp(15px, 2vh, 20px); height:clamp(15px, 2vh, 20px); }
+
+  .obrigado-footer { padding:clamp(6px, 1.4vh, 20px); }
+  .obrigado-footer a { font-size:clamp(.72rem, 1.4vh, .85rem); }
+}
+
+/* ============================================================
+   /em-breve/obrigado · mobile — tudo em uma tela, sem rolagem
+   ============================================================
+   Mesma técnica do bloco de desktop acima, com uma troca de unidade:
+   aqui é dvh, não vh. É o inverso da regra do resto do arquivo, e de
+   propósito — dvh existe exatamente pra barra de ferramentas que
+   aparece e some, que é o caso do celular; vh mediria sempre a viewport
+   grande e o conteúdo ficaria cortado enquanto a barra estivesse
+   visível. O bloco de desktop segue em vh, onde dvh não tem o que
+   compensar e diverge entre navegadores.
+
+   Os TETOS são os tamanhos que já estavam valendo no mobile (o card já
+   vem 20% menor do ajuste anterior, e o selo de sucesso está oculto
+   nesta faixa) — então em celular alto nada muda de aparência. Os PISOS
+   são o que ainda lê numa viewport de ~560dvh, que é o pior caso
+   realista (iPhone SE com a barra aberta).
+
+   Vem por último no arquivo de propósito: várias destas propriedades
+   também são declaradas no bloco "card do plano 20% menor" lá em cima,
+   com a mesma especificidade — quem decide é a ordem. Por isso o teto
+   de cada clamp repete o valor de lá, em vez de contradizê-lo.
+   ============================================================ */
+@media (max-width:899px) {
+  /* explícito nos dois, html E body — propagação de overflow
+     body→viewport é inconsistente entre navegadores. */
+  html.obrigado-html, body.obrigado-body {
+    height:100dvh; min-height:0; overflow:hidden;
+  }
+
+  .obrigado-main {
+    padding:clamp(12px, 3.2dvh, 40px) 20px;
+    /* item flex com min-height:auto não encolhe abaixo do conteúdo: sem
+       isto o estouro vaza pra fora da body em vez de acionar a rede de
+       segurança. */
+    min-height:0; overflow-y:auto;
+    /* space-between no lugar de center: os três filhos diretos são logo,
+       card e bloco de botões. Centralizado, a sobra de altura virava um
+       vazio só, empilhado em cima e embaixo do miolo — o conteúdo ficava
+       espremido no meio da tela com folga morta nas duas pontas. Aqui a
+       mesma sobra é repartida ENTRE os três, então o logo sobe pro topo e
+       os botões descem pro pé, cada um com o padding acima como respiro.
+       Também dispensa o "safe" do centramento: quando o conteúdo estoura,
+       space-between já alinha pelo topo em vez de esconder o começo. */
+    justify-content:space-between;
+  }
+
+  .obrigado-logo {
+    height:clamp(22px, 4.2dvh, 38px);
+    margin-bottom:clamp(8px, 2dvh, 24px);
+  }
+  .obrigado-title { font-size:clamp(1.35rem, 3.1dvh, 2.3rem); }
+  .obrigado-sub {
+    margin-top:clamp(5px, 1.2dvh, 14px);
+    font-size:clamp(.8rem, 1.5dvh, .9rem);
+    /* piso do respiro entre subtítulo e card: as margens auto do card
+       (logo abaixo) viram 0 quando não sobra altura, e sem isto os dois
+       encostariam na tela apertada. */
+    margin-bottom:clamp(8px, 2dvh, 26px);
+  }
+
+  /* ---- onde a sobra de altura é gasta ----
+     Duas coisas ao mesmo tempo: o vão entre o logo e o título continua o
+     que era, e o card do plano se centra no vão que sobra entre o
+     subtítulo e o botão de WhatsApp.
+
+     Um ::before vazio com flex:1 vira o vão de cima; o .obrigado-card,
+     também com grow 1, fica com a outra metade da sobra. Dentro dele
+     título e subtítulo ficam no topo e o plano reparte o que restou em
+     partes iguais acima e abaixo de si (margin-block:auto). Resultado:
+     metade da sobra acima do título, um quarto acima do plano, um quarto
+     abaixo — que é a mesma posição do título de antes.
+
+     Só flex-grow no card não bastaria: grow consome a sobra ANTES das
+     margens auto, e um margin-bottom:auto no logo receberia zero.
+
+     order explícito em todos porque o ::before nasce como primeiro filho
+     e precisa ficar entre o logo e o card. shrink 0 no card pra que, se
+     o conteúdo estourar, ele mantenha a altura e a rolagem de segurança
+     do main entre em ação em vez de espremer o card. */
+  .obrigado-main::before { content:''; order:1; flex:1 1 0; }
+  .obrigado-logo { order:0; }
+  .obrigado-card { order:2; flex:1 0 auto; min-height:0; display:flex; flex-direction:column; }
+  .obrigado-share { order:3; }
+
+  /* a largura (216px) não entra na conta de altura e fica como está;
+     só o miolo do card encolhe. padding-block, não padding: o valor
+     horizontal vem do bloco dos 20% e não tem por que mudar. */
+  /* tetos = os valores do bloco dos 20%+15% lá em cima; pisos = os
+     mesmos × 1,15, pra que o aumento valha também na tela apertada e não
+     só onde sobra altura. */
+  .obrigado-plan { margin-block:auto; }
+  .obrigado-plan .soon-price-card { padding-block:clamp(9.2px, 3dvh, 21.2px); }
+  .obrigado-plan .soon-price-plan-card { padding-block:clamp(5.8px, 1.6dvh, 11px); }
+  .obrigado-plan .soon-price-plan-head { margin-bottom:clamp(3.5px, .92dvh, 6.4px); }
+  .obrigado-plan #soon-price-mei .soon-price-icon,
+  .obrigado-plan #soon-price-me .soon-price-icon {
+    width:clamp(17.3px, 3.45dvh, 24.4px); height:clamp(17.3px, 3.45dvh, 24.4px);
+  }
+  .obrigado-plan #soon-price-mei .soon-price-icon svg,
+  .obrigado-plan #soon-price-me .soon-price-icon svg {
+    width:clamp(11.5px, 2.24dvh, 15.9px); height:clamp(11.5px, 2.24dvh, 15.9px);
+  }
+  .obrigado-plan #soon-price-mei .soon-price-value,
+  .obrigado-plan #soon-price-me .soon-price-value { font-size:clamp(1.725rem, 5.98dvh, 2.652rem); }
+  .obrigado-plan #soon-price-mei .soon-price-then,
+  .obrigado-plan #soon-price-me .soon-price-then {
+    font-size:clamp(.782rem, 1.73dvh, .979rem);
+    margin-top:clamp(2.3px, .69dvh, 4.6px);
+  }
+
+  /* o título deste bloco está oculto no mobile — sobram só os botões */
+  .obrigado-share { margin-top:clamp(10px, 2.6dvh, 48px); }
+  .obrigado-share-actions {
+    margin-top:clamp(6px, 1.6dvh, 16px);
+    gap:clamp(5px, 1.2dvh, 12px);
+  }
+  /* padding-block só: o padding horizontal é clamp(12px,4vw,22px), que
+     resolve largura de tela estreita e não tem papel nenhum aqui.
+     Piso de 8px com fonte .85rem deixa o botão em ~35px de altura,
+     acima do mínimo de alvo de toque. */
+  .obrigado-share-btn {
+    padding-block:clamp(8px, 1.6dvh, 14px);
+    font-size:clamp(.85rem, 1.55dvh, 1rem);
+  }
+  .obrigado-share-btn svg { width:clamp(14px, 2dvh, 20px); height:clamp(14px, 2dvh, 20px); }
+
+  .obrigado-footer { padding:clamp(5px, 1.2dvh, 20px); }
+  .obrigado-footer a { font-size:clamp(.72rem, 1.3dvh, .85rem); }
 }
 
 } /* fim @layer components */
