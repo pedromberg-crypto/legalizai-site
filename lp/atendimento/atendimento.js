@@ -8,6 +8,7 @@
   var TETO_MEI_MENSAL = 6750;
   var ENDERECO_FISCAL = 49;
   var WHATSAPP = '5531999999999';
+  var WHATSAPP_ATIVO = false;
   var PILLS = [
     { id: 'tech',       label: 'Tecnologia e software',            curto: 'Tecnologia' },
     { id: 'design',     label: 'Design',                           curto: 'Design' },
@@ -653,6 +654,13 @@
   }
   var LISTA_ESPERA = '/em-breve';
   function ctaConsultor(msg) {
+    if (!WHATSAPP_ATIVO) {
+      return {
+        label: 'Falar com a gente',
+        href: 'mailto:contato@legalizai.com.br?subject=' +
+              encodeURIComponent('Vim pelo site') + '&body=' + encodeURIComponent(msg)
+      };
+    }
     return { label: 'Falar com um consultor', href: linkWhats(msg) };
   }
   function calcularVeredito() {
@@ -802,7 +810,7 @@
     html += '<div class="sim-body-area">' + t.corpo + '</div>';
     if (!t.semRodape) {
       html += '<div class="sim-foot">';
-      if (t.rodapeLink) {
+      if (t.rodapeLink && !(!WHATSAPP_ATIVO && /wa\.me/.test(t.rodapeLink.href))) {
         html += '<a class="sim-foot-link" href="' + t.rodapeLink.href + '" target="_blank" rel="noopener">' + esc(t.rodapeLink.label) + '</a>';
       }
       if (t.ctaHref) {
