@@ -13,6 +13,56 @@
 
   function $(id) { return document.getElementById(id); }
 
+  /* ============================================================
+     CONTADOR DA 1ª LEVA — TEMPORÁRIO (15/09)
+     ============================================================
+     Fica NO TOPO do arquivo de propósito. Tudo daqui pra baixo é o formulário
+     da waitlist, que roda solto no corpo da IIFE e toca em vários elementos:
+     um throw lá embaixo mataria o resto do arquivo, e o contador junto. Na
+     frente, ele não depende de nada além do próprio elemento.
+
+     Some sozinho no prazo: contador negativo é pior que contador nenhum, e
+     23:59 não é hora de ninguém estar de plantão pra apagar na mão. O prazo
+     mora no `data-fim` do HTML, com fuso explícito; aqui só se lê. */
+  var ctaTimer = document.getElementById('soon-cta-timer');
+  if (ctaTimer) {
+    var ctaFim = new Date(ctaTimer.getAttribute('data-fim')).getTime();
+    var ctaH = ctaTimer.querySelector('[data-h]');
+    var ctaM = ctaTimer.querySelector('[data-m]');
+    var ctaS = ctaTimer.querySelector('[data-s]');
+    var ctaRelogio = null;
+
+    var doisDigitos = function (n) { return (n < 10 ? '0' : '') + n; };
+
+    // O rótulo do botão é metade de uma frase: "Garantir, termina em" só faz
+    // sentido com o relógio ao lado. Quando ele morre, o texto tem que virar a
+    // frase inteira de novo — senão o CTA amanhece pendurado no nada. A copy de
+    // volta vem do `data-label-fim`, no HTML.
+    var ctaLabel = document.getElementById('soon-cta-label');
+
+    var ctaTique = function () {
+      var resta = ctaFim - Date.now();
+      // `!(resta > 0)` e não `resta <= 0`: pega também o NaN de uma data
+      // inválida, e nesse caso o certo é sumir, não mostrar lixo.
+      if (!(resta > 0)) {
+        ctaTimer.hidden = true;
+        if (ctaLabel && ctaLabel.getAttribute('data-label-fim')) {
+          ctaLabel.textContent = ctaLabel.getAttribute('data-label-fim');
+        }
+        if (ctaRelogio) { clearInterval(ctaRelogio); ctaRelogio = null; }
+        return;
+      }
+      ctaTimer.hidden = false;
+      var seg = Math.floor(resta / 1000);
+      ctaH.textContent = doisDigitos(Math.floor(seg / 3600));
+      ctaM.textContent = doisDigitos(Math.floor(seg / 60) % 60);
+      ctaS.textContent = doisDigitos(seg % 60);
+    };
+
+    ctaTique();
+    if (!ctaTimer.hidden) ctaRelogio = setInterval(ctaTique, 1000);
+  }
+
   /* O Meta preenche utm_campaign={{campaign.name}}, utm_content={{adset.name}}
      e utm_term={{ad.name}} dinamicamente na URL do anúncio (taxonomia de
      tráfego pago). UTM presente na URL vale e sobrescreve o que tinha salvo;

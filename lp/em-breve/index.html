@@ -36,7 +36,7 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Sora:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 
-  <link rel="stylesheet" href="/em-breve/styles.css">
+  <link rel="stylesheet" href="/em-breve/styles.css?v=3">
 </head>
 <body class="soon-body">
 
@@ -175,7 +175,35 @@
             <span class="text-coral-600 font-semibold">(Isso é apenas para podermos te avisar no lançamento)</span>
           </span>
         </label>
-        <button class="soon-submit inline-flex items-center justify-center gap-2 rounded-2xl border-0 no-underline font-bold text-[1.2rem] text-white bg-coral-600 shadow-[0_8px_24px_rgba(242,100,60,.28)] transition-[transform,box-shadow,background-color] duration-[160ms] ease-[cubic-bezier(.22,1,.36,1)] hover:bg-coral-700 hover:-translate-y-0.5 hover:shadow-[0_12px_30px_rgba(242,100,60,.36)] active:translate-y-0 active:scale-[0.99]" type="submit">Garantir minha condição de lançamento</button>
+        <!-- ⏳ CONTADOR DA 1ª LEVA — TEMPORÁRIO (15/09). Mesmo prazo do hero da
+             home: R$ 79 até 23:59 de hoje. Aqui ele mora DENTRO do botão, e não
+             numa linha própria, porque esta página cabe numa tela só no desktop
+             (≥900×600, sem scroll) e bloco novo custa altura que não existe.
+             Por isso o botão virou `flex-col`: rótulo em cima, relógio embaixo.
+
+             O `data-fim` traz o fuso explícito pelo mesmo motivo da home: sem o
+             `-03:00`, `new Date()` lê a hora local de quem abre a página.
+
+             O rótulo é CURTO ("Garantir, termina em") pra sobrar largura: o
+             relógio entra na MESMA linha e no MESMO corpo do texto, senão vira
+             legenda e some, que foi o que aconteceu na primeira versão.
+
+             ACESSIBILIDADE, e é o que dita a estrutura abaixo:
+             · os dígitos são `aria-hidden`. Estão dentro de um <button>, então
+               entrariam no NOME ACESSÍVEL dele — e o botão passaria a se chamar
+               coisa diferente a cada segundo, o que quebra navegação por voz e
+               faz o leitor de tela reanunciar o controle.
+             · no lugar deles entra `soon-cta-sr`, fora da tela: o nome fica
+               "Garantir, termina em 23h59 de hoje." — frase inteira, estática,
+               e que CONTÉM o texto visível. Nome acessível que não contém o
+               texto visível reprova no axe (`label-content-name-mismatch`) e
+               some do comando de voz; é o mesmo erro que tirou o aria-label dos
+               badges das lojas na home.
+             · `data-label-fim` guarda a copy de VOLTA. Às 23:59 o relógio some
+               e o rótulo sozinho viraria "Garantir, termina em", pendurado no
+               nada — então o script devolve a frase inteira. A copy mora aqui,
+               no HTML, não escondida dentro do JS. -->
+        <button class="soon-submit inline-flex flex-wrap items-center justify-center gap-2 rounded-2xl border-0 no-underline font-bold text-[1.2rem] text-white bg-coral-600 shadow-[0_8px_24px_rgba(242,100,60,.28)] transition-[transform,box-shadow,background-color] duration-[160ms] ease-[cubic-bezier(.22,1,.36,1)] hover:bg-coral-700 hover:-translate-y-0.5 hover:shadow-[0_12px_30px_rgba(242,100,60,.36)] active:translate-y-0 active:scale-[0.99]" type="submit"><span class="soon-cta-label" id="soon-cta-label" data-label-fim="Garantir minha condição de lançamento">Garantir, termina em</span><span class="soon-cta-timer" id="soon-cta-timer" data-fim="2026-09-15T23:59:59-03:00" hidden><span class="soon-cta-sr"> 23h59 de hoje.</span><span class="soon-cta-clock" aria-hidden="true"><b data-h>00</b>h <b data-m>00</b>min <b data-s>00</b>s</span></span></button>
 
         <p class="hidden text-[0.9rem] font-semibold text-coral-700" id="soon-error">Não deu pra enviar agora. Tenta de novo em instantes.</p>
       </form>
@@ -350,7 +378,7 @@
   </footer>
 </main>
 
-<script src="/em-breve/script.js" defer></script>
+<script src="/em-breve/script.js?v=3" defer></script>
 <!-- chat.js (widget "Fale com o Léo") ocultado a pedido do Pedro — reversível, só descomentar -->
 <!-- <script src="/em-breve/chat.js" defer></script> -->
 <script src="/em-breve/assets/phone-lottie.js" defer></script>
