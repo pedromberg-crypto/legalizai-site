@@ -368,36 +368,6 @@
   } else {
     initSky();
   }
-  var contador = document.querySelector('.hero-contador');
-  if (contador) {
-    var fimOferta = new Date(contador.getAttribute('data-fim')).getTime();
-    var casaH = contador.querySelector('[data-h]');
-    var casaM = contador.querySelector('[data-m]');
-    var casaS = contador.querySelector('[data-s]');
-    var relogio = null;
-    var doisDigitos = function (n) { return (n < 10 ? '0' : '') + n; };
-    var raiz = document.documentElement;
-    var tique = function () {
-      var resta = fimOferta - Date.now();
-      if (!(resta > 0)) {
-        contador.hidden = true;
-        raiz.classList.remove('hero-contando');
-        if (relogio) { clearInterval(relogio); relogio = null; }
-        return;
-      }
-      contador.hidden = false;
-      raiz.classList.add('hero-contando');
-      var seg = Math.floor(resta / 1000);
-      casaH.textContent = doisDigitos(Math.floor(seg / 3600));
-      casaM.textContent = doisDigitos(Math.floor(seg / 60) % 60);
-      casaS.textContent = doisDigitos(seg % 60);
-    };
-    tique();
-    if (!contador.hidden) {
-      contador.classList.add('in');
-      relogio = setInterval(tique, 1000);
-    }
-  }
   var OK = {
     web:         { emoji: '💻', nome: 'Criação de sites e web design', desc: 'Você entrega sites e presença digital pra outras empresas.', cnae: 'CNAE 6201-5/02' },
     software:    { emoji: '⚙️', nome: 'Desenvolvimento de software',   desc: 'Você cria sistemas e programas sob encomenda.',              cnae: 'CNAE 6201-5/01' },

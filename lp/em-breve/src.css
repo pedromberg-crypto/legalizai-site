@@ -610,37 +610,6 @@ body.soon-body { min-height:100dvh; display:flex; flex-direction:column; }
    — travar aqui garante o negrito independente disso. */
 .soon-submit { width:100%; margin-top:22px; padding:13px 22px; font-weight:700; }
 
-/* ⏳ CONTADOR DA 1ª LEVA — TEMPORÁRIO. Sai junto com o bloco no index.html
-   quando a copy virar a 2ª leva (R$ 99). Ver o comentário lá.
-   Mora dentro do .soon-submit: nesta página não há altura pra um bloco novo. */
-.soon-cta-timer { display:block; line-height:1; }
-/* explícito: `[hidden]` do navegador e `.soon-cta-timer` empatam em
-   especificidade, e folha de autor ganha o empate — sem esta linha o
-   `display:block` venceria e o relógio apareceria zerado antes do JS. */
-.soon-cta-timer[hidden] { display:none; }
-/* fora da tela, não fora do documento: é esta frase que dá o prazo a quem usa
-   leitor de tela, já que os dígitos são aria-hidden. */
-.soon-cta-sr {
-  position:absolute; width:1px; height:1px;
-  margin:-1px; padding:0; border:0;
-  overflow:hidden; clip-path:inset(50%); white-space:nowrap;
-}
-/* `1em`, não um tamanho próprio: o relógio tem o MESMO corpo do rótulo do
-   botão e acompanha qualquer mudança dele. A primeira versão usava .7rem e o
-   contador virou legenda — some, que é o oposto do que a peça existe pra fazer.
-   `tabular-nums` aqui não é capricho: o conteúdo é centralizado dentro do
-   botão, então dígito de largura variável faria a linha inteira dançar de um
-   lado pro outro a cada segundo, arrastando o rótulo junto. */
-.soon-cta-clock {
-  display:inline-block;
-  font-size:.84em; font-weight:700; letter-spacing:.01em;
-  font-variant-numeric:tabular-nums; font-feature-settings:"tnum" 1;
-}
-/* os NÚMEROS voltam ao corpo do rótulo (.84 × 1.19 ≈ 1em); o "h", o "min" e o
-   "s" ficam no degrau de baixo. É isso que faz o olho ler um relógio, em vez
-   de uma frase com números no meio. */
-.soon-cta-clock b { font-size:1.19em; font-weight:800; }
-
 #soon-error { margin-top:20px; text-align:center; }
 
 .soon-footer { padding:16px 20px 20px; text-align:center; flex:none; }
@@ -962,12 +931,6 @@ body.soon-body { min-height:100dvh; display:flex; flex-direction:column; }
      aqui dentro do media query desktop). */
   .soon-field-row { display:flex; gap:12px; }
   .soon-field-row input { flex:1; min-width:0; }
-  /* padding e margin ORIGINAIS, de volta. A versão das 14h encolhia os dois e
-     punha um clamp no corpo do rótulo pra pagar a segunda linha do botão. Com
-     o rótulo curto ("Garantir, termina em") o relógio cabe na MESMA linha: a
-     altura do botão é a de sempre, não há o que pagar, e o texto volta aos
-     1.2rem cheios — que é justamente o que dá destaque ao contador, já que ele
-     herda esse corpo. */
   .soon-submit { padding:clamp(6px, .95vh, 10px) 20px; margin-top:clamp(5px, 1.1vh, 12px); }
 
   .soon-price-card { margin-top:clamp(6px, 1.1vh, 14px); padding:clamp(8px, 1.4vh, 14px) clamp(6px, .8vh, 9px); }

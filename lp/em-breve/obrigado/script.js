@@ -23,11 +23,11 @@
 
   var PLANO_COPY = {
     mei: {
-      rotulo: 'MEI', valor: 'R$19', depois: 'R$49',
+      rotulo: 'MEI', valor: 'R$29', depois: 'R$49',
       icone: '<svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 7h-9m0 0 3-3m-3 3 3 3M4 17h9m0 0-3-3m3 3-3 3"/></svg>'
     },
     me: {
-      rotulo: 'ME&nbsp;/&nbsp;Simples', valor: 'R$79', depois: 'R$139',
+      rotulo: 'ME&nbsp;/&nbsp;Simples', valor: 'R$99', depois: 'R$139',
       icone: '<svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 21V5a1 1 0 0 1 1-1h9a1 1 0 0 1 1 1v16"/><path d="M15 9h4a1 1 0 0 1 1 1v11M9 8h2M9 12h2M9 16h2"/></svg>'
     }
   };
@@ -125,7 +125,7 @@
 
   /* ---------- compartilhar ---------- */
   var shareUrl = window.location.origin + '/em-breve';
-  var waMsg = 'Oferta imperdível pra abrir empresa: 3 meses a partir de R$19/mês. ' + shareUrl;
+  var waMsg = 'Oferta imperdível pra abrir empresa: 3 meses a partir de R$29/mês. ' + shareUrl;
   var waLink = $('obrigado-whatsapp');
   if (waLink) waLink.href = 'https://wa.me/?text=' + encodeURIComponent(waMsg);
 
