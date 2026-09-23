@@ -100,9 +100,9 @@
     'Londrina|PR', 'Joinville|SC', 'Caxias do Sul|RS'
   ];
   var municipios = null;
+  var municipiosPromise = null;
   var acMatches = [];
   var acIndex = -1;
-  var acLoading = false;
   /* UF resolvida quando o usuário escolhe uma opção da lista de autocomplete
      (a base do IBGE já resolve nomes de cidade duplicados em vários estados).
      Zerada sempre que o texto do campo muda por digitação, pra não sobrar UF
@@ -114,10 +114,12 @@
     return (s || '').normalize('NFD').replace(/[\u0300-\u036f]/g, '').toLowerCase().trim();
   }
 
+  /* devolve a promise pra quem precisa esperar a lista (o submit, que resolve
+     a UF de quem não escolheu na lista); falha zera a promise pra permitir
+     nova tentativa no próximo foco/envio */
   function loadMunicipios() {
-    if (municipios || acLoading) return;
-    acLoading = true;
-    fetch(MUNICIPIOS_URL)
+    if (municipiosPromise) return municipiosPromise;
+    municipiosPromise = fetch(MUNICIPIOS_URL)
       .then(function (res) { return res.json(); })
       .then(function (list) {
         var prioridade = Object.create(null);
@@ -132,8 +134,28 @@
       })
       .catch(function (err) {
         console.log('[waitlist-debug] falha ao carregar municipios', err);
-        acLoading = false;
+        municipiosPromise = null;
       });
+    return municipiosPromise;
+  }
+
+  /* UF de quem NÃO escolheu na lista: autopreenchimento do navegador ou
+     cidade digitada inteira. O backend recusa `estado` vazio (400), então
+     sem isso esses cadastros morriam no "Não deu pra enviar". Ordem:
+     escolha da lista > sufixo " - UF" no texto > nome exato na base do IBGE
+     (nome repetido em vários estados: só resolve se um deles é prioritário).
+     Sem resposta segura, devolve '' e o campo nem vai no envio. */
+  function resolveUf() {
+    if (cidadeUf) return cidadeUf;
+    var texto = cidade.value.trim();
+    var sufixo = texto.match(/\s-\s*([A-Za-z]{2})$/);
+    if (sufixo) return sufixo[1].toUpperCase();
+    if (!municipios) return '';
+    var alvo = normalize(texto);
+    var achados = municipios.filter(function (m) { return m.busca === alvo; });
+    if (achados.length === 1) return achados[0].uf;
+    var prioritario = achados.filter(function (m) { return m.peso === 0; });
+    return prioritario.length === 1 ? prioritario[0].uf : '';
   }
 
   function closeList() {
@@ -408,25 +430,32 @@
 
     var partesNome = splitNome(nome.value);
 
-    fetch(WAITLIST_ENDPOINT, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({
-        nome: partesNome.nome,
-        sobrenome: partesNome.sobrenome,
-        email: email.value.trim(),
-        whatsapp: whatsapp.value.trim(),
-        cidade: cidade.value.trim(),
-        tipoNegocio: tipo.value,
-        estado: cidadeUf,
-        origem: 'coming-soon',
-        utmSource: utms.utm_source || '',
-        utmMedium: utms.utm_medium || '',
-        utmCampaign: utms.utm_campaign || '',
-        utmContent: utms.utm_content || '',
-        utmTerm: utms.utm_term || ''
+    /* autopreenchimento não foca o campo de cidade, então a base do IBGE pode
+       nem ter sido baixada ainda — espera ela antes de resolver a UF */
+    loadMunicipios()
+      .then(function () {
+        var payload = {
+          nome: partesNome.nome,
+          sobrenome: partesNome.sobrenome,
+          email: email.value.trim(),
+          whatsapp: whatsapp.value.trim(),
+          cidade: cidade.value.trim(),
+          tipoNegocio: tipo.value,
+          origem: 'coming-soon',
+          utmSource: utms.utm_source || '',
+          utmMedium: utms.utm_medium || '',
+          utmCampaign: utms.utm_campaign || '',
+          utmContent: utms.utm_content || '',
+          utmTerm: utms.utm_term || ''
+        };
+        var uf = resolveUf();
+        if (uf) payload.estado = uf;
+        return fetch(WAITLIST_ENDPOINT, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(payload)
+        });
       })
-    })
       .then(function (res) {
         console.log('[waitlist-debug] resposta recebida', res.status);
         /* 409 = WhatsApp já cadastrado (backend recusa, não mescla) — lê a
