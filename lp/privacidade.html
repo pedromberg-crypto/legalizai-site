@@ -4,6 +4,16 @@
 
   <meta name="facebook-domain-verification" content="loc3a8wvkc6o1600tze44v9jdgk0r8" />
 
+  <!-- CONSENTIMENTO DE COOKIES (LGPD): antes do GTM. Ver lp/_lab/index.html. -->
+  <script>
+  window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments);}
+  (function(){var c=null;try{c=JSON.parse(localStorage.getItem('lz_consent'));}catch(e){}
+  if(!c||c.v!==1||!(Date.now()-c.t<31536e6))c={};
+  var a=c.analytics?'granted':'denied',m=c.marketing?'granted':'denied';
+  gtag('consent','default',{analytics_storage:a,ad_storage:m,ad_user_data:m,ad_personalization:m,functionality_storage:'granted',security_storage:'granted',wait_for_update:500});
+  gtag('set','ads_data_redaction',m==='denied');window.lzMarketing=m==='granted';})();
+  </script>
+
   <!-- Google Tag Manager -->
   <script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
   new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
@@ -23,10 +33,7 @@
 </head>
 <body>
 
-  <!-- Google Tag Manager (noscript) -->
-  <noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-KC3H6Z9X"
-  height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
-  <!-- End Google Tag Manager (noscript) -->
+  <!-- ✂️ <noscript> do GTM removido (LGPD): sem JS não há consentimento. -->
 
 <!-- site-header-legal: sem o CTA "Baixar o app". Enquanto o pré-lançamento
      durar, "/" redireciona pra /em-breve, então "/#baixar" levaria a lugar
@@ -64,7 +71,7 @@
 <section class="legal">
   <p class="legal-eyebrow">Legalizai</p>
   <h1>Política de Privacidade</h1>
-  <p class="legal-updated">Última atualização: 3 de agosto de 2026</p>
+  <p class="legal-updated">Última atualização: 29 de setembro de 2026</p>
 
   <p>Esta política explica quais dados o <strong>Legalizai</strong> coleta quando você visita nosso site ou entra na lista de espera, para que usamos esses dados e quais são os seus direitos. Somos transparentes de propósito: se algo aqui não ficar claro, escreva pra gente.</p>
 
@@ -90,7 +97,7 @@
   </ul>
 
   <h2>3. Cookies e tags de terceiros</h2>
-  <p>Usamos (ou vamos usar) tags de mensuração do <strong>Google</strong> (Google Ads, Google Analytics) e da <strong>Meta</strong> (Meta Pixel, para Facebook e Instagram Ads) pra entender de onde vêm nossos visitantes e medir conversão. Essas empresas processam dados de navegação conforme as próprias políticas de privacidade delas. Você pode bloquear cookies nas configurações do seu navegador ou usar as ferramentas de opt-out do <a href="https://adssettings.google.com" target="_blank" rel="noopener">Google</a> e da <a href="https://www.facebook.com/adpreferences" target="_blank" rel="noopener">Meta</a>.</p>
+  <p>Usamos tags de mensuração do <strong>Google</strong> (Google Ads, Google Analytics) e da <strong>Meta</strong> (Meta Pixel, para Facebook e Instagram Ads) pra entender de onde vêm nossos visitantes e medir conversão. Essas tags <strong>só são ativadas com o seu consentimento</strong>, dado no aviso de cookies que aparece na primeira visita. Você pode mudar sua escolha a qualquer momento pelo link <a href="/cookies" data-lz-cookies>Cookies</a> no rodapé. A lista completa, com finalidade e duração de cada cookie, está na <a href="/cookies">Política de Cookies</a>.</p>
 
   <h2>4. Com quem compartilhamos</h2>
   <p>Não vendemos seus dados. Compartilhamos o mínimo necessário com: provedores de infraestrutura (hospedagem, e-mail), Google e Meta (mensuração de anúncios, conforme item 3), e autoridades, quando exigido por lei.</p>
@@ -119,6 +126,7 @@
       <a href="mailto:contato@legalizei.app">contato@legalizei.app</a>
       <a href="/termos">Termos de uso</a>
       <a href="/privacidade">Privacidade</a>
+      <a href="/cookies" data-lz-cookies>Cookies</a>
     </nav>
   </div>
   <div class="container footer-legal">
@@ -136,5 +144,6 @@
     onScroll();
   })();
 </script>
+<script src="/consentimento.js?v=1" defer></script>
 </body>
 </html>

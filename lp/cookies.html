@@ -24,12 +24,26 @@
 
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Termos de Uso · Legalizai</title>
-  <meta name="description" content="Termos de Uso do Legalizai: regras de uso do site, da lista de espera e do produto.">
+  <title>Política de Cookies · Legalizai</title>
+  <meta name="description" content="Política de Cookies do Legalizai: quais cookies o site usa, pra quê, por quanto tempo e como mudar sua escolha a qualquer momento (LGPD).">
+  <link rel="canonical" href="https://legalizai.com.br/cookies">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Sora:wght@400;500;600;700;800&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="styles.css">
+  <!-- tabela de cookies: só esta página tem, então o estilo fica aqui e não
+       no styles.css (que é gerado pelo build a partir do _lab). No celular a
+       tabela rola na horizontal dentro da própria caixa, nunca a página. -->
+  <style>
+    .legal-tabela { overflow-x:auto; margin:12px 0 8px; border:1px solid var(--ink-200); border-radius:14px; }
+    .legal-tabela table { width:100%; min-width:560px; border-collapse:collapse; font-size:.86rem; }
+    .legal-tabela th, .legal-tabela td { text-align:left; vertical-align:top; padding:10px 12px; border-bottom:1px solid var(--ink-200); color:var(--ink-700); }
+    .legal-tabela tr:last-child td { border-bottom:0; }
+    .legal-tabela th { background:var(--ink-50); color:var(--ink-900); font-weight:600; }
+    .legal-tabela code { font-size:.82rem; color:var(--ink-900); white-space:nowrap; }
+    .legal-btn-cookies { font:inherit; font-weight:600; font-size:.95rem; min-height:44px; padding:10px 22px; margin:8px 0 4px; border:0; border-radius:999px; background:var(--coral-500); color:#fff; cursor:pointer; }
+    .legal-btn-cookies:hover { background:var(--coral-600); }
+  </style>
 </head>
 <body>
 
@@ -70,44 +84,59 @@
 <main>
 <section class="legal">
   <p class="legal-eyebrow">Legalizai</p>
-  <h1>Termos de Uso</h1>
-  <p class="legal-updated">Última atualização: 3 de agosto de 2026</p>
+  <h1>Política de Cookies</h1>
+  <p class="legal-updated">Última atualização: 29 de setembro de 2026</p>
 
-  <p>Estes Termos de Uso regem o acesso ao site do <strong>Legalizai</strong> e a participação na lista de espera de lançamento. Ao usar o site ou se inscrever, você concorda com o que está escrito aqui.</p>
+  <p>Cookies são pequenos arquivos que o site grava no seu navegador. Alguns são indispensáveis pro site funcionar; outros servem pra medir visitas e anúncios. Aqui você vê <strong>todos</strong> os que o <strong>Legalizai</strong> usa, pra que servem e por quanto tempo ficam. Os de análise e de marketing <strong>só são ativados se você permitir</strong>.</p>
 
-  <div class="legal-empresa">
-    <p><strong>Legalize Digital LTDA</strong><br>
-    CNPJ 41.569.345/0001-48<br>
-    R. Satélite, 328, sala 411, Caiçara-Adelaide, Belo Horizonte/MG, CEP 30.770-380<br>
-    contato@legalizei.app</p>
+  <!-- data-lz-cookies: consentimento.js intercepta e abre o painel -->
+  <button type="button" class="legal-btn-cookies" data-lz-cookies>Mudar minhas preferências</button>
+
+  <h2>1. Cookies necessários</h2>
+  <p>Fazem o site funcionar e não podem ser desligados. Não identificam você e não saem do seu navegador, exceto a origem da visita, que vai junto com o seu cadastro na lista de espera.</p>
+  <div class="legal-tabela">
+    <table>
+      <thead><tr><th>Nome</th><th>De quem</th><th>Pra quê</th><th>Duração</th></tr></thead>
+      <tbody>
+        <tr><td><code>lz_consent</code></td><td>Legalizai</td><td>Guarda a sua escolha sobre cookies, pra não perguntar de novo a cada página.</td><td>12 meses</td></tr>
+        <tr><td><code>legalizai_utm</code></td><td>Legalizai</td><td>Guarda de onde você chegou ao site (ex: um anúncio), pra registrar junto do seu cadastro.</td><td>Até fechar a aba</td></tr>
+        <tr><td><code>legalizai_thanks</code></td><td>Legalizai</td><td>Leva seu primeiro nome e o plano escolhido até a página de confirmação do cadastro.</td><td>Apagado ao abrir a confirmação</td></tr>
+      </tbody>
+    </table>
   </div>
 
-  <h2>1. O que é o Legalizai</h2>
-  <p>O Legalizai é o produto de contabilidade digital do escritório <strong>Legalize Digital LTDA</strong> (22 anos de atuação em Belo Horizonte), atualmente em fase de pré-lançamento. Este site tem caráter informativo e de captação para a lista de espera; o app e a prestação de serviços contábeis serão regidos por contrato próprio no momento da contratação.</p>
+  <h2>2. Cookies de análise</h2>
+  <p>Contam visitas e mostram quais páginas funcionam melhor. Só ativados com o seu consentimento.</p>
+  <div class="legal-tabela">
+    <table>
+      <thead><tr><th>Nome</th><th>De quem</th><th>Pra quê</th><th>Duração</th></tr></thead>
+      <tbody>
+        <tr><td><code>_ga</code></td><td>Google Analytics</td><td>Distingue visitantes, sem identificar quem você é.</td><td>2 anos</td></tr>
+        <tr><td><code>_ga_*</code></td><td>Google Analytics</td><td>Mantém o estado da sua visita (sessão).</td><td>2 anos</td></tr>
+      </tbody>
+    </table>
+  </div>
 
-  <h2>2. Lista de espera</h2>
-  <p>Ao deixar seu e-mail, você concorda em receber comunicações sobre o lançamento do Legalizai. Você pode pedir a remoção da lista a qualquer momento em <a href="mailto:contato@legalizei.app">contato@legalizei.app</a>. Veja também nossa <a href="/privacidade">Política de Privacidade</a>.</p>
+  <h2>3. Cookies de marketing</h2>
+  <p>Medem se nossos anúncios no Google, Facebook e Instagram trouxeram você e ajudam a mostrar anúncios mais relevantes. Só ativados com o seu consentimento.</p>
+  <div class="legal-tabela">
+    <table>
+      <thead><tr><th>Nome</th><th>De quem</th><th>Pra quê</th><th>Duração</th></tr></thead>
+      <tbody>
+        <tr><td><code>_gcl_*</code></td><td>Google Ads</td><td>Liga a sua visita ao anúncio do Google em que você clicou.</td><td>90 dias</td></tr>
+        <tr><td><code>_fbp</code></td><td>Meta (Facebook e Instagram)</td><td>Identifica o navegador pra medir anúncios da Meta.</td><td>90 dias</td></tr>
+        <tr><td><code>_fbc</code></td><td>Meta (Facebook e Instagram)</td><td>Guarda o clique no anúncio da Meta que trouxe você.</td><td>90 dias</td></tr>
+      </tbody>
+    </table>
+  </div>
+  <p>Google e Meta tratam esses dados conforme as políticas de privacidade delas: <a href="https://policies.google.com/privacy" target="_blank" rel="noopener">Google</a> e <a href="https://www.facebook.com/privacy/policy" target="_blank" rel="noopener">Meta</a>.</p>
 
-  <h2>3. Uso permitido</h2>
-  <p>Você concorda em fornecer informações verdadeiras e em não usar o site para fins ilícitos, tentar acessar áreas restritas, ou interferir no funcionamento do site.</p>
+  <h2>4. Como mudar sua escolha</h2>
+  <p>Quando quiser, pelo botão no topo desta página ou pelo link <a href="/cookies" data-lz-cookies>Cookies</a> no rodapé de qualquer página. Se você retirar uma permissão, apagamos os cookies daquela categoria que estiverem no seu navegador. Você também pode bloquear ou apagar cookies nas configurações do próprio navegador.</p>
+  <p>Sua escolha vale por 12 meses. Depois disso, ou se esta política mudar, perguntamos de novo.</p>
 
-  <h2>4. Propriedade intelectual</h2>
-  <p>A marca <strong>Legalizai</strong>, o logotipo, os textos e o design deste site pertencem à Legalize Digital LTDA. Não é permitido copiar, reproduzir ou usar esse material sem autorização.</p>
-
-  <h2>5. Isenção de responsabilidade</h2>
-  <p>Este site está em fase de pré-lançamento: funcionalidades, preços e prazos descritos aqui são informativos e podem mudar até o lançamento oficial do produto. Nenhuma simulação ou validador de CNAE apresentado no site substitui orientação contábil formal.</p>
-
-  <h2>6. Limitação de responsabilidade</h2>
-  <p>Na máxima extensão permitida por lei, a Legalize Digital LTDA não se responsabiliza por danos indiretos decorrentes do uso deste site informativo, anterior ao lançamento do produto.</p>
-
-  <h2>7. Alterações destes termos</h2>
-  <p>Podemos atualizar estes Termos conforme o produto evolui. A data no topo desta página sempre reflete a versão mais recente.</p>
-
-  <h2>8. Foro</h2>
-  <p>Fica eleito o foro da comarca de Belo Horizonte/MG para dirimir eventuais controvérsias decorrentes destes Termos.</p>
-
-  <h2>9. Contato</h2>
-  <p>Dúvidas sobre estes Termos: <a href="mailto:contato@legalizei.app">contato@legalizei.app</a>.</p>
+  <h2>5. Mais sobre seus dados</h2>
+  <p>O que fazemos com os dados que você nos dá, e como exercer seus direitos pela LGPD, está na <a href="/privacidade">Política de Privacidade</a>. Dúvidas: <a href="mailto:contato@legalizei.app">contato@legalizei.app</a>.</p>
 </section>
 </main>
 

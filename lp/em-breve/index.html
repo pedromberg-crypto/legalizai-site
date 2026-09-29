@@ -4,6 +4,17 @@
 
   <meta name="facebook-domain-verification" content="loc3a8wvkc6o1600tze44v9jdgk0r8" />
 
+  <!-- CONSENTIMENTO DE COOKIES (LGPD): antes do GTM e do Pixel. Ver
+       lp/_lab/index.html. Deixa window.lzMarketing pronto pro Pixel abaixo. -->
+  <script>
+  window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments);}
+  (function(){var c=null;try{c=JSON.parse(localStorage.getItem('lz_consent'));}catch(e){}
+  if(!c||c.v!==1||!(Date.now()-c.t<31536e6))c={};
+  var a=c.analytics?'granted':'denied',m=c.marketing?'granted':'denied';
+  gtag('consent','default',{analytics_storage:a,ad_storage:m,ad_user_data:m,ad_personalization:m,functionality_storage:'granted',security_storage:'granted',wait_for_update:500});
+  gtag('set','ads_data_redaction',m==='denied');window.lzMarketing=m==='granted';})();
+  </script>
+
   <!-- Google Tag Manager -->
   <script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
   new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
@@ -22,6 +33,10 @@
   t.src=v;s=b.getElementsByTagName(e)[0];
   s.parentNode.insertBefore(t,s)}(window, document,'script',
   'https://connect.facebook.net/en_US/fbevents.js');
+  /* LGPD: sem marketing aceito, o Pixel fica pausado (revoke) e não grava
+     _fbp nem manda evento. consentimento.js troca pra 'grant' se a pessoa
+     aceitar depois, já nesta mesma página. */
+  fbq('consent', window.lzMarketing ? 'grant' : 'revoke');
   fbq('init', '1491545112739294');
   fbq('track', 'PageView');
   </script>
@@ -40,16 +55,9 @@
 </head>
 <body class="soon-body">
 
-  <!-- Google Tag Manager (noscript) -->
-  <noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-KC3H6Z9X"
-  height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
-  <!-- End Google Tag Manager (noscript) -->
-
-  <!-- Meta Pixel Code (noscript) -->
-  <noscript><img height="1" width="1" style="display:none"
-  src="https://www.facebook.com/tr?id=1491545112739294&ev=PageView&noscript=1"
-  /></noscript>
-  <!-- End Meta Pixel Code (noscript) -->
+  <!-- ✂️ <noscript> do GTM e do Pixel removidos (LGPD): sem JS não existe
+       banner, então não há como pedir consentimento — e rastrear sem ele é
+       justamente o que a política de cookies promete não fazer. -->
 
 <main class="soon-main">
   <section class="soon-col soon-col-form">
@@ -344,6 +352,7 @@
       <a class="text-ink-500 no-underline hover:text-ink-900 hover:underline" href="mailto:contato@legalizai.com.br">contato@legalizai.com.br</a>
       <a class="text-ink-500 no-underline hover:text-ink-900 hover:underline" href="/termos">Termos de uso</a>
       <a class="text-ink-500 no-underline hover:text-ink-900 hover:underline" href="/privacidade">Privacidade</a>
+      <a class="text-ink-500 no-underline hover:text-ink-900 hover:underline" href="/cookies" data-lz-cookies>Cookies</a>
     </nav>
     <p>© 2026 Legalizai · Legalize Digital LTDA · CNPJ 41.569.345/0001-48 · Belo Horizonte/MG</p>
     <p>Responsabilidade técnica: Legalize Auditoria e Consultoria Contábil LTDA · CNPJ 12.423.332/0001-68 · CRC-MG 007900/O · Contador responsável: Mauro Lopes de Faria, CRC-MG 094967/O-0</p>
@@ -351,6 +360,7 @@
 </main>
 
 <script src="/em-breve/script.js?v=5" defer></script>
+<script src="/consentimento.js?v=1" defer></script>
 <!-- chat.js (widget "Fale com o Léo") ocultado a pedido do Pedro — reversível, só descomentar -->
 <!-- <script src="/em-breve/chat.js" defer></script> -->
 <script src="/em-breve/assets/phone-lottie.js" defer></script>

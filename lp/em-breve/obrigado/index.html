@@ -51,6 +51,18 @@
   })();
   </script>
 
+  <!-- CONSENTIMENTO DE COOKIES (LGPD): antes do Pixel e do GTM. Ver
+       lp/_lab/index.html. A escolha feita no /em-breve já vem salva, então
+       quem aceitou marketing lá gera o Lead aqui normalmente. -->
+  <script>
+  window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments);}
+  (function(){var c=null;try{c=JSON.parse(localStorage.getItem('lz_consent'));}catch(e){}
+  if(!c||c.v!==1||!(Date.now()-c.t<31536e6))c={};
+  var a=c.analytics?'granted':'denied',m=c.marketing?'granted':'denied';
+  gtag('consent','default',{analytics_storage:a,ad_storage:m,ad_user_data:m,ad_personalization:m,functionality_storage:'granted',security_storage:'granted',wait_for_update:500});
+  gtag('set','ads_data_redaction',m==='denied');window.lzMarketing=m==='granted';})();
+  </script>
+
   <!-- Meta Pixel Code -->
   <!-- Só dispara quando o guard acima deixou a chave em window.__legalizaiThanks:
        quem caiu aqui por acesso direto já está sendo redirecionado e não
@@ -66,6 +78,8 @@
     t.src=v;s=b.getElementsByTagName(e)[0];
     s.parentNode.insertBefore(t,s)}(window, document,'script',
     'https://connect.facebook.net/en_US/fbevents.js');
+    // LGPD: sem marketing aceito, o Pixel fica pausado e o Lead não sai
+    fbq('consent', window.lzMarketing ? 'grant' : 'revoke');
     fbq('init', '1491545112739294');
     fbq('track', 'PageView');
     fbq('track', 'Lead', { content_name: window.__legalizaiThanks.plano || '' });
@@ -104,13 +118,8 @@
 </head>
 <body class="obrigado-body">
 
-  <!-- Meta Pixel Code (noscript) -->
-  <noscript><img height="1" width="1" style="display:none"
-  src="https://www.facebook.com/tr?id=1491545112739294&ev=PageView&noscript=1"
-  /><img height="1" width="1" style="display:none"
-  src="https://www.facebook.com/tr?id=1491545112739294&ev=Lead&noscript=1"
-  /></noscript>
-  <!-- End Meta Pixel Code (noscript) -->
+  <!-- ✂️ <noscript> do Pixel removido (LGPD): sem JS não há banner nem
+       consentimento, então o pixel de imagem não pode disparar. -->
 
 <main class="obrigado-main">
   <!-- mesma marca do form, recolorida pra ler bem sobre o fundo coral:
@@ -182,5 +191,6 @@
 </footer>
 
 <script src="/em-breve/obrigado/script.js" defer></script>
+<script src="/consentimento.js?v=1" defer></script>
 </body>
 </html>

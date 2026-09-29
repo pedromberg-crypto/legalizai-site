@@ -1,6 +1,14 @@
 <!doctype html>
 <html lang="pt-BR">
 <head>
+<script>
+window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments);}
+(function(){var c=null;try{c=JSON.parse(localStorage.getItem('lz_consent'));}catch(e){}
+if(!c||c.v!==1||!(Date.now()-c.t<31536e6))c={};
+var a=c.analytics?'granted':'denied',m=c.marketing?'granted':'denied';
+gtag('consent','default',{analytics_storage:a,ad_storage:m,ad_user_data:m,ad_personalization:m,functionality_storage:'granted',security_storage:'granted',wait_for_update:500});
+gtag('set','ads_data_redaction',m==='denied');window.lzMarketing=m==='granted';})();
+</script>
 <script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
 new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
 j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
@@ -30,8 +38,6 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
   </style>
 </head>
 <body class="sim-body">
-<noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-KC3H6Z9X"
-height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
 <header class="site-header site-header-blog" id="topo">
   <div class="container header-inner">
     <a class="brand" href="/index.html" aria-label="Legalizaí, início">
@@ -124,6 +130,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
       <a href="mailto:contato@legalizei.app">contato@legalizei.app</a>
       <a href="/termos">Termos de uso</a>
       <a href="/privacidade">Privacidade</a>
+      <a href="/cookies" data-lz-cookies>Cookies</a>
     </nav>
   </div>
   <div class="container footer-legal">
@@ -133,5 +140,6 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
   </div>
 </footer>
 <script src="/atendimento/atendimento.js?v=64" defer></script>
+<script src="/consentimento.js?v=1" defer></script>
 </body>
 </html>

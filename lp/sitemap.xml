@@ -40,7 +40,13 @@
   </url>
   <url>
     <loc>https://legalizai.com.br/privacidade</loc>
-    <lastmod>2026-09-08</lastmod>
+    <lastmod>2026-09-29</lastmod>
+    <changefreq>yearly</changefreq>
+    <priority>0.2</priority>
+  </url>
+  <url>
+    <loc>https://legalizai.com.br/cookies</loc>
+    <lastmod>2026-09-29</lastmod>
     <changefreq>yearly</changefreq>
     <priority>0.2</priority>
   </url>
