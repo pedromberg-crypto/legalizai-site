@@ -63,6 +63,9 @@
     '.lzc-acoes{display:flex;flex-wrap:wrap;gap:8px}',
     '.lzc-btn{font:inherit;font-size:.82rem;font-weight:600;min-height:44px;padding:10px 18px;border-radius:999px;cursor:pointer;border:1.5px solid transparent;flex:1 1 auto;transition:background-color .15s,border-color .15s,color .15s}',
     '.lzc-btn:focus-visible,.lzc-toggle input:focus-visible+span{outline:3px solid #F47F58;outline-offset:2px}',
+    '.lzc-link{font:inherit;font-weight:600;color:#B83D1C;background:none;border:0;padding:0;margin:0;text-decoration:underline;cursor:pointer}',
+    '.lzc-link:hover{color:#8C2F16}',
+    '.lzc-link:focus-visible{outline:3px solid #F47F58;outline-offset:2px;border-radius:4px}',
     '.lzc-sim{background:#F2643C;color:#fff}',
     '.lzc-sim:hover{background:#DD4E27}',
     '.lzc-nao{background:#1B1E24;color:#fff}',
@@ -116,12 +119,12 @@
     banner.innerHTML =
       '<p><strong>A gente usa cookies.</strong> Os necessários fazem o site funcionar. ' +
       'Com a sua permissão, usamos também cookies de análise e de marketing pra entender ' +
-      'de onde você veio e melhorar nossos anúncios. Você escolhe. ' +
+      'de onde você veio e melhorar nossos anúncios. Se preferir, você pode ' +
+      '<button type="button" class="lzc-link" data-lzc="rejeitar">rejeitar</button> ou ' +
+      '<button type="button" class="lzc-link" data-lzc="personalizar">escolher quais aceitar</button>. ' +
       '<a href="/cookies">Política de cookies</a></p>' +
       '<div class="lzc-acoes">' +
-        '<button type="button" class="lzc-btn lzc-mais" data-lzc="personalizar">Personalizar</button>' +
-        '<button type="button" class="lzc-btn lzc-nao" data-lzc="rejeitar">Rejeitar</button>' +
-        '<button type="button" class="lzc-btn lzc-sim" data-lzc="aceitar">Aceitar todos</button>' +
+        '<button type="button" class="lzc-btn lzc-sim" data-lzc="aceitar">Aceitar cookies</button>' +
       '</div>';
     banner.addEventListener('click', function (e) {
       var acao = e.target.closest('[data-lzc]');
