@@ -49,10 +49,9 @@
 
   <!-- ✂️ <noscript> do GTM removido (LGPD): sem JS não há consentimento. -->
 
-<!-- site-header-legal: sem o CTA "Baixar o app". Enquanto o pré-lançamento
-     durar, "/" redireciona pra /em-breve, então "/#baixar" levaria a lugar
-     nenhum — e página de aceite não é lugar de vender. -->
-<header class="site-header site-header-legal" id="topo">
+<!-- mesmo menu da home (lp/_lab/index.html), com as âncoras apontando pra
+     "/#..." porque aqui não é a home. Mudou o menu lá, muda aqui. -->
+<header class="site-header" id="topo">
   <div class="container header-inner">
     <a class="brand" href="/" aria-label="Legalizai, início">
       <svg class="logo" viewBox="0 0 659.73 130" role="img" aria-label="Legalizai">
@@ -77,7 +76,14 @@
     </a>
     <nav class="header-nav" aria-label="Navegação principal">
       <a href="/">Início</a>
+      <a href="/#validador">Atendemos você?</a>
+      <a href="/#como-funciona">Como funciona</a>
+      <a href="/#planos">Planos</a>
+      <a href="/#perguntas">Perguntas</a>
     </nav>
+    <a class="header-cta" href="/em-breve">
+      Entrar na lista
+    </a>
   </div>
 </header>
 
