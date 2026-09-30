@@ -56,8 +56,8 @@
   var CSS = [
     '.lzc-banner,.lzc-painel{font-family:"Sora",system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;color:#1B1E24;-webkit-font-smoothing:antialiased;box-sizing:border-box}',
     '.lzc-banner *,.lzc-painel *{box-sizing:border-box}',
-    '.lzc-banner{position:fixed;left:16px;right:16px;bottom:16px;z-index:2147483000;max-width:1040px;margin:0 auto;background:#fff;border:1px solid #E3DED7;border-radius:18px;box-shadow:0 14px 40px rgba(27,30,36,.18);padding:16px 18px;display:flex;flex-direction:column;gap:12px;animation:lzc-sobe .25s ease-out}',
-    '.lzc-banner p{margin:0;font-size:.8rem;line-height:1.5;color:#34363C}',
+    '.lzc-banner{position:fixed;left:0;right:0;bottom:max(16px,env(safe-area-inset-bottom));z-index:2147483000;width:calc(100% - 32px);max-width:1040px;margin:0 auto !important;background:#fff;border:1px solid #E3DED7;border-radius:16px;box-shadow:0 14px 40px rgba(27,30,36,.18);padding:14px 16px;display:flex;flex-direction:column;gap:10px;animation:lzc-sobe .25s ease-out}',
+    '.lzc-banner p{margin:0;font-size:.78rem;line-height:1.5;color:#34363C}',
     '.lzc-banner strong{color:#1B1E24}',
     '.lzc-banner a,.lzc-painel a{color:#B83D1C;font-weight:600}',
     '.lzc-acoes{display:flex;flex-wrap:wrap;gap:8px}',
@@ -117,12 +117,11 @@
     banner.setAttribute('role', 'region');
     banner.setAttribute('aria-label', 'Aviso de cookies');
     banner.innerHTML =
-      '<p><strong>A gente usa cookies.</strong> Os necessários fazem o site funcionar. ' +
-      'Com a sua permissão, usamos também cookies de análise e de marketing pra entender ' +
-      'de onde você veio e melhorar nossos anúncios. Se preferir, você pode ' +
+      '<p><strong>Usamos cookies</strong> pro site funcionar e, com a sua permissão, ' +
+      'pra medir visitas e anúncios. Você pode ' +
       '<button type="button" class="lzc-link" data-lzc="rejeitar">rejeitar</button> ou ' +
-      '<button type="button" class="lzc-link" data-lzc="personalizar">escolher quais aceitar</button>. ' +
-      '<a href="/cookies">Política de cookies</a></p>' +
+      '<button type="button" class="lzc-link" data-lzc="personalizar">escolher quais</button>. ' +
+      '<a href="/cookies">Saiba mais</a></p>' +
       '<div class="lzc-acoes">' +
         '<button type="button" class="lzc-btn lzc-sim" data-lzc="aceitar">Aceitar cookies</button>' +
       '</div>';
