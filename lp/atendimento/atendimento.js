@@ -70,7 +70,7 @@
       checks: [
         'Fatura até ~R$6.750/mês (R$81 mil/ano)',
         'Abre em qualquer cidade do Brasil',
-        'Sem taxa da Junta · registro na hora',
+        'Sem taxa de registro · na hora',
         'Sem sócio · até 1 funcionário com carteira',
         'Certificado digital por sua conta (não vem no plano)'
       ]
@@ -447,7 +447,7 @@
       }
       if (mei && cepOk) {
         corpo += '<div class="sim-full">' + nota('info', 'Pode ser o seu endereço de casa',
-          'No MEI não existe consulta prévia de viabilidade, e em BH o alvará é dispensado pras atividades de baixo risco. Você declara o endereço e assume o compromisso de seguir as regras do município.') + '</div>';
+          'No MEI, as atividades de baixo risco em BH podem funcionar no endereço de casa. Você declara o endereço e assume o compromisso de seguir as regras do município.') + '</div>';
       }
     }
     var pronto = mei
@@ -469,9 +469,9 @@
     var veredito = '';
     if (apeSemResidencia) {
       veredito = nota('warn', 'Esse apartamento não serve como sede',
-        'Sem sócio morando nele, a Prefeitura indefere. Use outro endereço seu, ou o da Legalizaí.');
+        'Sem sócio morando nele, a regra de BH não aceita. Use outro endereço seu, ou o da Legalizaí.');
     } else if (s.tipoImovel !== '' && s.reside !== null) {
-      veredito = nota('ok', '', 'Endereço aprovado pela regra da Prefeitura. É esse que vai no seu CNPJ.');
+      veredito = nota('ok', '', 'Endereço dentro da regra de BH. É esse que vai no seu CNPJ.');
     }
     var corpo = '<div class="sim-duo">' +
       '<div class="sim-field"><label class="sim-field-label" for="sim-tipo">Esse endereço é casa ou apartamento?</label>' +
@@ -491,7 +491,7 @@
       '<p class="sim-regra-titulo">Por que a gente pergunta</p>' +
       '<ul class="sim-checks">' +
         [
-          'Casa, sala, loja ou galpão: a Prefeitura aceita direto',
+          'Casa, sala, loja ou galpão: a regra de BH aceita direto',
           'Apartamento só é aceito se um dos sócios morar nele',
           'Se não for o seu caso, o endereço da Legalizaí resolve por ' + brl(ENDERECO_FISCAL) + '/mês'
         ].map(function (t) { return '<li>' + CHECK_SVG + '<span>' + esc(t) + '</span></li>'; }).join('') +
@@ -530,8 +530,8 @@
           [
             plural ? 'Seu sócio precisa morar no Brasil' : 'Seus sócios precisam morar no Brasil',
             plural ? 'Seu sócio entra só com CPF, não CNPJ' : 'Seus sócios entram só com CPF, não CNPJ',
-            plural ? 'Seu sócio vai assinar (GOV.BR) na hora de constituir a empresa'
-                   : 'Seus sócios vão assinar (GOV.BR) na hora de constituir a empresa'
+            plural ? 'Seu sócio vai assinar digitalmente, pelo celular, na hora de constituir a empresa'
+                   : 'Seus sócios vão assinar digitalmente, pelo celular, na hora de constituir a empresa'
           ].map(function (t) { return '<li>' + CHECK_SVG + '<span>' + esc(t) + '</span></li>'; }).join('') +
           (s.socioNaoAtende ? '' :
             '<li class="sim-check-acao"><button type="button" class="sim-btn-cinza" data-acao="socio-nao-atende">' +
