@@ -1,7 +1,7 @@
 /* ============================================================
    LEGALIZAI · Chat do Léo (em-breve)
    Widget de atendimento: visitante conversa com o Léo (agente
-   da Legalizai) direto na LP. Primeiro ponto de contato antes
+   da Legalizaí) direto na LP. Primeiro ponto de contato antes
    da integração com WhatsApp. Backend: /site-chat no
    legalizai-backend — o histórico vive lá, chaveado por um
    visitorId gerado aqui e guardado em localStorage.
@@ -69,11 +69,11 @@
   var panel = document.createElement('div');
   panel.id = 'lz-chat';
   panel.setAttribute('role', 'dialog');
-  panel.setAttribute('aria-label', 'Chat com o Léo, atendente da Legalizai');
+  panel.setAttribute('aria-label', 'Chat com o Léo, atendente da Legalizaí');
   panel.innerHTML =
     '<div id="lz-chat-head">' +
       '<div class="lz-avatar" aria-hidden="true">L</div>' +
-      '<div><div class="lz-nome">Léo</div><div class="lz-sub">Atendimento Legalizai</div></div>' +
+      '<div><div class="lz-nome">Léo</div><div class="lz-sub">Atendimento Legalizaí</div></div>' +
       '<button id="lz-chat-close" type="button" aria-label="Fechar chat">&times;</button>' +
     '</div>' +
     '<div id="lz-chat-msgs" aria-live="polite"></div>' +
@@ -154,10 +154,10 @@
   /* Variações da abertura pra não repetir a mesma frase pra todo visitante —
      um humano não abre a conversa com o texto idêntico toda vez. */
   var ABERTURAS = [
-    'Léo aqui, da Legalizai, de olho pra te ajudar com o que precisar.',
-    'Aqui é o Léo, o suricato de vigia da Legalizai, pode perguntar à vontade.',
-    'Léo na área, da Legalizai, fica esperto que eu já fiquei, manda sua dúvida.',
-    'Sou o Léo, da Legalizai, pergunta o que quiser sobre a gente.',
+    'Léo aqui, da Legalizaí, de olho pra te ajudar com o que precisar.',
+    'Aqui é o Léo, o suricato de vigia da Legalizaí, pode perguntar à vontade.',
+    'Léo na área, da Legalizaí, fica esperto que eu já fiquei, manda sua dúvida.',
+    'Sou o Léo, da Legalizaí, pergunta o que quiser sobre a gente.',
   ];
 
   function saudacaoPorHorario() {

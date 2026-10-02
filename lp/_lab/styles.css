@@ -1770,7 +1770,7 @@ h2 { font-size:clamp(1.5rem, 2vw + .8rem, 2.05rem); font-weight:800; line-height
   align-items:flex-start; gap:10px;
 }
 /* a garantia é reforço comercial, não veredito: fica fora do verde (que aqui
-   significa "coberto pelo Legalizai"), senão o olho perde qual pílula é a
+   significa "coberto pelo Legalizaí"), senão o olho perde qual pílula é a
    resposta da pergunta. */
 .c-reassure .result-selo { margin-top:0; color:var(--ink-600); font-weight:600; }
 
@@ -1805,7 +1805,7 @@ h2 { font-size:clamp(1.5rem, 2vw + .8rem, 2.05rem); font-weight:800; line-height
 .price-mei strong { color:var(--ink-700); font-weight:700; }
 .price-block .tag { margin-top:12px; }
 /* a garantia é reforço comercial, não veredito: sai do verde (que aqui significa
-   "coberto pelo Legalizai") e vira linha neutra, senão são 4 elementos verdes
+   "coberto pelo Legalizaí") e vira linha neutra, senão são 4 elementos verdes
    disputando a mesma bolha. */
 .price-block .result-selo { margin-top:10px; color:var(--ink-600); font-weight:600; }
 
@@ -4088,7 +4088,7 @@ details[open] .faq-ico::after { opacity:0; transform:translate(-50%,-50%) rotate
     display:block; margin:0 0 3px 31px;
     font-size:.64rem; font-weight:800; letter-spacing:.08em; text-transform:uppercase;
   }
-  .vs-table td.vs-us::before{content:"Legalizai"; color:var(--coral-300,rgba(255,255,255,.85))}
+  .vs-table td.vs-us::before{content:"Legalizaí"; color:var(--coral-300,rgba(255,255,255,.85))}
   .vs-table td.vs-them::before{content:"Os outros"; color:rgba(255,255,255,.42)}
 
   .vs-check{width:20px; height:20px; margin-right:11px; vertical-align:-5px}
