@@ -63,20 +63,26 @@
      conversão personalizada do Meta). As duas URLs servem o MESMO
      obrigado/index.html via rewrite (vercel.json e, local, serve.json).
      "me-simples" e não "me": "/obrigado/me" é prefixo de "/obrigado/mei",
-     e uma regra "URL contém" pegaria os dois. Plano desconhecido cai na
-     URL base, que continua funcionando. */
+     e uma regra "URL contém" pegaria os dois. Plano desconhecido não tem
+     obrigado (a URL base só roteia): volta pro /em-breve sem gravar chave.
+     Não acontece hoje: o envio exige o tipo, e as 3 opções têm data-plan. */
   var OBRIGADO_SLUG = { mei: 'mei', me: 'me-simples' };
 
   console.log('[waitlist-debug] script inicializado', { form: !!form, submitBtn: !!submitBtn });
 
   function irParaObrigado(primeiroNome, plano) {
+    var slug = OBRIGADO_SLUG[plano];
+    if (!slug) {
+      console.log('[waitlist-debug] plano desconhecido, voltando pro em-breve', plano);
+      window.location.href = '/_lab/em-breve';
+      return;
+    }
     try {
       sessionStorage.setItem(THANKS_STORAGE_KEY, JSON.stringify({ nome: primeiroNome || '', plano: plano || '' }));
     } catch (e) {
       console.log('[waitlist-debug] sessionStorage indisponível, seguindo sem salvar nome/plano', e);
     }
-    var slug = OBRIGADO_SLUG[plano];
-    window.location.href = '/_lab/em-breve/obrigado' + (slug ? '/' + slug : '');
+    window.location.href = '/_lab/em-breve/obrigado/' + slug;
   }
 
   function digits(s) { return (s || '').replace(/\D/g, ''); }

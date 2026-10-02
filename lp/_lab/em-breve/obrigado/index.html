@@ -23,11 +23,32 @@
        vercel.json e no serve.json): /_lab/em-breve/obrigado/mei e
        /_lab/em-breve/obrigado/me-simples. O slug manda no plano: é ele que a
        conversão lê na URL, então o card e o Lead do Pixel seguem o slug
-       pra nunca divergir dele. -->
+       pra nunca divergir dele. A URL base (/_lab/em-breve/obrigado, sem slug)
+       não é destino de ninguém: só roteia (ver o primeiro bloco abaixo). -->
   <script>
   (function () {
     var SLUG_PLANO = { 'mei': 'mei', 'me-simples': 'me' };
     var slugPlano = SLUG_PLANO[location.pathname.replace(/\/+$/, '').split('/').pop()];
+
+    /* URL base: quem traz a chave (aba aberta antes do deploy dos slugs,
+       ainda com o script.js antigo) segue pro slug do plano SEM consumir
+       a chave, e a conversão sai lá; sem chave, ou com plano desconhecido,
+       volta pro /_lab/em-breve. Pixel e GTM nunca carregam nesta URL, porque
+       __legalizaiThanks não é definido aqui. A query vai junto, então o
+       ?preview do atalho local abaixo continua valendo pela URL base. */
+    if (!slugPlano) {
+      var q0 = new URLSearchParams(location.search);
+      var cru = null, planoBase = null;
+      try { cru = sessionStorage.getItem('legalizai_thanks'); } catch (e) {}
+      try {
+        planoBase = cru ? JSON.parse(cru).plano
+                        : (q0.has('preview') ? (q0.get('plano') || 'mei') : null);
+      } catch (e) {}
+      var slugBase = { mei: 'mei', me: 'me-simples' }[planoBase];
+      if (!slugBase) { try { sessionStorage.removeItem('legalizai_thanks'); } catch (e) {} }
+      location.replace(slugBase ? '/_lab/em-breve/obrigado/' + slugBase + location.search : '/_lab/em-breve');
+      return;
+    }
 
     /* Atalho de preview pra trabalhar layout: ?preview (opcional
        &plano=mei|me e &nome=Fulano) entrega dado falso sem passar pelo
