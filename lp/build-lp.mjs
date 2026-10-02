@@ -193,8 +193,14 @@ function anda(rel) {
 
   // 1 · o caminho do sandbox vira a raiz do site
   s = s.replace(/\/_lab\//g, () => { conta.caminhos++; return '/'; });
-  // 2 · rede contra a tarja de sandbox voltar
-  s = s.replace(/^.*lab-flag.*$\n?/gm, '');
+  // 2 · a tarja de sandbox sai inteira: tudo entre <!-- lab:inicio --> e
+  //     <!-- lab:fim -->. Apagar só a linha com "lab-flag" deixava o resto do
+  //     CSS (e o texto "LAB — sandbox local") vazando pro ar.
+  s = s.replace(/[ \t]*<!-- lab:inicio -->[\s\S]*?<!-- lab:fim -->\n?/g, '');
+  // trava: sobrou tarja sem marcador? para o build em vez de publicar
+  if (/lab-flag|sandbox local/.test(s)) {
+    throw new Error(`${rel}: tarja do LAB sem <!-- lab:inicio --> / <!-- lab:fim -->`);
+  }
 
   const bruto = s;
   antes += bruto.length;
