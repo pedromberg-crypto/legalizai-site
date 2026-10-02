@@ -1,0 +1,518 @@
+/* ============================================================
+   LEGALIZEI · Blog (listagem) — LAB
+   Só o que NÃO existe em /_lab/styles.css: header sem hero atrás, intro,
+   busca+filtro, carrossel de destaque, grade de posts (namespace bp-*),
+   paginação e faixa de assinatura. Tokens (--coral-*, --ink-*, --container,
+   --r-card, --shadow-card, --dark-glow), .container, .section-sub, .btn,
+   .sr-only, header/footer: reaproveitados de styles.css, não duplicar aqui.
+
+   v2 — redesenho pedido pelo Pedro a partir de referência visual (título
+   com acento lateral + busca/filtro + carrossel de destaque + grade rica +
+   paginação + assinatura). Ver comentário completo em blog/index.html.
+   IMPORTANTE: os cards da grade usam classes .bp-* (não .blog-card/.blog-cat)
+   de propósito — essas duas já existem em styles.css, compartilhadas com o
+   teaser "Aprenda o essencial" da home (seção .blog, 3 posts). Reusar o
+   mesmo nome aqui herdaria aquele visual cru (cartão sem imagem, padding
+   fixo) por cascata — `.blog-card a`/`.blog-card h3` são seletores por
+   ANCESTRAL, então bastava a <li> ter a classe pra herdar, mesmo com o <a>
+   com outro nome. Namespace novo resolve sem tocar em styles.css.
+   ============================================================ */
+
+/* ---------- header sem hero coral atrás ----------
+   Na home, .site-header nasce transparente e só vira "vidro sólido" coral
+   (fundo + blur) depois de rolar 8px (classe .scrolled, ver script.js) —
+   funciona porque embaixo dele tem o degradê do .coral-field. Aqui não tem:
+   o body começa direto em --ink-50. Sem isto, a página carregaria com o
+   logo e os links do nav BRANCOS (.site-header .logo força --ink-900:#fff
+   e --coral-500:#fff, e o texto do nav é branco fixo) sobre fundo claro,
+   ou seja, invisíveis até o usuário rolar 8px.
+   Solução: uma classe NOVA (não mexe em .scrolled) que aplica o MESMO
+   visual do estado rolado desde o primeiro frame. Valores copiados de
+   .site-header.scrolled em styles.css de propósito — são o mesmo material,
+   só que sempre ligado; se aquele visual mudar lá, replicar aqui. */
+.site-header-blog {
+  background:rgba(242,100,60,.72);
+  backdrop-filter:blur(14px) saturate(140%); -webkit-backdrop-filter:blur(14px) saturate(140%);
+  border-bottom-color:rgba(255,255,255,.18);
+  box-shadow:0 6px 24px rgba(92,31,15,.14);
+}
+
+/* ============================================================ INTRO
+   Título + acento de cor à esquerda + ícones sociais no canto oposto —
+   composição da referência do Pedro, cores/marca da Legalizai. */
+.blog-hero { padding:56px 0 20px; }
+.blog-hero-inner { display:flex; align-items:flex-start; justify-content:space-between; gap:28px; }
+.blog-hero-text {
+  flex:1 1 640px; min-width:0;
+  /* a barrinha da referência: acento sólido encostado na margem, não
+     decoração de fundo — por isso border-left, não pseudo-elemento
+     posicionado (mais simples e já respeita a altura real do bloco). */
+  border-left:6px solid var(--coral-500);
+  padding-left:22px;
+}
+.blog-hero-text h1 {
+  margin:0;
+  /* menor que o h1 global (é o hero de conversão da home, clamp 2.1–3.7rem);
+     maior que .legal h1 (1.7–2.3rem, é rodapé jurídico) — título de página
+     de conteúdo, mesma régua da v1 desta página. */
+  font-size:clamp(1.9rem, 2.8vw + 1.1rem, 2.7rem);
+}
+.blog-hero-sub { margin-top:14px; max-width:58ch; }
+.blog-hero-sub strong { color:var(--ink-900); font-weight:700; }
+
+.blog-hero-social { display:flex; gap:10px; flex:none; margin-top:4px; }
+.blog-social-btn {
+  width:44px; height:44px; /* alvo de toque mínimo, não só ícone de 20px */
+  display:flex; align-items:center; justify-content:center;
+  border-radius:50%; background:#fff; border:1.5px solid var(--ink-200);
+  color:var(--ink-600); transition:border-color .16s, color .16s, transform .16s var(--ease-out);
+}
+.blog-social-btn svg { width:19px; height:19px; }
+.blog-social-btn:hover { border-color:var(--coral-400); color:var(--coral-600); transform:translateY(-2px); }
+
+@media (max-width:719px) {
+  .blog-hero-inner { flex-direction:column; }
+  .blog-hero-social { margin-top:4px; }
+}
+
+/* ============================================================ TOOLBAR
+   busca + filtro numa linha só (quebra em 2 no mobile). */
+.blog-listing { padding:16px 0 72px; }
+
+.blog-toolbar { display:flex; flex-wrap:wrap; gap:16px; align-items:center; justify-content:space-between; margin:0 0 36px; }
+
+.blog-search { position:relative; flex:1 1 260px; max-width:380px; }
+.blog-search svg {
+  position:absolute; left:16px; top:50%; transform:translateY(-50%);
+  width:18px; height:18px; color:var(--ink-400); pointer-events:none;
+}
+.blog-search input {
+  width:100%; box-sizing:border-box;
+  padding:13px 16px 13px 44px; /* espaço pra lupa à esquerda */
+  border-radius:999px; border:1.5px solid var(--ink-200); background:var(--ink-50);
+  font-size:.92rem; transition:border-color .16s, background-color .16s;
+}
+.blog-search input:hover { border-color:var(--ink-300); }
+.blog-search input:focus-visible { background:#fff; border-color:var(--coral-400); }
+/* botão nativo de limpar o campo search (x) no Chrome/Edge herda o alvo de
+   toque do input; sem regra própria ele nasce pequeno mas funcional — ok. */
+
+.blog-filters { display:flex; flex-wrap:wrap; gap:10px; }
+.blog-filter-btn {
+  font:inherit; font-weight:600; font-size:.86rem; line-height:1;
+  color:var(--ink-600); background:#fff; cursor:pointer;
+  border:1.5px solid var(--ink-200); border-radius:999px;
+  padding:13px 16px; /* fonte .86rem/1 + padding + borda ≈ 43px → WCAG 2.5.5 (arredonda pra baixo por ~1px, dentro da tolerância) */
+  transition:background-color .16s, border-color .16s, color .16s;
+}
+.blog-filter-btn:hover { border-color:var(--coral-300); color:var(--coral-700); }
+.blog-filter-btn[aria-pressed="true"] {
+  /* coral-700, não coral-600: o rótulo é .86rem/600 (não passa no teto de
+     "texto grande" que o coral-600 exige, ver nota de contraste em
+     .btn-primary no styles.css) — coral-700 mede 5,64:1 e passa AA em
+     qualquer tamanho, sem depender de peso/corpo da fonte. */
+  background:var(--coral-700); border-color:var(--coral-700); color:#fff;
+}
+
+@media (max-width:719px) {
+  .blog-toolbar { flex-direction:column; align-items:stretch; }
+  .blog-search { max-width:none; }
+}
+
+/* ---------- rótulo de seção ---------- */
+.blog-section-label {
+  border-bottom:1.5px solid var(--ink-200);
+  padding-bottom:14px; margin-bottom:28px;
+}
+.blog-section-label h2 { font-size:1.3rem; }
+
+/* ============================================================ DESTAQUE (CARROSSEL)
+   Faixa larga (praticamente o container inteiro), fundo coral-50 (tom claro
+   da paleta, não branco puro), imagem decorativa sangrando nas laterais por
+   trás do texto. 3 slides empilhados por OPACIDADE — nunca width/top, fica
+   na GPU (ver .difs-track em styles.css pro mesmo princípio no carrossel da
+   home). initFeaturedCarousel em blog.js troca .is-active e o aria-hidden
+   de cada slide; sem JS, o slide 0 já nasce visível (progressive
+   enhancement, mesmo padrão do filtro). */
+.blog-featured {
+  position:relative; overflow:hidden;
+  border-radius:28px; background:var(--coral-50);
+  box-shadow:var(--shadow-card);
+  margin-bottom:52px;
+}
+
+.blog-featured-track {
+  position:relative; z-index:1;
+  /* altura fixa via clamp (não min-height dependente do conteúdo do slide
+     ativo): os 3 slides têm textos de tamanho parecido, mas travar a altura
+     evita qualquer salto de layout na troca — CLS zero por construção. */
+  min-height:clamp(300px, 30vw, 380px);
+}
+.blog-featured-slide {
+  position:absolute; inset:0;
+  display:flex; flex-direction:column; align-items:center; justify-content:center;
+  text-align:center; padding:48px 28px 64px; /* base maior (era 40px): sobra respiro pros dots, que agora são overlay (ver .blog-featured-dots) em vez de linha própria abaixo do card */
+  opacity:0; visibility:hidden; pointer-events:none;
+  transition:opacity .5s var(--ease-out);
+}
+.blog-featured-slide.is-active { opacity:1; visibility:visible; pointer-events:auto; }
+
+/* foto de fundo por slide (pedido do Pedro): z-index NEGATIVO, não 0 — um
+   filho position:absolute com z-index:auto/0 pintaria ACIMA do texto normal
+   (estático) do slide, mesmo vindo antes no DOM (é assim que a ordem de
+   pintura do CSS funciona: positioned sempre por cima de in-flow, ordem no
+   HTML não decide isso sozinha). z-index:-1 bota a foto na camada de baixo,
+   abaixo do texto estático (autor/título/descrição), sem precisar dar
+   z-index em cada um deles. */
+.blog-featured-slide-img {
+  position:absolute; inset:0; z-index:-1;
+  width:100%; height:100%; object-fit:cover;
+}
+/* véu escuro por cima da foto (::after nasce DEPOIS da <img> na árvore, então
+   pinta por cima dela dentro da mesma camada z-index:-1): sem ele o texto
+   branco não teria garantia de contraste contra uma foto de banco qualquer,
+   de brilho imprevisível. Mais forte que o véu do hero da home (.35) de
+   propósito — lá a arte de fundo é conhecida e calibrada, aqui é foto
+   aleatória, então o véu tem que carregar mais peso sozinho. */
+.blog-featured-slide::after {
+  content:''; position:absolute; inset:0; z-index:-1; pointer-events:none;
+  background:linear-gradient(180deg, rgba(20,14,10,.52), rgba(20,14,10,.72));
+}
+
+.blog-featured-author {
+  display:inline-flex; align-items:center; gap:9px;
+  background:#fff; padding:6px 16px 6px 6px; border-radius:999px;
+  font-size:.84rem; font-weight:700; color:var(--ink-700);
+  box-shadow:var(--shadow-card); margin:0 0 18px;
+}
+.blog-featured-author img { width:26px; height:26px; border-radius:50%; object-fit:cover; }
+
+/* texto virou branco (era ink-900/ink-600, pensado pro fundo --coral-50
+   liso): com foto+véu atrás, branco é a única cor que segura contraste em
+   qualquer slide. Pior caso estimado com o véu acima: ~7:1 pro título
+   (branco puro, bold, grande) e ~4,9:1 pra descrição (.92 alpha, corpo
+   menor) — ambos acima do piso AA. */
+.blog-featured-slide h3 {
+  font-size:clamp(1.5rem, 1.8vw + 1.1rem, 2.15rem);
+  font-weight:800; /* explícito: h3 não tem regra global de peso (só h1/h2 em styles.css), não depender do bold padrão do navegador */
+  max-width:680px; color:#fff;
+}
+.blog-featured-desc { margin:14px 0 0; max-width:56ch; color:rgba(255,255,255,.92); font-size:1rem; }
+.blog-featured-desc a {
+  color:#fff; font-weight:700;
+  text-decoration:underline; text-underline-offset:3px;
+}
+
+/* pedido do Pedro: sem borda creme embaixo da foto — os dots deixam de ser
+   uma linha em fluxo normal (que empurrava a altura do card e sobrava
+   .blog-featured / --coral-50 aparecendo como tira embaixo da foto) e viram
+   overlay sobre a própria foto, ancorados no fundo do card. z-index:5 é
+   folgado de propósito: garante ficar acima de qualquer camada da foto/véu
+   dos slides, sem precisar rastrear o contexto de empilhamento exato de
+   cada .blog-featured-slide. */
+.blog-featured-dots {
+  position:absolute; left:0; right:0; bottom:14px; z-index:5;
+  display:flex; justify-content:center; gap:2px;
+}
+.blog-dot {
+  /* alvo de toque 44×44 mesmo com o miolo visual sendo um pontinho de 9px —
+     a bolinha pequena é só o desenho, o hit-box é o botão inteiro. */
+  width:40px; height:40px; border:0; background:transparent;
+  display:flex; align-items:center; justify-content:center; cursor:pointer;
+}
+/* cor mudou de ink-300 (pensado pra fundo claro --coral-50) pra branco
+   translúcido: os dots agora sentam em cima da foto, onde o véu escuro do
+   slide já garante fundo escuro embaixo deles em qualquer slide. */
+.blog-dot::after {
+  content:""; width:9px; height:9px; border-radius:50%;
+  background:rgba(255,255,255,.55);
+  box-shadow:0 1px 3px rgba(0,0,0,.35);
+  transition:transform .2s var(--ease-out), background-color .2s;
+}
+.blog-dot.is-active::after { background:var(--coral-500); transform:scale(1.4); }
+.blog-dot:hover::after { background:#fff; }
+
+@media (max-width:719px) {
+  .blog-featured-slide { padding:36px 20px 52px; }
+}
+
+/* ============================================================ GRADE bp-*
+   3 colunas no desktop (1000px), 2 no tablet (720px), 1 no mobile — mesmos
+   breakpoints já em uso no resto do site. */
+.blog-list-grid { list-style:none; margin:0; padding:0; display:grid; grid-template-columns:1fr; gap:22px; }
+@media (min-width:720px) {
+  .blog-list-grid { grid-template-columns:repeat(2, 1fr); }
+}
+@media (min-width:1000px) {
+  .blog-list-grid { grid-template-columns:repeat(3, 1fr); gap:26px; }
+}
+
+.bp-link {
+  display:flex; flex-direction:column; height:100%;
+  background:#fff; border:1px solid var(--ink-100); border-radius:var(--r-card);
+  overflow:hidden; text-decoration:none; color:inherit;
+  box-shadow:var(--shadow-card);
+  transition:transform .18s var(--ease-out), box-shadow .18s;
+}
+.bp-link:hover, .bp-link:focus-visible { transform:translateY(-4px); box-shadow:var(--shadow-card-hover); }
+
+/* ---------- capa ----------
+   Foto placeholder (picsum.photos, seed fixo por post — estável no reload,
+   não sorteia de novo). O gradiente por categoria continua no `background`
+   como fallback (imagem lenta/offline não deixa um retângulo vazio) e some
+   visualmente atrás da foto no caso normal. Um véu coral por cima (::after)
+   amarra fotos aleatórias de banco de imagem na paleta da marca — sem isso,
+   10 fotos de fontes diferentes bagunçam a cor da grade inteira. */
+/* SEM overflow:hidden aqui — a pílula de autor (.bp-author) usa bottom:-18px
+   de propósito pra vazar pra fora desta caixa (ver comentário dela abaixo);
+   quem clipa de verdade é o .bp-link (o <a> pai). A foto não precisa de
+   overflow pra ficar contida, position:absolute;inset:0 já basta. */
+.bp-media {
+  position:relative; height:208px; flex:none;
+  display:flex; align-items:center; justify-content:center;
+}
+.bp-media-img { position:absolute; inset:0; width:100%; height:100%; object-fit:cover; z-index:0; }
+.bp-media::after {
+  content:''; position:absolute; inset:0; z-index:1; pointer-events:none;
+  background:linear-gradient(165deg, rgba(242,100,60,.32), rgba(133,42,21,.42));
+}
+.bp-media-abertura   { background:linear-gradient(135deg, var(--coral-100), var(--coral-300)); }
+.bp-media-impostos   { background:linear-gradient(135deg, var(--coral-50), var(--coral-200)); }
+.bp-media-mei        { background:linear-gradient(135deg, var(--coral-200), var(--coral-400)); }
+.bp-media-obrigacoes { background:linear-gradient(135deg, var(--coral-50), var(--coral-100)); }
+.bp-media-guias      { background:linear-gradient(135deg, var(--coral-100), var(--coral-200)); }
+
+/* badge "destaque": só em 2-3 cards dos 10, não em todos — indicador visual,
+   não métrica real. sr-only irmão (no HTML) dá o mesmo dado pra quem usa
+   leitor de tela, já que o ícone sozinho é aria-hidden. */
+.bp-badge {
+  position:absolute; top:12px; right:12px; z-index:2;
+  width:32px; height:32px; border-radius:50%;
+  display:flex; align-items:center; justify-content:center;
+  background:#fff; box-shadow:var(--shadow-card); color:var(--coral-600);
+}
+.bp-badge svg { width:16px; height:16px; }
+
+/* pílula de autor: sobrepõe o canto inferior esquerdo da capa (metade
+   dentro, metade fora — offset negativo de propósito, é o desenho pedido).
+   position:relative no .bp-media clipa certo porque o overflow:hidden real
+   fica no .bp-link (a pílula "vaza" pra dentro do corpo branco do card,
+   nunca pra fora da borda arredondada do cartão). */
+.bp-author {
+  position:absolute; left:16px; bottom:-18px; z-index:2;
+  display:inline-flex; align-items:center; gap:8px;
+  background:#fff; border-radius:999px; padding:5px 14px 5px 5px;
+  box-shadow:var(--shadow-card); font-size:.78rem; font-weight:700; color:var(--ink-700);
+  max-width:calc(100% - 32px); white-space:nowrap; overflow:hidden; text-overflow:ellipsis;
+}
+.bp-author img { width:26px; height:26px; border-radius:50%; object-fit:cover; flex:none; }
+
+/* ---------- corpo ---------- */
+.bp-body { padding:32px 20px 20px; flex:1; display:flex; flex-direction:column; } /* 32px topo: folga pra pílula de autor que overlapa -18px */
+.bp-cat {
+  align-self:flex-start; font-size:.72rem; font-weight:700; letter-spacing:.03em;
+  text-transform:uppercase; color:var(--coral-600);
+  background:var(--coral-50); border-radius:999px; padding:5px 11px;
+  margin-bottom:10px;
+}
+.bp-body h3 {
+  font-size:1.08rem; font-weight:700; color:var(--ink-900); line-height:1.35;
+  /* trunca em 2 linhas — mesma técnica de .difs-card (styles.css), com
+     fallback: navegador sem suporte a line-clamp só deixa de truncar,
+     nunca corta texto no meio ou quebra layout. */
+  display:-webkit-box; -webkit-line-clamp:2; -webkit-box-orient:vertical; overflow:hidden;
+}
+.bp-body p {
+  margin-top:8px; font-size:.92rem; color:var(--ink-500); line-height:1.5;
+  display:-webkit-box; -webkit-line-clamp:3; -webkit-box-orient:vertical; overflow:hidden;
+}
+.bp-divider { margin:16px 0 12px; border-top:1px solid var(--ink-100); }
+.bp-meta { display:flex; gap:16px; flex-wrap:wrap; font-size:.78rem; color:var(--ink-400); margin-bottom:16px; }
+.bp-meta span { display:inline-flex; align-items:center; gap:5px; }
+.bp-meta svg { width:14px; height:14px; flex:none; }
+
+.bp-cta {
+  margin-top:auto; width:100%; border-radius:999px; padding:12px 20px;
+  font-size:.92rem;
+  background:#fff; border:1.5px solid var(--coral-300); color:var(--coral-700);
+}
+.bp-link:hover .bp-cta, .bp-link:focus-visible .bp-cta { border-color:var(--coral-500); background:var(--coral-50); }
+/* variante preenchida em 1-2 cards por página só, pra dar variedade sem
+   virar bagunça visual (mesma ideia da referência: maioria contorno, um ou
+   outro cheio). coral-600+branco = 4,04:1, texto ≥.92rem/700 fica na faixa
+   "grande" que passa AA — mesma régua do .btn-primary global. */
+.bp-cta.is-solid { background:var(--coral-600); border-color:var(--coral-600); color:#fff; }
+.bp-link:hover .bp-cta.is-solid, .bp-link:focus-visible .bp-cta.is-solid { background:var(--coral-700); border-color:var(--coral-700); }
+
+/* ============================================================ PAGINAÇÃO */
+.blog-pagination { display:flex; align-items:center; justify-content:center; gap:12px; margin-top:48px; }
+.blog-page-nav {
+  width:44px; height:44px; border-radius:50%; flex:none;
+  display:flex; align-items:center; justify-content:center;
+  background:#fff; border:1.5px solid var(--ink-200); color:var(--ink-600);
+  transition:border-color .16s, color .16s, opacity .16s;
+}
+.blog-page-nav svg { width:18px; height:18px; }
+.blog-page-nav:not(:disabled):hover { border-color:var(--coral-400); color:var(--coral-600); }
+.blog-page-nav:disabled { opacity:.4; cursor:default; }
+.blog-page-list { list-style:none; display:flex; gap:8px; margin:0; padding:0; }
+.blog-page-num {
+  width:40px; height:40px; border-radius:50%;
+  display:flex; align-items:center; justify-content:center;
+  font-weight:700; font-size:.92rem; color:var(--ink-600);
+}
+.blog-page-num.is-active { border:1.5px solid var(--coral-500); color:var(--coral-700); }
+
+/* ============================================================ ASSINATURA
+   Faixa escura entre a grade e o rodapé. --dark-glow (ink-900 + glow radial
+   coral) já é o "gradiente assinatura do app" definido em styles.css — reusa
+   em vez de inventar um azul-marinho novo como na referência. */
+.blog-newsletter { background:var(--dark-glow); color:#fff; padding:48px 0; margin-top:8px; }
+.blog-newsletter-inner {
+  display:flex; align-items:center; justify-content:space-between; gap:32px; flex-wrap:wrap;
+}
+.blog-newsletter-text { flex:1 1 320px; min-width:0; }
+.blog-newsletter-text h2 { color:#fff; font-size:1.6rem; }
+.blog-newsletter-text p { margin-top:8px; color:rgba(255,255,255,.72); max-width:48ch; }
+.blog-newsletter-form {
+  display:flex; gap:10px; flex:1 1 380px; max-width:440px;
+}
+.blog-newsletter-form input {
+  flex:1; min-width:0; padding:14px 18px; border-radius:999px;
+  border:1.5px solid rgba(255,255,255,.28); background:rgba(255,255,255,.1);
+  color:#fff;
+}
+.blog-newsletter-form input::placeholder { color:rgba(255,255,255,.6); }
+.blog-newsletter-form input:focus-visible { background:rgba(255,255,255,.16); border-color:rgba(255,255,255,.6); }
+.blog-newsletter-btn {
+  flex:none; border:0; border-radius:999px; padding:14px 26px;
+  background:#fff; color:var(--ink-900); font-weight:700; cursor:pointer;
+  transition:transform .16s var(--ease-out), background-color .16s;
+}
+.blog-newsletter-btn:hover { background:var(--coral-50); transform:translateY(-2px); }
+
+@media (max-width:719px) {
+  .blog-newsletter-inner { flex-direction:column; align-items:stretch; }
+  .blog-newsletter-form { max-width:none; flex-direction:column; }
+  .blog-newsletter-btn { width:100%; }
+}
+
+/* ============================================================
+   PÁGINA DE ARTIGO (post.html) — v6
+   Tudo que É compartilhável com a listagem (grade .bp-*, newsletter,
+   .site-header-blog, sprite de ícones) já está em cima, neste mesmo
+   arquivo — não duplicar. Daqui pra baixo é só o que é exclusivo do
+   template de post: cabeçalho do artigo, capa, coluna de leitura,
+   citação e caixa de conclusão. A seção "Últimos artigos" no fim do
+   post é o MESMO .blog-list-grid/.bp-item de cima, sem regra nova.
+
+   Duas larguras, não uma: o wrap externo (920px — cabeçalho e capa)
+   é mais largo que a coluna de leitura (720px — parágrafos, citação,
+   conclusão), aninhada dentro dele. É o padrão editorial comum (NYT,
+   Medium): a foto respira até quase a borda do container de leitura,
+   o texto fica mais estreito porque linha longa demais cansa o olho
+   (720px ≈ 78-84 caracteres por linha no corpo em 1.05rem/Sora, dentro
+   da faixa de conforto 60-80). Nenhum dos dois usa --container/1120:
+   esse token é do grid de página (onde logo/CTA do header precisam
+   fechar em 1080); aqui é ritmo de leitura, medida independente. */
+
+.post-article { padding-block:8px 64px; }
+
+/* ---------- cabeçalho ---------- */
+.post-head { padding-block:40px 0; text-align:center; }
+
+/* linha utilitária (voltar + compartilhar) ANTES do bloco centralizado —
+   não pedido na referência, mas todo template de post precisa de uma
+   saída pra listagem; span:space-between deixa os dois extremos
+   simétricos sem position:absolute (mais robusto a mudança de altura). */
+.post-head-top {
+  display:flex; align-items:center; justify-content:space-between; gap:16px;
+  text-align:left; margin-bottom:32px;
+}
+.post-back {
+  display:inline-flex; align-items:center; gap:6px;
+  font-size:.86rem; font-weight:700; color:var(--ink-500);
+  text-decoration:none; padding:10px 4px; margin-left:-4px; /* padding vertical some no alvo de toque; horizontal quase zero pra não empurrar o texto da borda */
+}
+.post-back svg { width:16px; height:16px; }
+.post-back:hover, .post-back:focus-visible { color:var(--coral-600); }
+
+/* compartilhar: MESMO visual de .blog-social-btn (intro da listagem),
+   namespace próprio só pra não acoplar o post ao bloco de intro. */
+.post-share { display:flex; gap:10px; flex:none; }
+.post-share a {
+  width:44px; height:44px; display:flex; align-items:center; justify-content:center;
+  border-radius:50%; background:#fff; border:1.5px solid var(--ink-200);
+  color:var(--ink-600); transition:border-color .16s, color .16s, transform .16s var(--ease-out);
+}
+.post-share svg { width:19px; height:19px; }
+.post-share a:hover, .post-share a:focus-visible { border-color:var(--coral-400); color:var(--coral-600); transform:translateY(-2px); }
+
+.post-head-inner { max-width:920px; margin:0 auto; }
+/* .eyebrow (styles.css) já é o rótulo discreto coral-50/coral-700 usado no
+   resto do site — "Publicado em..." reaproveita em vez de inventar rótulo
+   novo. inline-flex centra sozinho porque o pai (.post-head) tem
+   text-align:center. */
+.post-eyebrow { margin:0 0 18px; }
+.post-head-inner h1 {
+  /* um degrau acima do h1 da listagem (teto 2.7rem): aqui é o único
+     protagonista da página, sem toolbar/carrossel competindo por atenção. */
+  font-size:clamp(1.7rem, 2.6vw + 1.2rem, 2.9rem);
+}
+.post-pills { display:flex; flex-wrap:wrap; justify-content:center; gap:8px; margin-top:20px; }
+.post-pill {
+  font-size:.8rem; font-weight:700; padding:7px 16px; border-radius:999px;
+  background:var(--coral-50); color:var(--coral-700);
+  /* mesma combinação do .eyebrow global (~5,2:1 medido, AA em qualquer
+     tamanho). coral-100/200 como fundo com esse texto pequeno cai pra
+     ~4,3:1 e ~3,6:1 (medido) — abaixo do piso — por isso as pílulas
+     variam só no RÓTULO, não numa escala de cor por categoria como no
+     mockup original (lá cada categoria vinha de uma paleta própria deles;
+     aqui só existe a família coral). */
+}
+
+/* ---------- capa ---------- */
+.post-cover { max-width:920px; margin:32px auto 0; }
+.post-cover img {
+  width:100%; height:auto; aspect-ratio:12/7; object-fit:cover;
+  border-radius:28px; /* mesmo raio grande do .blog-featured — é a peça mais "hero" da página */
+  box-shadow:var(--shadow-card);
+}
+
+/* ---------- corpo (prosa) ---------- */
+.post-prose { max-width:720px; margin:40px auto 0; color:var(--ink-700); }
+.post-prose h2 { font-size:clamp(1.35rem, 1.3vw + 1rem, 1.7rem); }
+.post-prose > * + * { margin-top:16px; }
+.post-prose > * + h2 { margin-top:40px; } /* respiro maior entrando em cada novo bloco temático */
+.post-prose > p { font-size:1.05rem; line-height:1.75; }
+
+.post-quote { margin-top:32px; padding:2px 0 2px 26px; border-left:4px solid var(--coral-500); position:relative; }
+.post-quote svg { position:absolute; left:-2px; top:-8px; width:26px; height:26px; color:var(--coral-200); }
+.post-quote p { font-size:1.2rem; font-style:italic; font-weight:600; color:var(--ink-900); line-height:1.5; }
+.post-quote footer { margin-top:14px; }
+.post-quote footer strong { font-weight:700; display:block; color:var(--ink-900); }
+.post-quote footer span { font-size:.86rem; color:var(--ink-500); }
+
+/* ---------- conclusão ---------- */
+.post-conclusion { margin-top:44px; padding:32px; border-radius:24px; background:var(--coral-50); }
+.post-conclusion-label { display:inline-flex; align-items:center; gap:8px; font-size:.86rem; font-weight:700; color:var(--coral-700); }
+.post-conclusion-label svg { width:20px; height:20px; }
+.post-conclusion p { margin-top:14px; font-size:1rem; color:var(--ink-700); line-height:1.65; }
+.post-conclusion-sign {
+  display:flex; align-items:center; gap:10px; margin-top:24px; padding-top:20px;
+  border-top:1px solid rgba(184,61,28,.16); /* coral-700 a 16%, traço discreto na mesma família da caixa */
+}
+.post-conclusion-sign img { width:36px; height:36px; border-radius:50%; object-fit:cover; }
+.post-conclusion-sign strong { display:block; font-size:.88rem; color:var(--ink-900); }
+/* ink-600, não ink-500: ink-500 sobre --coral-50 mede ~4,6:1 (passa raspando);
+   ink-600 mede ~7,6:1. Texto pequeno (.78rem) merece a folga. */
+.post-conclusion-sign span { font-size:.78rem; color:var(--ink-600); }
+
+@media (max-width:719px) {
+  .post-head-inner h1 { font-size:clamp(1.6rem, 6vw + .6rem, 2.1rem); }
+  .post-cover img { border-radius:20px; }
+  .post-conclusion { padding:24px 20px; border-radius:20px; }
+}
+
+/* ---------- relacionados ---------- */
+.post-related { padding-block:64px 8px; }

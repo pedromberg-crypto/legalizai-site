@@ -1,0 +1,3 @@
+# A Vercel serve lp/ como root. O _lab/ está no git (é a fonte do site),
+# mas não pode ir pro deploy: viraria rota pública em /_lab/.
+_lab

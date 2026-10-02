@@ -1,0 +1,1836 @@
+<!doctype html>
+<!-- DOIS EIXOS, independentes (ver lp/_lab/modo-copy.mjs):
+       data-preco  79 | 99        · quanto custa o ME nos 3 primeiros meses
+       data-modo   espera | app   · o app já pode ser baixado? (é quem o CSS lê) -->
+<html lang="pt-BR" data-preco="99" data-modo="espera">
+<!-- modo: lançamento, lista de espera aberta -->
+<head>
+  <!-- LAB · PÁGINA DE ABERTURA (01/10/2026). Nasceu da home de antes das mudanças da política do Google:
+       a home passou a vender CONTABILIDADE e a abertura ganhou página própria, como fazem os 5 concorrentes.
+       Fica só no lab até o lançamento (o build-lp.mjs não copia esta pasta). Ao ativar: tirar o noindex,
+       acrescentar a pasta no COPIAR do build e no sitemap, e usar como destino dos anúncios de abertura
+       (só quando o serviço estiver disponível: política de ofertas indisponíveis). -->
+  <meta name="robots" content="noindex, nofollow">
+ <!-- CONSENTIMENTO DE COOKIES (LGPD): tem que rodar ANTES do GTM. Tudo nasce
+      negado e só vira 'granted' se a pessoa já aceitou antes (lz_consent no
+      localStorage). O banner e o painel vêm de /_lab/consentimento.js, no fim
+      do <body>. ⚠️ Chave, versão (v:1) e validade (12 meses) espelham as de
+      consentimento.js — mudou lá, muda aqui e nas outras páginas. -->
+<script>
+window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments);}
+(function(){var c=null;try{c=JSON.parse(localStorage.getItem('lz_consent'));}catch(e){}
+if(!c||c.v!==1||!(Date.now()-c.t<31536e6))c={};
+var a=c.analytics?'granted':'denied',m=c.marketing?'granted':'denied';
+gtag('consent','default',{analytics_storage:a,ad_storage:m,ad_user_data:m,ad_personalization:m,functionality_storage:'granted',security_storage:'granted',wait_for_update:500});
+gtag('set','ads_data_redaction',m==='denied');window.lzMarketing=m==='granted';})();
+</script>
+ <!-- Google Tag Manager -->
+<script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
+})(window,document,'script','dataLayer','GTM-KC3H6Z9X');</script>
+
+<!-- End Google Tag Manager -->
+  <!-- verificação de domínio da Meta: exigida pro pixel/anúncios do Facebook.
+       ⚠️ Estava só na LP antiga e se perdeu quando o _lab virou a fonte —
+       reposta em 08/09. Vale pra TODA página do domínio. -->
+  <meta name="facebook-domain-verification" content="loc3a8wvkc6o1600tze44v9jdgk0r8">
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <!-- TÍTULO: a intenção de busca ("abrir empresa em BH") vem PRIMEIRO e a marca
+       por último. O Google trunca o fim, então o que precisa sobreviver ao corte
+       fica na frente — e quem já conhece a marca acha pelo nome de qualquer jeito. -->
+  <title>Abrir empresa em BH com contador de verdade · Legalizaí</title>
+  <!-- 🔄 A description descrevia o PRODUTO; agora descreve o que ESTA PÁGINA
+       entrega, na ordem em que a página entrega (a promessa do hero, a prova do
+       contador, o preço fechado). É esse texto que aparece embaixo do link na
+       busca: ele tem que ser a continuação do título, não um segundo slogan. -->
+  <meta name="description" content="Abra sua empresa e mantenha o CNPJ em dia pelo celular, com um contador de verdade no WhatsApp. Escritório com 22 anos em BH, preço fechado: R$ 49/mês no MEI e R$ 99/mês no ME.">
+  <link rel="canonical" href="https://legalizai.com.br/abrir-empresa">
+  <meta name="theme-color" content="#F2643C">
+
+  <!-- ─── CARD SOCIAL ───────────────────────────────────────────────────────
+       O produto vende atendimento por WhatsApp, e era justamente lá que o link
+       aparecia pelado: sem og:image, o WhatsApp mostra só a URL crua. `og:image`
+       precisa de URL ABSOLUTA (o WhatsApp não resolve caminho relativo) e de um
+       arquivo abaixo de ~300 KB, senão o preview é descartado em conexão ruim.
+       1200×630 é a proporção que o WhatsApp, o Facebook e o LinkedIn recortam
+       sem cortar o texto. -->
+  <meta property="og:type" content="website">
+  <meta property="og:site_name" content="Legalizaí">
+  <meta property="og:locale" content="pt_BR">
+  <meta property="og:url" content="https://legalizai.com.br/">
+  <meta property="og:title" content="Sua empresa em dia, sem dor de cabeça">
+  <meta property="og:description" content="Contabilidade digital com contador de verdade no WhatsApp. Escritório com 22 anos em Belo Horizonte.">
+  <meta property="og:image" content="https://legalizai.com.br/assets/og-legalizai.jpg">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta property="og:image:alt" content="Legalizaí · sua empresa em dia, sem dor de cabeça">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="Sua empresa em dia, sem dor de cabeça">
+  <meta name="twitter:description" content="Contabilidade digital com contador de verdade no WhatsApp. Escritório com 22 anos em Belo Horizonte.">
+  <meta name="twitter:image" content="https://legalizai.com.br/assets/og-legalizai.jpg">
+
+  <link rel="icon" href="/favicon.ico" sizes="any">
+  <link rel="icon" href="/assets/favicon.png" type="image/png" sizes="64x64">
+  <link rel="apple-touch-icon" href="/assets/apple-touch-icon.png">
+
+  <!-- ─── SORA LOCAL, UM ARQUIVO SÓ ────────────────────────────────────────
+       Era o CSS do Google Fonts, que é RENDER-BLOCKING: o navegador não pintava
+       nada antes de resolver fonts.googleapis.com, baixar o CSS e só então
+       descobrir quais woff2 buscar. Três viagens de rede antes do primeiro pixel.
+       Agora a Sora é VARIÁVEL: um arquivo de 25 KB cobre os cinco pesos que a
+       página usa (400/500/600/700/800), contra cinco arquivos estáticos. O
+       `preload` do subset latino começa o download junto com o CSS, e o
+       latin-ext (acentos raros) fica sem preload de propósito — quase nenhum
+       texto da página o alcança.
+       O @font-face vive no topo do styles.css. -->
+  <!-- 🔴 O GTM carrega o GA4, e o GA4 fala com google-analytics.com — uma
+       terceira conexao, descoberta so depois de dois scripts rodarem. O
+       Lighthouse mede 300 ms perdidos so no aperto de mao (DNS + TLS). O
+       preconnect adianta isso pro comeco do <head>. Achado na varredura
+       completa das 176 auditorias (08/09); antes a gente so tinha aberto os
+       itens de maior peso e este passou batido. -->
+  <link rel="preconnect" href="https://www.google-analytics.com" crossorigin>
+  <link rel="preload" href="/assets/fonts/sora-latin.woff2" as="font" type="font/woff2" crossorigin>
+
+  <!-- LAB: ?v muda a cada rodada de ajuste; sem isso o Chrome serve o css antigo -->
+  <link rel="stylesheet" href="/_lab/styles.css?v=294">
+  <!-- simulador de atendimento (seção #validador). MESMO par de arquivos
+       servido em /_lab/atendimento/ — a página standalone e a seção da home
+       não são cópias, dividem css e js. -->
+  <link rel="stylesheet" href="/_lab/atendimento/atendimento.css?v=83">
+  <noscript><style>.reveal{opacity:1;transform:none}</style></noscript>
+
+  <!-- ─── PRIORIDADE DE CARREGAMENTO ───────────────────────────────────────
+       🔄 O `preload` da tela do app SAIU (08/09). Ele estava aqui porque eu
+       supus que a imagem fosse o LCP — o Lighthouse local mostrou que não é:
+       o maior elemento visível é o <h1>, TEXTO. Preload de imagem que não é
+       LCP não ajuda o LCP e ainda disputa banda com o que ele realmente
+       precisa (o CSS e a fonte) no começo da conexão, que é onde dói.
+
+       O que fica: o `preload` da Sora, logo acima — LCP de texto depende da
+       fonte — e o `fetchpriority="high"` no próprio <img> da tela do app, que
+       segue priorizando ela entre as 40 imagens assim que for descoberta, sem
+       roubar a largada.
+
+       🔄 E o preload VOLTOU (mesma medicao, passo seguinte). Corrigido o
+       <h1>, ele passou a pintar na hora e a TELA DO APP virou o novo LCP —
+       com 2,9 s de "load delay", que e o navegador so descobrindo o <img>
+       depois de montar o hero inteiro. Agora ela e de fato o maior elemento
+       visivel, entao o preload deixou de ser aposta e virou o certo.
+       Licao: LCP se mede, nao se adivinha — e ele MUDA de elemento a cada
+       correcao. Mexeu no hero? Remede antes de mexer no preload. -->
+  <link rel="preload" href="/_lab/assets/app-home.webp" as="image" fetchpriority="high">
+</head>
+<body>
+
+<!-- ✂️ <noscript> do GTM removido (LGPD): sem JS não há banner nem
+     consentimento, então nada de rastreio. -->
+<!-- ============================================================ HEADER -->
+
+<header class="site-header" id="topo">
+  <div class="container header-inner">
+    <a class="brand" href="#topo" aria-label="Legalizaí, início">
+      <!-- logo horizontal (positiva) -->
+      <svg class="logo" viewBox="0 0 659.73 130" role="img" aria-label="Legalizaí">
+        <g fill="var(--ink-900)">
+          <path d="M160.38,84.81V17.54h0c-10.75,0-19.47,8.72-19.47,19.47v50.46c0,9.28,7.53,16.81,16.81,16.81h36.66c0-10.75-8.72-19.47-19.47-19.47h-14.53Z"/>
+          <path d="M251.92,41.66c-4.78-3.12-10.65-4.68-17.6-4.68-5.29,0-10.01.93-14.16,2.78-4.15,1.86-7.6,4.37-10.37,7.52-2.77,3.16-4.88,6.74-6.34,10.72-1.46,3.99-2.19,8.16-2.19,12.5v2.37c0,4.19.73,8.28,2.19,12.26,1.46,3.99,3.59,7.58,6.4,10.78,2.8,3.2,6.32,5.75,10.55,7.64,4.22,1.9,9.1,2.84,14.63,2.84s10.27-.95,14.46-2.84c4.19-1.9,7.66-4.54,10.43-7.94,2.76-3.4,4.62-7.27,5.57-11.61h-4.9c-6.01,0-11.84,1.79-16.95,4.94-.02.01-.04.03-.07.04-2.21,1.34-5.06,2.01-8.53,2.01-3.79,0-6.87-.79-9.24-2.37-2.37-1.58-4.11-3.81-5.21-6.7-.62-1.6-1.05-3.36-1.33-5.27h47.42v-6.4c0-5.92-1.26-11.39-3.79-16.41-2.53-5.02-6.18-9.08-10.96-12.21ZM220.69,61.21c1.19-2.88,2.92-5.08,5.21-6.58,2.29-1.5,5.1-2.25,8.41-2.25s5.94.73,8.12,2.19c2.17,1.46,3.81,3.58,4.92,6.34.6,1.5,1.03,3.16,1.3,4.98h-29.27c.3-1.71.73-3.28,1.31-4.68Z"/>
+          <path d="M329,52.98c-.29-.73-.6-1.45-.95-2.14-2.21-4.42-5.23-7.78-9.07-10.07-3.83-2.29-8.35-3.44-13.57-3.44-4.5,0-8.61.81-12.32,2.43-3.71,1.62-6.91,3.89-9.6,6.81-2.69,2.92-4.74,6.36-6.16,10.31-1.42,3.95-2.13,8.22-2.13,12.8v2.73c0,4.58.67,8.83,2.01,12.74,1.34,3.91,3.28,7.33,5.81,10.25,2.53,2.92,5.59,5.2,9.18,6.81,3.59,1.62,7.6,2.43,12.03,2.43,5.13,0,9.56-1.09,13.27-3.26,3.68-2.15,6.56-5.26,8.65-9.31v5.58c0,3.79-.75,6.89-2.25,9.3-1.5,2.41-3.85,4.21-7.05,5.39-3.2,1.19-7.37,1.78-12.5,1.78-2.77,0-5.83-.14-9.18-.41-.03,0-.07,0-.1,0-4.89-.41-9.08,3.42-9.08,8.32v6.67c2.76.39,5.81.71,9.12.95s6.56.36,9.72.36c8.85,0,16.18-1.15,21.98-3.44,5.81-2.29,10.13-5.89,12.98-10.78,2.84-4.9,4.27-11.34,4.27-19.32v-42.19c0-8.31-6.74-15.05-15.05-15.05h0v13.75ZM325.8,72.17c0,3.48-.69,6.44-2.07,8.89-1.38,2.45-3.26,4.32-5.63,5.63-2.37,1.3-5.02,1.95-7.94,1.95-3.08,0-5.83-.69-8.24-2.07-2.41-1.38-4.31-3.4-5.69-6.04-1.38-2.65-2.07-5.83-2.07-9.54s.67-6.79,2.01-9.48c1.34-2.68,3.24-4.78,5.69-6.28,2.45-1.5,5.25-2.25,8.41-2.25,2.68,0,5.21.61,7.58,1.84,2.37,1.23,4.28,3,5.75,5.33,1.46,2.33,2.19,5.2,2.19,8.59v3.44Z"/>
+          <path d="M400.87,41c-4.54-1.9-10.13-2.84-16.77-2.84-2.29,0-4.74.04-7.35.12-2.61.08-5.14.2-7.58.36-2.45.16-4.58.32-6.4.47v7.86c0,4.4,3.69,7.9,8.09,7.67h.09c3-.16,5.92-.28,8.77-.36,2.84-.08,5.13-.12,6.87-.12,3.48,0,6,.83,7.58,2.49,1.58,1.66,2.37,4.15,2.37,7.47v.24h-11.73c-5.77,0-10.86.73-15.29,2.19-4.43,1.46-7.86,3.71-10.31,6.75-2.45,3.04-3.67,6.93-3.67,11.67,0,4.35.99,8.08,2.96,11.2,1.97,3.12,4.72,5.51,8.24,7.17,3.51,1.66,7.6,2.49,12.26,2.49s8.31-.83,11.44-2.49c3.12-1.66,5.57-4.03,7.35-7.11.79-1.37,1.44-2.89,1.95-4.55h0c0,6.9,5.59,12.49,12.49,12.49h2.56v-39.82c0-6-1.18-10.92-3.55-14.75-2.37-3.83-5.83-6.7-10.37-8.59ZM390.44,91.54c-1.7.75-3.61,1.13-5.75,1.13-3.32,0-5.87-.81-7.64-2.43-1.78-1.62-2.67-3.73-2.67-6.34,0-2.76.89-4.96,2.67-6.58,1.78-1.62,4.32-2.43,7.64-2.43h11.85v5.21c-.16,3.24-.79,5.77-1.9,7.58-1.11,1.82-2.51,3.1-4.21,3.85Z"/>
+          <path d="M424.04,17.66v13.98h7.7v53.44c0,10.54,8.54,19.08,19.08,19.08h0V17.66h-26.78Z"/>
+          <path d="M462.66,39.23v13.98h8.65v32c0,10.47,8.49,18.96,18.96,18.96h0v-50.95h0c0-7.72-6.26-13.98-13.98-13.98h-13.63Z"/>
+          <path d="M525.01,88.13l21.23-25.44c5.49-6.58,8.5-14.89,8.5-23.46h0s-36.5,0-36.5,0c-8.05,0-14.58,6.53-14.58,14.58h0s28.35,0,28.35,0l1.22,1.52-29.68,35.57h0c0,7.33,5.94,13.27,13.27,13.27h24.29c8.05,0,14.58-6.53,14.58-14.58h0s-29.51,0-29.51,0l-1.17-1.46Z"/>
+        </g>
+        <g fill="var(--coral-500)">
+          <path d="M607.65,41c-4.54-1.9-10.13-2.84-16.77-2.84-2.29,0-4.74.04-7.35.12-2.61.08-5.14.2-7.58.36-2.41.16-4.52.31-6.32.47-.05,0-.08.04-.08.09v7.69c0,4.45,3.73,7.99,8.18,7.75h0c3-.16,5.92-.28,8.77-.36,2.84-.08,5.13-.12,6.87-.12,3.48,0,6,.83,7.58,2.49,1.58,1.66,2.37,4.15,2.37,7.47v.24h-11.73c-5.77,0-10.86.73-15.29,2.19-4.43,1.46-7.86,3.71-10.31,6.75-2.45,3.04-3.67,6.93-3.67,11.67,0,4.35.99,8.08,2.96,11.2,1.97,3.12,4.72,5.51,8.24,7.17,3.51,1.66,7.6,2.49,12.26,2.49s8.31-.83,11.44-2.49c3.12-1.66,5.57-4.03,7.35-7.11.71-1.23,1.3-2.57,1.78-4.02.03-.1.17-.08.17.03h0c0,6.59,5.34,11.94,11.94,11.94h3.02s.09-.04.09-.09v-39.73c0-6-1.18-10.92-3.55-14.75-2.37-3.83-5.83-6.7-10.37-8.59ZM597.22,91.54c-1.7.75-3.61,1.13-5.75,1.13-3.32,0-5.87-.81-7.64-2.43-1.78-1.62-2.67-3.73-2.67-6.34,0-2.76.89-4.96,2.67-6.58,1.78-1.62,4.32-2.43,7.64-2.43h11.76s.09.04.09.09v5.13c-.16,3.24-.79,5.77-1.9,7.58-1.11,1.82-2.51,3.1-4.21,3.85Z"/>
+          <path d="M632.12,39.23v13.98h8.65v32c0,10.47,8.49,18.96,18.96,18.96h0v-50.95h0c0-7.72-6.26-13.98-13.98-13.98h-13.63Z"/>
+          <circle cx="479.45" cy="25.28" r="7.62"/>
+          <path d="M632.12,17.8h20.14c4.12,0,7.47,3.35,7.47,7.47h0c0,4.12-3.35,7.47-7.47,7.47h-20.14v-14.94h0Z" transform="translate(1291.8483 50.535) rotate(-180)"/>
+        </g>
+        <path fill="var(--coral-500)" d="M72.64,95.27c-6.56,6.56-17.21,6.56-23.77,0L13.91,60.32c7.6-7.6,19.93-7.6,27.54,0l19.31,19.31,60.67-60.67C121.28,8.46,112.74,0,102.21,0H19.23C8.61,0,0,8.61,0,19.23v82.98c0,10.62,8.61,19.23,19.23,19.23h82.98c10.62,0,19.23-8.61,19.23-19.23v-55.74l-48.8,48.8Z"/>
+        <path fill="#fff" d="M121.43,18.95l-60.67,60.67-19.33-19.33c-7.6-7.6-19.93-7.6-27.54,0h0s34.97,34.97,34.97,34.97c6.56,6.56,17.21,6.56,23.77,0l48.79-48.79v-27.54Z"/>
+      </svg>
+    </a>
+    <nav class="header-nav" aria-label="Navegação principal">
+      <a href="#topo">Início</a>
+      <a href="#validador">Atendemos você?</a>
+      <a href="#como-funciona">Como funciona</a>
+      <a href="#planos">Planos</a>
+      <a href="#perguntas">Perguntas</a>
+      <a class="oculto-por-ora" href="/blog" hidden>Blog</a>
+    </nav>
+    <a class="header-cta" href="/em-breve">
+      Entrar na lista
+      <svg viewBox="0 0 24 24" aria-hidden="true"><path fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" d="M4 12h15m-6-6 6 6-6 6"/></svg>
+    </a>
+  </div>
+</header>
+
+<main>
+
+<!-- ============================================================ CAMPO DE COR
+     🔄 UM ÚNICO campo pra página inteira (antes eram dois: o coral do topo,
+     ancorado na base do validador, e o coral→dark do fecho). Os dois se
+     encontravam no meio e cada um tinha a própria régua de stops, então mexer
+     na cor exigia editar em dois lugares e conferir a emenda.
+
+     Agora existe uma rampa só, do topo do hero até o rodapé, e TODAS as
+     dobras entram transparentes por cima dela. Os stops são variáveis em px
+     no `.campo` (styles.css): mexer em um número move a cor daquele ponto e
+     nada mais.
+     Decorativo: não tem papel semântico, é só o portador do gradiente. -->
+<div class="campo">
+
+<!-- ============================================================ HERO -->
+<section class="hero" aria-labelledby="hero-title">
+
+  <!-- céu: instâncias do mesmo lottie (nuvem branca) em escalas/opacidades/frames
+       diferentes. Cada instância já anima borda→centro + fade; variar o frame
+       inicial evita que todas nasçam juntas. Máscara vertical deixa o topo mais
+       denso e dissolve na base, como na referência. -->
+  <div class="hero-sky" id="hero-sky" aria-hidden="true"></div>
+
+  <div class="container hero-copy">
+    <a class="hero-eyebrow reveal" href="/em-breve">
+      Lista de espera aberta: R$ 99/mês nos 3 primeiros meses
+      <svg viewBox="0 0 24 24" aria-hidden="true"><path fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" d="M4 12h15m-6-6 6 6-6 6"/></svg>
+    </a>
+
+    <h1 id="hero-title" class="reveal d1">Abra sua empresa em BH<br>com quem vai cuidar dela depois.</h1>
+    <!-- claim oficial travado em 18/08 (posicionamento.md) + a promessa de
+       velocidade do statement v2 (01/09). Antes eram duas taglines
+       empilhadas ("fala a sua língua" logo abaixo de "sem dor de cabeça"):
+       bonito e sem promessa de produto nenhuma. -->
+      <p class="hero-sub reveal d1">Uma contabilidade 100% humana e 100% digital. O que tomava semanas de papelada, você resolve pelo celular.</p>
+
+    <!-- 🔀 MODO LANÇAMENTO. Os badges das lojas FICAM nos dois modos: o que
+         muda é a linha de cima deles ("Baixar na" vira "Em breve na") e o
+         destino do clique. Some o badge seria jogar fora a prova visual de
+         que existe app; deixá-lo dizendo "Baixar" seria promessa falsa.
+         Quem decide é o `data-modo` do <html>, virado por
+         `node lp/_lab/modo-copy.mjs`. -->
+    <div class="store-row reveal d3">
+      <!-- 🔴 SEM `aria-label`. Ele dizia "Baixar na App Store", mas o texto
+           visivel e <small>Em breve na</small><strong>App Store</strong>, que o
+           leitor de tela concatena como "Baixar naApp Store" — sem espaco. O
+           axe compara os dois e acusa `label-content-name-mismatch`: rotulo
+           acessivel que nao contem o texto visivel confunde quem navega por
+           voz ("clicar em Baixar na App Store" nao encontra o alvo).
+           Sem o atributo, o nome acessivel PASSA A SER o proprio texto
+           visivel e o conflito deixa de existir. -->
+      <a class="store-badge store-badge-light" href="/em-breve">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M17.05 12.54c-.03-2.89 2.36-4.27 2.47-4.34-1.35-1.97-3.44-2.24-4.18-2.27-1.78-.18-3.47 1.05-4.37 1.05-.9 0-2.29-1.02-3.77-1-1.94.03-3.72 1.13-4.72 2.86-2.01 3.49-.51 8.66 1.45 11.49.96 1.39 2.1 2.94 3.6 2.89 1.45-.06 1.99-.93 3.74-.93s2.24.93 3.77.9c1.56-.03 2.54-1.41 3.49-2.8 1.1-1.61 1.55-3.17 1.58-3.25-.04-.02-3.03-1.16-3.06-4.6zM14.16 4.06c.8-.97 1.34-2.32 1.19-3.66-1.15.05-2.55.77-3.38 1.74-.74.85-1.39 2.23-1.22 3.54 1.29.1 2.6-.65 3.41-1.62z"/></svg>
+        <span><small>Em breve na</small><strong>App Store</strong></span>
+      </a>
+      <a class="store-badge store-badge-light" href="/em-breve">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M3.6 1.8c-.34.36-.54.91-.54 1.62v17.15c0 .71.2 1.26.55 1.61l.09.08 9.61-9.61v-.22L3.7 1.72l-.1.08zm13.51 13.14-3.2-3.2v-.22l3.2-3.21 3.87 2.2c1.1.62 1.1 1.65 0 2.28l-3.87 2.15zm-.9.86L12.9 12.5 3.6 21.8c.36.38.96.42 1.63.05l10.98-6.05zM3.6 1.72l9.3 9.3 3.31-3.3L5.23 1.67C4.56 1.3 3.96 1.35 3.6 1.72z"/></svg>
+        <span><small>Em breve no</small><strong>Google Play</strong></span>
+      </a>
+      <a class="btn btn-primary hero-btn-espera so-espera" href="/em-breve">Entrar na lista de espera</a>
+    </div>
+    <!-- ✂️ 11/09: a linha "Leva 1 minuto / condição garantida" saiu daqui. Ela
+         repetia a etiqueta do topo do hero, que já diz o preço e o prazo da
+         oferta, e virava o sexto bloco de texto da mesma tela. A etiqueta faz
+         a oferta, o botão faz a ação. -->
+
+    <div class="hero-proofs reveal d4">
+      <p class="hero-proof">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><path fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" d="m5 12 5 5L20 7"/></svg>
+        <strong>Contador de verdade</strong> no WhatsApp, no plano ME
+      </p>
+      <p class="hero-proof">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><path fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" d="m5 12 5 5L20 7"/></svg>
+        <strong>R$ 139/mês</strong> no ME · preço fechado
+      </p>
+      <p class="hero-proof">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><path fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" d="m5 12 5 5L20 7"/></svg>
+        <strong>Zero contabilês.</strong> A gente traduz tudo
+      </p>
+    </div>
+  </div>
+
+  <!-- painel glass: o recorte do topo é uma máscara (mask-composite) com raio
+       calibrado no raio do mockup, então a borda "abraça" o aparelho em vez de
+       passar reto por trás dele. -->
+  <div class="hero-showcase reveal d3" aria-hidden="true">
+      <!-- UMA superfície de vidro só. Antes eram 4 divs encostadas (corpo,
+           elevação e as 2 concordâncias) e cada uma desfocava o fundo por
+           conta própria: as emendas nunca fechavam. A silhueta inteira agora
+           é um clip-path, gerado no script porque a largura é fluida. -->
+      <div class="showcase-glass"></div>
+      <svg class="showcase-outline" aria-hidden="true" preserveAspectRatio="none"><path d=""/></svg>
+
+      <!-- wrapper SÓ do aparelho: recebe o mesmo clip-path da silhueta do vidro,
+           pra que o mockup termine dentro do card em vez de vazar pela base.
+           Envolve apenas o aparelho de propósito — os .float-card são irmãos e
+           precisam continuar livres pra passear por cima do painel. -->
+      <div class="showcase-phone-clip">
+      <div class="showcase-phone">
+        <div class="phone-mock">
+          <div class="phone-frame">
+            <div class="phone-screen">
+              <div class="phone-statusbar" aria-hidden="true">
+                <span class="phone-time">9:41</span>
+                <div class="phone-status-icons">
+                  <svg viewBox="0 0 18 12" class="phone-icon-signal" fill="currentColor"><rect x="0" y="7" width="3" height="5" rx="0.6"/><rect x="5" y="5" width="3" height="7" rx="0.6"/><rect x="10" y="3" width="3" height="9" rx="0.6"/><rect x="15" y="0" width="3" height="12" rx="0.6"/></svg>
+                  <svg viewBox="0 0 16 12" class="phone-icon-wifi" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"><path d="M1 4.5a10 10 0 0 1 14 0"/><path d="M3.8 7.3a6 6 0 0 1 8.4 0"/><path d="M6.6 10a2 2 0 0 1 2.8 0"/></svg>
+                  <svg viewBox="0 0 25 12" class="phone-icon-battery" fill="none"><rect x="0.75" y="0.75" width="20.5" height="10.5" rx="2.5" stroke="currentColor" stroke-width="1"/><rect x="2.25" y="2.25" width="16" height="7.5" rx="1.3" fill="currentColor"/><path d="M23 4v4a1.6 1.6 0 0 0 0-4Z" fill="currentColor"/></svg>
+                </div>
+              </div>
+
+              <!-- tela real do app (rota /home-campea do repo legalize),
+                   capturada e trazida proporcionalmente pra dentro do aparelho -->
+              <img class="phone-shot" src="/_lab/assets/app-home.webp" alt="" aria-hidden="true" width="432" height="853" fetchpriority="high" decoding="async">
+            </div>
+          </div>
+        </div>
+      </div>
+      </div>
+
+      <div class="float-card float-card-notas" aria-hidden="true">
+          <div class="fc-row-between">
+            <p class="fc-section-title">Notas recentes</p>
+            <span class="fc-link">Ver tudo</span>
+          </div>
+          <div class="fc-notas-list">
+            <div class="fc-nota-row">
+              <span class="fc-avatar">MC<span class="fc-dot"></span></span>
+              <div class="fc-nota-info"><p class="fc-nota-title">Maria Costa</p><p class="fc-nota-date">há 2h</p></div>
+              <span class="fc-nota-valor">+ R$ 1.200,00</span>
+            </div>
+            <div class="fc-nota-row">
+              <span class="fc-avatar">EL<span class="fc-dot"></span></span>
+              <div class="fc-nota-info"><p class="fc-nota-title">Estúdio Lima Design</p><p class="fc-nota-date">28/05</p></div>
+              <span class="fc-nota-valor">+ R$ 3.000,00</span>
+            </div>
+            <div class="fc-nota-row">
+              <span class="fc-avatar">DP<span class="fc-dot"></span></span>
+              <div class="fc-nota-info"><p class="fc-nota-title">Doce Ponto Confeitaria</p><p class="fc-nota-date">22/05</p></div>
+              <span class="fc-nota-valor">+ R$ 850,00</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="float-card float-card-atalhos" aria-hidden="true">
+          <div class="fc-row-between">
+            <p class="fc-section-title">Atalhos rápidos</p>
+            <span class="fc-link">Ver tudo</span>
+          </div>
+          <div class="fc-grid2">
+            <div class="fc-action fc-action-primary">
+              <span class="fc-action-icon fc-action-icon-on"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M7 3h7l4 4v14H7z"/><path d="M14 3v4h4"/><path d="M10 13h5M10 17h5"/></svg></span>
+              <p class="fc-action-title">Emitir nota</p>
+              <p class="fc-action-sub">Sua NF-e em segundos</p>
+            </div>
+            <div class="fc-action">
+              <span class="fc-action-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 9 12 4l9 5"/><path d="M5 9v9M10 9v9M14 9v9M19 9v9"/><path d="M3 20h18"/></svg></span>
+              <p class="fc-action-title">Pagar imposto</p>
+              <p class="fc-action-sub">O DAS do mês, no app</p>
+            </div>
+          </div>
+        </div>
+
+        <div class="float-card float-card-cnae" aria-hidden="true">
+          <div class="fc-row-between">
+            <div>
+              <span class="fc-tag-success">★ Recomendado</span>
+              <p class="fc-title">Criação de sites e web design</p>
+            </div>
+            <span class="fc-badge-success">94% compatível</span>
+          </div>
+          <p class="fc-desc">Você entrega sites e presença digital pra outras empresas.</p>
+          <div class="fc-stats">
+            <div class="fc-stat">
+              <p class="fc-stat-label">Sua atividade<br>na Receita</p>
+              <p class="fc-stat-value">CNAE 6201-5/02</p>
+            </div>
+            <div class="fc-stat fc-stat-success">
+              <p class="fc-stat-label">Imposto</p>
+              <p class="fc-stat-value">mais baixo</p>
+              <p class="fc-stat-sub">entre os que servem</p>
+            </div>
+          </div>
+          <p class="fc-subheading">O que esse CNAE cobre</p>
+          <div class="fc-check-item">
+            <span class="fc-check-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="m5 12 4.5 4.5L19 7"/></svg></span>
+            <span>Criar e desenvolver sites, páginas e portais na internet</span>
+          </div>
+          <div class="fc-check-item">
+            <span class="fc-check-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="m5 12 4.5 4.5L19 7"/></svg></span>
+            <span>Desenhar a interface (o visual e a navegação) desses sites</span>
+          </div>
+      </div>
+
+      <!-- 4º card: equilibra a coluna direita (padrão da referência: card curto
+           só com ícone + 2 linhas) -->
+      <div class="float-card float-card-suporte" aria-hidden="true">
+        <div class="fc-mini">
+          <span class="fc-mini-icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 11.5a8.4 8.4 0 0 1-9 8.4 9 9 0 0 1-3.9-.9L3 20.5l1.6-4.6A8.4 8.4 0 0 1 12 3.1a8.4 8.4 0 0 1 9 8.4z"/></svg>
+          </span>
+          <p>Contador de verdade no WhatsApp, <strong>sem robô e sem fila</strong>.</p>
+        </div>
+      </div>
+  </div>
+
+
+</section>
+
+<!-- ============================================================ MARQUEE (faixa branca, modelo referência) -->
+<section class="marquee-band" aria-label="Burocracias que deixam de ser problema seu">
+  <div class="container">
+    <!-- a sobrancelha existe pra montar a TENSÃO antes da trilha. Sem ela, a
+         faixa lia como checklist de features (cada item já vinha com um ✓
+         verde, entregando o alívio antes de construir a dor) e a frase que é
+         o payload da dobra chegava depois de a promessa já ter sido dada 12
+         vezes. Agora: setup (aqui) → evidência (trilha) → alívio (a nota). -->
+    <p class="mq-eyebrow">O que você não vai mais precisar entender:</p>
+  </div>
+  <div class="marquee" data-marquee>
+    <div class="marquee-track">
+      <!-- lista de verdade: o leitor de tela anuncia a contagem de itens. O
+           clone pro loop é criado no script com aria-hidden. -->
+      <ul class="mq-set">
+        <li class="mq-chip">DAS mensal <em>(a guia do mês)</em></li>
+        <li class="mq-chip">Nota fiscal</li>
+        <li class="mq-chip">Pró-labore</li>
+        <li class="mq-chip">Declarações</li>
+        <li class="mq-chip">Alvará</li>
+        <li class="mq-chip">Certificado digital</li>
+        <li class="mq-chip">Prazos da Receita</li>
+        <li class="mq-chip">Fator R <em>(o que decide seu imposto)</em></li>
+        <li class="mq-chip">Anexo III <em>(a tabela mais barata)</em></li>
+        <li class="mq-chip">Contrato social</li>
+        <li class="mq-chip">Inscrição na prefeitura</li>
+        <li class="mq-chip">Papelada do governo</li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+<!-- ============================================================ VALIDADOR
+     🔄 TROCA SECA — esta seção era o "concierge" de CNAE (3 passos: MEI ou ME
+     → sua atividade → resultado). Foi substituída pelo SIMULADOR DE
+     ATENDIMENTO, que espelha o trecho E3.2 → E5F do flow real de abrir do app
+     (regime → atividade → endereço → sócios → faturamento → veredito).
+
+     Por que trocou, e não somou: as duas faziam a MESMA pergunta ("vocês me
+     atendem?"), e duas ferramentas iguais na mesma página não competem —
+     a de baixo morre por cansaço. O simulador responde mais e mente menos:
+     o antigo dizia "sua atividade entra", este diz "a gente abre a sua
+     empresa", que é a pergunta que a pessoa realmente faz.
+
+     ⚠️ A marcação e o comportamento vivem em /_lab/atendimento/ (css + js),
+     carregados no <head> e no fim do <body> desta página. A página
+     /_lab/atendimento/ continua existindo com o MESMO código, como destino
+     de anúncio/link direto — não é cópia, é o mesmo par de arquivos.
+
+     O JS antigo do concierge (seção 5 do script.js) morre sozinho: ele começa
+     com `if (!input) return;` justamente porque #v-input pode não existir na
+     página (guard criado quando o /blog foi montado). Nada a limpar lá.
+
+     Espelho do flow real (fonte: legalize/execucao/flow/versoes/v113):
+       E3.2 (MEI × ME) → E3.4 (categoria + endereço, os 2 gates)
+                       → E5T (sócios) → E5F (faixa) → veredito
+     Regras (CEP de BH, teto do MEI/ME, categorias sem MEI, endereço fiscal)
+     estão comentadas em /_lab/atendimento/atendimento.js — não duplicar aqui. -->
+<section class="validador sim-embed" id="validador" aria-labelledby="val-title">
+  <div class="container">
+    <div class="section-head reveal">
+      <h2 id="val-title">A gente consegue abrir a sua empresa?</h2>
+      <p class="section-sub">Algumas perguntas rápidas, de graça e sem cadastro. No fim você sabe se o seu caso entra hoje.</p>
+    </div>
+
+    <div class="sim-grid" id="simulador">
+
+      <!-- Trilha de etapas: espelha o passo atual e marca o que já passou.
+           Em mobile some e vira a barra fina de progresso no topo do cartão. -->
+      <aside class="sim-rail" aria-hidden="true">
+        <p class="sim-rail-title">Acompanhe as etapas</p>
+        <ol class="sim-rail-list" id="sim-rail-list"></ol>
+
+        <ul class="sim-rail-trust">
+          <li>
+            <svg viewBox="0 0 24 24" aria-hidden="true"><path fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" d="m5 12 5 5L20 7"/></svg>
+            Escritório de verdade, 22 anos em BH
+          </li>
+          <li>
+            <svg viewBox="0 0 24 24" aria-hidden="true"><path fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" d="m5 12 5 5L20 7"/></svg>
+            Contador especializado, com registro no CRC
+          </li>
+          <li>
+            <svg viewBox="0 0 24 24" aria-hidden="true"><path fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" d="m5 12 5 5L20 7"/></svg>
+            Resposta na hora, sem falar com vendedor
+          </li>
+        </ul>
+      </aside>
+
+      <div class="sim-stage">
+        <div class="sim-bar" aria-hidden="true">
+          <div class="sim-bar-track"><span class="sim-bar-fill" id="sim-bar-fill"></span></div>
+          <p class="sim-bar-label" id="sim-bar-label"></p>
+        </div>
+
+        <!-- O CARTÃO-TELA: estrutura de 3 partes do app (título fixo / corpo /
+             CTA fixo). O JS injeta o miolo. -->
+        <div class="sim-screen" id="sim-screen"></div>
+
+        <p class="sr-only" role="status" aria-live="polite" id="sim-live"></p>
+
+        <p class="sim-disclaimer">
+          Simulação. As respostas ficam só no seu navegador. Nada é enviado,
+          gravado ou usado pra te ligar depois.
+        </p>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<!-- ============================================================ DIFERENCIAIS
+     REDESENHO V2 (LAB) — o Pedro trouxe print de um app de viagem (mobile,
+     tema claro): carrossel de cards de canto MUITO arredondado, espiando um
+     do outro (profundidade), badge flutuante por cima da superfície, título
+     bold direto na cor do card, muito respiro. Isso é LINGUAGEM VISUAL, não
+     conteúdo — não existe foto, preço por pessoa nem estrela no nosso
+     produto. O que foi traduzido pro nosso sistema:
+
+     1. MOLDURA+FOLHA (papel sobre palco) → CARD SÓLIDO DE PONTA A PONTA.
+        A v1 tinha uma superfície externa colorida com uma folha branca
+        recuada dentro (mesma gramática do vidro do hero). Aqui o card É a
+        cor, sem folha interna — mais perto do "card cheio de foto" da
+        referência, e mais barato: um elemento só, sem camada extra.
+
+     2. PILHA/PROFUNDIDADE → SCROLL HORIZONTAL COM SNAP, não 3D falso. Os
+        vizinhos espiam pela BORDA DO VIEWPORT DE VERDADE (o trilho sangra
+        até a borda da tela; ver .difs-rail-wrap), e o card centralizado
+        cresce (scale) e ganha opacidade via JS (ver initDifsRail no
+        script.js) enquanto os outros encolhem — o MESMO efeito do print,
+        sem simular 3D com transforms caros. Isso também resolve WCAG 2.2.2
+        de graça: não tem autoplay, o carrossel só se move quando ALGUÉM
+        arrasta — não precisa de botão de pausa porque nada roda sozinho.
+
+     3. BADGES FLUTUANTES → chip de ícone (canto sup. esquerdo) + chip
+        numérico (canto sup. direito), os dois brancos, por cima da cor do
+        card, exatamente como "$400/Person" e "4.8★" flutuam sobre a foto
+        na referência — só que aqui o número é posição real no carrossel
+        (01–06), não um dado inventado.
+
+     4. TOM em vez de FOTO: como não há imagem, o ritmo visual vem de 2 tons
+        alternados (coral-800 / ink-900, sem o terceiro tom claro — Pedro
+        pediu só escuro) em vez de 6 fotos diferentes — mesma sensação de
+        variedade que uma galeria de fotos dá, sem precisar de imagem
+        nenhuma. Alternância ESTRITA (nunca dois do mesmo tom seguidos),
+        inclusive na costura 06→01 do loop.
+
+     Os pictogramas: 3 sobrevivem do redesenho anterior (contador/WhatsApp,
+     fala a sua língua, mobile-first), 3 são novos (preço fechado, BH/MG,
+     gestão simples). Todos na mesma família (grid 120, traço ink-700,
+     accent coral-700) — e agora TODOS pousam sobre um chip BRANCO, então a
+     paleta do pictograma deixou de depender do tom do card (--i-* fixo). -->
+<section class="difs" aria-labelledby="difs-title">
+  <div class="container">
+    <div class="section-head reveal">
+      <h2 id="difs-title">Feito pra quem odeia burocracia.</h2>
+      <p class="section-sub">Contabilidade não precisa ser complicada. A gente prova.</p>
+    </div>
+  </div>
+
+  <div class="difs-rail-wrap reveal">
+    <!-- role=region + tabindex: o trilho é alcançável e rolável por teclado
+         (setas, uma vez focado) mesmo sem nenhum link dentro dos cards. -->
+    <div class="difs-rail" role="region" aria-label="Diferenciais Legalizaí, arraste para o lado" tabindex="0">
+     <!-- REFATORADO: loop infinito por manipulação de DOM (não scroll nativo
+          + clone). .difs-rail é só o VISOR (overflow:hidden, largura fixa);
+          quem se move é .difs-track via transform:translateX, calculado e
+          animado inteiramente por JS (initDifsRail em script.js). Cada card
+          carrega data-ix FIXO (0-5) — é a identidade permanente que sobrevive
+          à reordenação de DOM (ver script.js §loop contínuo); a posição
+          dele na lista de filhos MUDA quando o primeiro vai pro fim, o
+          data-ix NUNCA muda — é o que faz o card certo ficar "ativo" (ver
+          syncActive em script.js) mesmo depois de reordenar. -->
+     <div class="difs-track">
+
+      <!-- 🔄 DE VOLTA AOS 6 (Pedro, 09/09). Uma auditoria em 06/09 tinha
+           cortado três — preço, contador de verdade e "fala a sua língua" —
+           por serem cobertos por outras dobras (Planos prova o preço com
+           número, a dobra de Prova é inteira sobre o contador, a marquee e o
+           blog FAZEM o "fala a sua língua" em vez de anunciá-lo). A decisão
+           foi revertida: a dobra volta a ser o panorama dos 6 diferenciais.
+
+           ⚠️ A COPY DOS TRÊS RESTAURADOS É NOVA. O texto original foi escrito
+           direto no _lab, que é gitignorado, e não sobreviveu ao corte — nem
+           no git nem no cache do navegador. Foi reescrita a partir do que cada
+           cena mostra e da voz dos outros três. Vale uma revisão do Pedro.
+
+           TONS: sem regra de alternância (ver styles.css). Os três que já
+           existiam mantêm o tom que tinham; os novos foram distribuídos pra
+           fechar 3 coral / 3 escuro sem cair em A·B·A·B.
+           O loop não depende da quantidade: o script clona o que existir. -->
+
+      <!-- 1 · escuro · Léo erguendo a plaquinha de preço, sem asterisco. -->
+      <article class="dif-card dif-tone-b" data-ix="0" style="background:linear-gradient(180deg, rgba(12,8,6,0), rgba(12,8,6,.72) 62%, rgba(12,8,6,.9)), url('/_lab/assets/dif-cenas/01-preco-fechado.webp') center/cover">
+        <span class="dif-badge dif-badge-num" aria-hidden="true">01</span>
+        <div class="dif-body">
+          <h3>O preço da tela é o da fatura</h3>
+          <p>Sem "a partir de", sem adicional por faturamento, sem taxa que aparece no boleto. O que não está incluso a gente diz na página, não no contrato.</p>
+        </div>
+      </article>
+
+      <!-- 2 · coral · Léo de headset, atendendo — gente, não robô. -->
+      <article class="dif-card dif-tone-a" data-ix="1" style="background:linear-gradient(180deg, rgba(12,8,6,0), rgba(12,8,6,.72) 62%, rgba(12,8,6,.9)), url('/_lab/assets/dif-cenas/02-contador-whatsapp.webp') center/cover">
+        <span class="dif-badge dif-badge-num" aria-hidden="true">02</span>
+        <div class="dif-body">
+          <h3>Quem responde tem nome e CRC</h3>
+          <p>No plano ME você fala com o contador no WhatsApp, sem robô e sem fila. Quem assume a responsabilidade pela sua empresa tem registro no conselho.</p>
+        </div>
+      </article>
+
+      <!-- 3 · coral · pino de mapa, "lugar" sem citar nome de empresa. -->
+      <article class="dif-card dif-tone-a" data-ix="2" style="background:linear-gradient(180deg, rgba(12,8,6,0), rgba(12,8,6,.72) 62%, rgba(12,8,6,.9)), url('/_lab/assets/dif-cenas/03-bh-mg.webp') center/cover">
+        <span class="dif-badge dif-badge-num" aria-hidden="true">03</span>
+        <div class="dif-body">
+          <h3>Time que conhece BH e MG de verdade</h3>
+          <p>ISS-BH, alvará da prefeitura e as regras da Junta Comercial de MG já fazem parte do produto, não são surpresa depois.</p>
+        </div>
+      </article>
+      <!-- 4 · escuro · contorno de celular + indicador de home. -->
+      <article class="dif-card dif-tone-b" data-ix="3" style="background:linear-gradient(180deg, rgba(12,8,6,0), rgba(12,8,6,.72) 62%, rgba(12,8,6,.9)), url('/_lab/assets/dif-cenas/04-mobile-first.webp') center 15%/cover">
+        <span class="dif-badge dif-badge-num" aria-hidden="true">04</span>
+        <div class="dif-body">
+          <h3>Mobile-first, no seu bolso</h3>
+          <p>Desenhado pro celular desde a base. Funciona liso no Apple e no Android, sem "portal" que só roda no computador.</p>
+        </div>
+      </article>
+      <!-- 5 · coral · Léo apontando o rabisco que virou desenho claro. -->
+      <article class="dif-card dif-tone-a" data-ix="4" style="background:linear-gradient(180deg, rgba(12,8,6,0), rgba(12,8,6,.72) 62%, rgba(12,8,6,.9)), url('/_lab/assets/dif-cenas/05-fala-sua-lingua.webp') center/cover">
+        <span class="dif-badge dif-badge-num" aria-hidden="true">05</span>
+        <div class="dif-body">
+          <h3>Contabilês fica do nosso lado</h3>
+          <p>Fator R, Anexo III, pró-labore, DAS. Você não precisa aprender nada disso: a gente traduz na hora e resolve o resto.</p>
+        </div>
+      </article>
+
+      <!-- 6 · escuro · grade 2×2 solta, sem nenhum quadrado "aceso". -->
+      <article class="dif-card dif-tone-b" data-ix="5" style="background:linear-gradient(180deg, rgba(12,8,6,0), rgba(12,8,6,.72) 62%, rgba(12,8,6,.9)), url('/_lab/assets/dif-cenas/06-gestao-simples.webp') center 12%/cover">
+        <span class="dif-badge dif-badge-num" aria-hidden="true">06</span>
+        <div class="dif-body">
+          <h3>Você sabe quanto custa sair</h3>
+          <p>Fidelidade, multa e o que acontece se você sair estão escritos na página, não escondidos no fim do contrato.</p>
+        </div>
+      </article>
+     </div>
+    </div>
+
+  </div>
+</section>
+
+<!-- ============================================================ COMO FUNCIONA
+     🔄 TESTE DE LAYOUT 2 (referência do Pedro): cartão macio sobre fundo cinza,
+     com pedaços de INTERFACE flutuando dentro dele e o texto embaixo. Saiu o
+     teste anterior (aparelhos sobre faixa escura): a faixa preta cortava a
+     página em duas e brigava com o coral.
+
+     Gramática da referência, aplicada aqui:
+       · fundo da dobra em cinza, cartão do passo num cinza mais claro, e as
+         peças de UI em BRANCO por cima — três níveis, nenhum deles com borda.
+         A separação vem da sombra difusa, não de contorno.
+       · o pedaço de tela não é uma captura inteira: são 2 ou 3 peças soltas,
+         do tamanho que a informação pede.
+       · texto (título + frase) embaixo, alinhado à esquerda, sem caixa.
+
+     Conteúdo de cada tela (copy e estrutura vindas do app, não inventadas):
+       1 · C0 `/dossie/atividade` — campo livre + pills (PILLS/EXEMPLOS em
+           legalize/app/src/components/gate-telas.tsx)
+       2 · a conversa que o E3.2 abre pelo link "Tirar dúvida no WhatsApp".
+           A credencial do contador (nome, CRC, 22 anos) fica na dobra de
+           baixo, que é inteira sobre isso — repetida aqui, enfraquecia as duas.
+       3 · A3 Status — etapas reais de `ETAPAS_ABERTURA` (components/painel.tsx)
+     As peças são ILUSTRAÇÃO: `aria-hidden`, nada clicável dentro. -->
+<section class="steps" id="como-funciona" aria-labelledby="steps-title">
+  <div class="container">
+    <div class="section-head reveal">
+      <h2 id="steps-title">Três passos e pronto. Vai, Legaliza aí!</h2>
+      <p class="section-sub steps-sub">O que você faz em cada um, na tela em que ele acontece.</p>
+    </div>
+
+    <ol class="steps-grid">
+      <li class="step reveal">
+        <div class="step-visual" aria-hidden="true">
+          <div class="step-sheet">
+            <p class="step-sheet-label">O que você faz?</p>
+            <div class="step-campo">Faço sites e lojas virtuais para pequenas empresas<i class="step-caret"></i></div>
+          </div>
+          <div class="step-sheet is-solta">
+            <div class="step-pills">
+              <span class="is-on">Tecnologia e software</span>
+              <span>Design</span>
+              <span>Marketing</span>
+            </div>
+          </div>
+        </div>
+        <div class="step-legenda">
+          <span class="step-num">1</span>
+          <h3>Conte o que você faz</h3>
+          <p>Com as suas palavras, em 10 segundos. Sem formulário, sem decorar código.</p>
+        </div>
+      </li>
+
+      <li class="step reveal d1">
+        <div class="step-visual" aria-hidden="true">
+          <div class="step-sheet">
+            <p class="step-presenca"><i></i>Contador · online agora</p>
+            <div class="step-chat">
+              <span class="step-bolha is-eu">Tenho MEI e passei do teto no ano passado. Isso atrapalha a abertura?</span>
+              <span class="step-bolha">Atrapalha não. Antes de você pagar qualquer coisa eu te explico o que muda no seu caso.</span>
+            </div>
+          </div>
+          <div class="step-sheet is-solta step-zap">Tirar dúvida no WhatsApp</div>
+        </div>
+        <div class="step-legenda">
+          <span class="step-num">2</span>
+          <h3>Fale com seu contador</h3>
+          <p>No WhatsApp, com gente de verdade, antes de pagar qualquer coisa. Pergunta o que quiser.</p>
+        </div>
+      </li>
+
+      <li class="step reveal d2">
+        <div class="step-visual" aria-hidden="true">
+          <div class="step-sheet is-solta step-status">
+            <span>Status da sua abertura</span><b>2 de 3</b>
+          </div>
+          <div class="step-sheet">
+            <ol class="step-timeline">
+              <li class="is-done">
+                <b>Documentos enviados</b>
+                <span>tudo que a Junta pede, conferido</span>
+              </li>
+              <li class="is-now">
+                <b>Analisando viabilidade</b>
+                <span>Junta Comercial · a gente te avisa</span>
+              </li>
+              <li>
+                <b>Assinar o contrato social</b>
+                <span>pelo GOV.BR, no seu celular</span>
+              </li>
+            </ol>
+          </div>
+        </div>
+        <div class="step-legenda">
+          <span class="step-num">3</span>
+          <h3>Deixe a burocracia com a gente</h3>
+          <p>A gente abre a sua empresa, ou traz pra cá a que você já tem, e mantém tudo em dia. Você acompanha pelo app, no celular.</p>
+        </div>
+      </li>
+    </ol>
+
+    <!-- destino: o RODAPÉ (onde ficam os badges das lojas), não o simulador.
+         O passo 1 ("conte o que você faz") acontece dentro do app — mandar pro
+         simulador era prometer o passo 1 e entregar outra coisa. A âncora era
+         #baixar até a dobra do CTA final sair, em 07/09. -->
+    <p class="steps-cta reveal d3"><a class="btn btn-primary" href="/em-breve">Quero entrar na lista</a></p>
+  </div>
+</section>
+
+<!-- ============================================================ PROVA
+     ✂️ ENXUGADA. Antes esta dobra dizia a mesma coisa cinco vezes: parágrafo
+     do contador, linha de "ISS/alvará/Junta", três estatísticas (CRC, BH,
+     WhatsApp), linha do fundador, uma tela de assinatura E uma conversa de
+     WhatsApp inteira. O CRC aparecia três vezes na mesma tela.
+
+     Ficou o que PROVA, e uma prova por afirmação:
+       · a frase, com o nome e o registro de quem assina;
+       · a tela do A4″ (2ª assinatura), que é o fato do processo: o CNPJ só
+         sai porque um contador com CRC assina junto.
+     Saiu a conversa de WhatsApp: ela virou o passo 2 da dobra de cima, e aqui
+     era a segunda vez que a mesma cena aparecia em uma tela e meia de rolagem.
+     Saíram as estatísticas: repetiam o que a frase e a tela já dizem.
+
+     Fonte da tela: `ETAPAS_ABERTURA` / A4″ em painel.tsx — "são duas
+     assinaturas, não uma: a 2ª é ela + o CONTADOR, que assina junto e se
+     responsabiliza; é esta que gera o CNPJ" (destrinchado com o Pedro em
+     04/09). `aria-hidden`: ilustração, nada focável. -->
+<section class="prova" aria-labelledby="prova-title">
+  <div class="container prova-grid">
+    <div class="prova-copy reveal">
+      <h2 id="prova-title">Tem gente de verdade por trás do app.</h2>
+      <p>Quem assina pela sua empresa é <strong>um contador especializado</strong>, com registro no CRC-MG, de um escritório com 22 anos em BH. O app organiza e avisa. A responsabilidade tem nome e registro.</p>
+      <p class="prova-founder">O fundador usa o Legalizaí pro CNPJ dele. Se travar, a gente sente primeiro.</p>
+    </div>
+
+    <div class="prova-lado reveal d2">
+      <div class="prova-tela" aria-hidden="true">
+        <p class="prova-tela-meta">No app · na hora de gerar o CNPJ</p>
+        <p class="prova-tela-titulo">Assinatura do contrato social</p>
+
+        <ul class="prova-assina">
+          <li class="is-done">
+            <img class="prova-assina-mark is-3d" src="/_lab/assets/check-3d.webp?v=2" alt="" aria-hidden="true" width="146" height="146" loading="lazy" decoding="async">
+            <span><b>Você assinou</b>pelo GOV.BR, no seu celular</span>
+          </li>
+          <li class="is-now">
+            <span class="prova-assina-mark prova-assina-selo">
+              <svg viewBox="0 0 121.44 121.44"><path fill="#fff" d="M72.64,95.27c-6.56,6.56-17.21,6.56-23.77,0L13.91,60.32c7.6-7.6,19.93-7.6,27.54,0l19.31,19.31,60.67-60.67C121.28,8.46,112.74,0,102.21,0H19.23C8.61,0,0,8.61,0,19.23v82.98c0,10.62,8.61,19.23,19.23,19.23h82.98c10.62,0,19.23-8.61,19.23-19.23v-55.74l-48.8,48.8Z"/></svg>
+            </span>
+            <span><b>O contador assina junto</b>é a assinatura dele que gera o CNPJ</span>
+          </li>
+        </ul>
+
+        <p class="prova-tela-nota">Duas assinaturas, não uma. A segunda tem registro no conselho.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============================================================ PLANOS
+     Teste de dobra (referência trazida pelo Pedro): coluna de argumentos à
+     esquerda, dois cartões de plano à direita, o principal destacado.
+
+     Posição (auditoria de 06/09): logo depois da PROVA e ANTES da comparação.
+     A LP é fundo A do funil (ADR 18/08, funil-conversao.md): existe pra
+     recolher objeção na ordem em que ela aparece — "vocês me atendem?" (
+     simulador) → "como funciona?" → "tem gente de verdade?" → "quanto custa?"
+     → "e comparado com os outros?". Antes o preço só chegava na 8ª dobra.
+
+     ⚠️ TODO NÚMERO AQUI TEM FONTE, nenhum é ilustrativo:
+       · ME R$ 139 e MEI R$ 49 · `CUSTOS.MENSALIDADE` / `MENSALIDADE_MEI`
+       · ⚠️ 11/09: oferta de lancamento e de 3 MESES nos dois planos: ME R$ 99 -> R$ 139, MEI R$ 29 -> R$ 49, ate 31/12/2026. 🔴 A minuta do contrato (clausula 3.6) ainda diz coorte travada por 12 meses: PRECISA SER CORRIGIDA. 
+         até 31/12/2026 · decisoes-marca 20/08, fechado com o Mauro
+       · taxa da Junta R$ 281,08 e abertura R$ 0 · `DAE_JUCEMG` / `HONORARIO_ABERTURA`
+       · fidelidade 12 meses e multa de 30% do saldo · vault 10-CONTRATO
+       · certificado incluso no ME e fora do MEI · decisão 28/08
+
+     🔴 REGRA DURA (decisoes-marca 26/08): no cartão do MEI é proibido
+     prometer ou insinuar contador humano. Lá é assistente virtual, e está
+     escrito com essas palavras. -->
+<section class="planos" id="planos" aria-labelledby="planos-title">
+  <div class="container planos-grid">
+
+    <div class="planos-copy reveal">
+      <h2 id="planos-title">Dois planos. Nenhum asterisco.</h2>
+      <p class="planos-sub">O preço da tela é o da fatura. O que não está incluso, a gente diz aqui, e não no contrato.</p>
+
+        <!-- 🆕 11/09: a coluna da esquerda vira a COLUNA DE ROTULOS da
+             comparacao. O texto de cada item e escrito UMA vez aqui, e os
+             cartoes ao lado ficam so com o status. Era esse o defeito da
+             versao anterior: o mesmo rotulo aparecia nos dois cartoes e a
+             pessoa lia a frase duas vezes pra descobrir um sim ou um nao. -->
+        <div class="planos-rotulos">
+          <p class="pr-cat">O que você paga de imposto</p>
+          <ul class="pr-lista">
+            <li><details class="pr-det"><summary>Cálculo do Fator R todo mês<span class="pr-info" aria-hidden="true">?</span></summary><p class="pr-tip">É o Fator R que decide se a sua empresa paga 6% ou 15,5% de imposto sobre o faturamento. Ele compara a sua folha com o que você fatura nos últimos 12 meses. A gente calcula todo mês e avisa antes de você cair na faixa cara.</p></details></li>
+            <li><details class="pr-det"><summary>A guia do mês, calculada e avisada<span class="pr-info" aria-hidden="true">?</span></summary><p class="pr-tip">A guia aparece no app com o valor já apurado e o aviso chega antes do vencimento, não depois. No ME são duas: o DAS do Simples e o DARF do INSS do pró-labore. E antes de decidir qualquer coisa, o simulador mostra o efeito no imposto na hora.</p></details></li>
+          </ul>
+          <p class="pr-cat">Quem responde por você</p>
+          <ul class="pr-lista">
+            <!-- 🆕 11/09 (pedido do Pedro): o Léo passa a ser item PRÓPRIO, e
+                 abre a categoria. Motivo de ordem, não de gosto: ele está
+                 liberado nos dois planos, então a categoria "Quem responde por
+                 você" abre com um check na coluna do MEI em vez de abrir com
+                 dois X seguidos. Mesmo conteúdo, outra primeira impressão. -->
+            <li><details class="pr-det"><summary>Léo, o agente contábil, no WhatsApp<span class="pr-info" aria-hidden="true">?</span></summary><p class="pr-tip">O Léo é o nosso agente contábil. Ele responde no WhatsApp e dentro do app, fica de vigia no prazo e na guia que vence, e tira dúvida do dia a dia na hora, sem fila e sem horário comercial. Está liberado nos dois planos. No ME ele trabalha junto do contador com registro no CRC; no MEI é ele quem cuida da rotina.</p></details></li>
+            <li><details class="pr-det"><summary>Contador com CRC no WhatsApp<span class="pr-info" aria-hidden="true">?</span></summary><p class="pr-tip">Você conversa com um contador especializado, com registro no CRC-MG, de um escritório com 22 anos em Belo Horizonte. Quem responde é quem assume a responsabilidade técnica pela sua empresa. No MEI, quem cuida da rotina é o Léo.</p></details></li>
+            <li><details class="pr-det"><summary>Contabilidade completa, com balanço e DRE<span class="pr-info" aria-hidden="true">?</span></summary><p class="pr-tip">Escrituração contábil e fiscal · Balancete, Balanço Patrimonial e DRE · ECD transmitida à Receita Federal · Obrigações acessórias e declaração anual · Tudo assinado por contador com registro no conselho. E se um dia você trocar de contador, os livros e os documentos são seus e vão com você, sem retenção e sem taxa de saída.</p></details></li>
+          </ul>
+          <p class="pr-cat">Quanto custa pra abrir</p>
+          <ul class="pr-lista">
+            <li><details class="pr-det"><summary>Honorário da abertura<span class="pr-info" aria-hidden="true">?</span></summary><p class="pr-tip">A gente não cobra pelo trabalho de abrir. A receita é a mensalidade. A taxa da Junta Comercial existe, é do Estado, e aparece destacada na conta acima.</p></details></li>
+            <li><details class="pr-det"><summary>Certificado digital e-CNPJ<span class="pr-info" aria-hidden="true">?</span></summary><p class="pr-tip">Sem ele não dá para emitir nota nem acessar os sistemas da Receita. No ME vem incluso e é renovado todo ano enquanto o contrato estiver ativo. No MEI é contratado à parte.</p></details></li>
+          </ul>
+          <p class="pr-cat">O dia a dia no app</p>
+          <ul class="pr-lista">
+            <li><details class="pr-det"><summary>Emissão de nota pelo app, sem limite<span class="pr-info" aria-hidden="true">?</span></summary><p class="pr-tip">Sem cobrança por nota emitida e sem teto mensal. Você emite direto do celular, e a nota entra na apuração do mês sozinha.</p></details></li>
+            <li><details class="pr-det"><summary>Pró-labore: você escolhe o valor<span class="pr-info" aria-hidden="true">?</span></summary><p class="pr-tip">Você define quanto tirar no mês e vê na hora o efeito no Fator R e no imposto. Sai com recibo e com a guia de INSS calculada. Não é um número que alguém define por você.</p></details></li>
+          </ul>
+          <p class="pr-cat">Quando você crescer</p>
+          <ul class="pr-lista">
+            <li><details class="pr-det"><summary>Sócios na empresa<span class="pr-info" aria-hidden="true">?</span></summary><p class="pr-tip">Até 4 sócios no plano ME. E sócio com carteira assinada em outra empresa continua contando como um só: aqui não existe sócio que vale por dois.</p></details></li>
+            <li><details class="pr-det"><summary>Colaboradores na folha<span class="pr-info" aria-hidden="true">?</span></summary><p class="pr-tip">Serviço adicional, contratado no app depois que a empresa está aberta. R$ 39 por pessoa ativa no mês, até 10 pessoas, com eSocial, EFD-Reinf e DCTFWeb por nossa conta.</p></details></li>
+            <li><details class="pr-det"><summary>Aviso antes de bater o teto<span class="pr-info" aria-hidden="true">?</span></summary><p class="pr-tip">O MEI para em R$ 81 mil por ano. O ME para em R$ 360 mil. Nos dois casos a gente acompanha o seu faturamento e avisa enquanto ainda dá tempo de ajustar.</p></details></li>
+            <li><details class="pr-det"><summary>A transição é por nossa conta<span class="pr-info" aria-hidden="true">?</span></summary><p class="pr-tip">Passou do teto do MEI, a gente vira ME. Passou do teto do ME, a gente faz o desenquadramento para EPP: honorário de R$ 139 mais a taxa da Junta de R$ 290, dita antes. Você continua no mesmo app, com a mesma equipe. E se o faturamento cair, a faixa desce sozinha na competência seguinte: você não precisa pedir nem reclamar.</p></details></li>
+          </ul>
+        </div>
+
+      <!-- ✂️ Saiu o argumento "A conta inteira, antes de você pagar": é a tese
+           da tela "A conta da abertura", 400px acima, com os números na mão.
+           Repetir aqui em prosa não acrescenta prova, só linha. -->
+        <!-- ✂️ 11/09 (pedido do Pedro): os dois argumentos sairam daqui.
+             "Quem responde tem nome e CRC" ja e a dobra inteira "Tem gente de
+             verdade por tras do app", logo acima, com o nome e o registro do
+             contador. "Cresceu, a gente troca o plano" e a dobra "Passar do teto
+             nao pode pegar voce de surpresa", logo abaixo. E os dois voltam a
+             aparecer dentro dos cartoes, nas categorias Atendimento e Quando
+             voce crescer. Diziam a mesma coisa tres vezes na mesma tela. -->
+
+      <!-- As patas do Léo entregando o contrato (RGBA 700×564, alpha real). No
+           lugar do Léo inteiro segurando duas folhas: aqui a coluna é estreita
+           e o corpo inteiro virava uma miniatura de 180px onde nada se lia. O
+           braço cortado na borda funciona no estreito porque o assunto dele é
+           o documento, não o personagem — e o documento é o que a dobra vende.
+           `aria-hidden`: ilustração, não carrega informação nova. -->
+      <img class="planos-leo" src="/_lab/assets/leo-contrato.webp" alt="" aria-hidden="true" width="700" height="564" loading="lazy">
+    </div>
+
+    <div class="planos-cards reveal d1">
+
+      <!-- MEI: cartão secundário. Sem contador humano, sem certificado. -->
+      <article class="plano">
+        <!-- 🔄 Era "POPULAR", ao lado de um "MAIS ESCOLHIDO" no cartão do ME:
+             dois selos afirmando popularidade, um contradizendo o outro na
+             mesma linha de leitura. Os dois selos agora dizem coisas de
+             NATUREZAS diferentes — este descreve ENCAIXE ("é por onde se
+             começa"), o do ME descreve ESCOLHA ("é o mais pedido"). Sem
+             disputa, e a leitura fica: começa aqui, a maioria acaba ali. -->
+        <!-- 🔄 11/09: selo + nome viram um CABEÇALHO com o ícone dentro, em
+             flexbox. Antes o ícone era absoluto e cada texto reservava espaço
+             pra ele à mão (`padding-right` calculado). Foram 3 rodadas de
+             quebra pelo mesmo motivo: a reserva não bate com a largura real, e
+             "ME · Simples Nacional" encostava enquanto "MEI" nunca encostava.
+             No fluxo, o ícone ocupa o espaço dele e ninguém precisa reservar
+             nada. Mexer em `--ico-tam` deixou de conseguir quebrar texto. -->
+        <div class="plano-cabeca">
+          <div class="plano-cabeca-txt">
+            <p class="plano-selo is-neutro">PRA COMEÇAR</p>
+            <p class="plano-nome">MEI</p>
+          </div>
+          <img class="plano-ico" src="/_lab/atendimento/icones/regime-mei-coral.webp" alt="" aria-hidden="true" loading="lazy" width="140" height="129">
+        </div>
+        <p class="plano-preco"><strong>R$ 29</strong><span>/por mês</span></p>
+        <p class="plano-oferta">Nos 3 primeiros meses<br>Depois R$ 49/mês</p>
+        <p class="plano-quem">Até R$ 6.750/mês, sem sócio. Abre em qualquer cidade do Brasil.</p>
+        <!-- ✂️ 11/09: o titulo da categoria fica VAZIO aqui de proposito.
+             O nome da categoria e escrito uma vez so, na coluna da esquerda.
+             O elemento continua existindo com a mesma caixa e a mesma
+             divisoria: e ele que segura o ritmo das linhas batendo entre as
+             tres colunas. Esvaziar o texto sem tirar o elemento e o ponto.
+             Leitor de tela nao perde nada: cada celula ja carrega o rotulo
+             completo em .sr-only. -->
+      <!-- 📱 11/09: no MOBILE a lista "o que entra" nasce COLAPSADA. Um <details>
+           e nao um botão com JS de proposito: abre e fecha sem script, responde a
+           teclado e o leitor de tela ja anuncia o estado. O atributo `open` vem no
+           HTML, entao sem JS a pagina fica EXPANDIDA (degrada mostrando conteudo,
+           nunca escondendo). Quem tira o `open` abaixo de 900px e o script no fim
+           do arquivo. No desktop o <details> vira `display:contents` e some da
+           arvore de layout, pra nao entrar como item flex entre o cartao e os
+           blocos (era isso que quebraria a sincronia de altura das 3 colunas). -->
+      <details class="plano-detalhes" open>
+        <summary class="plano-detalhes-btn">
+          <span>Ver o que está incluso</span>
+          <svg viewBox="0 0 24 24" aria-hidden="true"><path fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" d="m6 9 6 6 6-6"/></svg>
+        </summary>
+        <div class="plano-blocos" aria-label="O que entra no plano">
+          <p class="plano-features-titulo is-vazio" aria-hidden="true" data-cat="O que você paga de imposto"></p>
+          <ul class="plano-features is-status">
+            <li class="is-fora"><img class="plano-check" src="/_lab/assets/x-3d.webp?v=2" alt="" aria-hidden="true" width="105" height="105" loading="lazy" decoding="async"><span class="pf-nota">Seu imposto já é fixo</span><span class="sr-only">Cálculo do Fator R todo mês: não faz parte deste plano</span></li>
+            <li><img class="plano-check" src="/_lab/assets/check-3d.webp?v=2" alt="" aria-hidden="true" width="146" height="146" loading="lazy" decoding="async"><span class="pf-nota">DAS, com aviso antes</span><span class="sr-only">A guia do mês, calculada e avisada: incluso</span></li>
+          </ul>
+          <p class="plano-features-titulo is-vazio" aria-hidden="true" data-cat="Quem responde por você"></p>
+          <ul class="plano-features is-status">
+            <li><img class="plano-check" src="/_lab/assets/check-3d.webp?v=2" alt="" aria-hidden="true" width="146" height="146" loading="lazy" decoding="async"><span class="pf-nota">Tira dúvida e vigia prazo</span><span class="sr-only">Léo, o agente contábil, no WhatsApp: incluso</span></li>
+            <li class="is-fora"><img class="plano-check" src="/_lab/assets/x-3d.webp?v=2" alt="" aria-hidden="true" width="105" height="105" loading="lazy" decoding="async"><span class="pf-nota">Quem cuida é o Léo</span><span class="sr-only">Contador com CRC no WhatsApp: não faz parte deste plano</span></li>
+            <li class="is-fora"><img class="plano-check" src="/_lab/assets/x-3d.webp?v=2" alt="" aria-hidden="true" width="105" height="105" loading="lazy" decoding="async"><span class="pf-nota">Dispensado por lei no MEI</span><span class="sr-only">Contabilidade completa, com balanço e DRE: não faz parte deste plano</span></li>
+          </ul>
+          <p class="plano-features-titulo is-vazio" aria-hidden="true" data-cat="Quanto custa pra abrir"></p>
+          <ul class="plano-features is-status">
+            <li><img class="plano-check" src="/_lab/assets/check-3d.webp?v=2" alt="" aria-hidden="true" width="146" height="146" loading="lazy" decoding="async"><span class="pf-nota">R$ 0</span><span class="sr-only">Honorário da abertura: incluso</span></li>
+            <li class="is-taxa"><img class="plano-check" src="/_lab/assets/alerta-3d.webp?v=2" alt="" aria-hidden="true" width="106" height="106" loading="lazy" decoding="async"><span class="pf-nota">R$ 209 por ano, à parte</span><span class="sr-only">Certificado digital e-CNPJ: com condição</span></li>
+          </ul>
+          <p class="plano-features-titulo is-vazio" aria-hidden="true" data-cat="O dia a dia no app"></p>
+          <ul class="plano-features is-status">
+            <li><img class="plano-check" src="/_lab/assets/check-3d.webp?v=2" alt="" aria-hidden="true" width="146" height="146" loading="lazy" decoding="async"><span class="pf-nota">Sem custo por nota</span><span class="sr-only">Emissão de nota pelo app, sem limite: incluso</span></li>
+            <li class="is-fora"><img class="plano-check" src="/_lab/assets/x-3d.webp?v=2" alt="" aria-hidden="true" width="105" height="105" loading="lazy" decoding="async"><span class="pf-nota">O DAS já cobre seu INSS</span><span class="sr-only">Pró-labore: você escolhe o valor: não faz parte deste plano</span></li>
+          </ul>
+          <p class="plano-features-titulo is-vazio" aria-hidden="true" data-cat="Quando você crescer"></p>
+          <ul class="plano-features is-status">
+            <li class="is-fora"><img class="plano-check" src="/_lab/assets/x-3d.webp?v=2" alt="" aria-hidden="true" width="105" height="105" loading="lazy" decoding="async"><span class="pf-nota">Empresa de um dono só</span><span class="sr-only">Sócios na empresa: não faz parte deste plano</span></li>
+            <li class="is-fora"><img class="plano-check" src="/_lab/assets/x-3d.webp?v=2" alt="" aria-hidden="true" width="105" height="105" loading="lazy" decoding="async"><span class="pf-nota">Chega quando virar ME</span><span class="sr-only">Colaboradores na folha: não faz parte deste plano</span></li>
+            <li><img class="plano-check" src="/_lab/assets/check-3d.webp?v=2" alt="" aria-hidden="true" width="146" height="146" loading="lazy" decoding="async"><span class="pf-nota">R$ 81 mil por ano</span><span class="sr-only">Aviso antes de bater o teto: incluso</span></li>
+            <li><img class="plano-check" src="/_lab/assets/check-3d.webp?v=2" alt="" aria-hidden="true" width="146" height="146" loading="lazy" decoding="async"><span class="pf-nota">Vira ME sem parar</span><span class="sr-only">A transição é por nossa conta: incluso</span></li>
+          </ul>
+        </div>
+        <!-- ✂️ 11/09: a lista "O que entra" saiu do cartão. A tabela
+             "O que entra em cada plano", logo abaixo, diz o mesmo com 37
+             linhas, agrupadas e com detalhe no "?". Manter as duas era a
+             mesma informação duas vezes, e a curta enfraquecia a longa. -->
+
+        <!-- 🔄 CTA no PÉ do cartão, não no meio: quem decide plano lê os itens
+             primeiro e só então quer o botão. Com ele no topo, a lista virava
+             leitura DEPOIS do clique. `margin-top:auto` cola os dois na mesma
+             linha, mesmo com listas de tamanhos diferentes. -->
+        <!-- 🔴 ADR 28/08 deixou aberto: tirando o certificado do plano MEI, a
+             fidelidade ficou sem contrapartida escrita. Aqui ela é dita com o
+             que de fato existe hoje (abertura por nossa conta + oferta de
+             lançamento). Se o Mauro fechar outra contrapartida, é esta linha
+             que muda. -->
+      </details>
+
+        <div class="plano-conta">
+          <p class="plano-conta-titulo">A conta da abertura</p>
+          <ul class="vs-conta">
+            <li>
+            <span><b>Abrir o seu MEI</b></span>
+            <em class="is-zero">R$ 0</em>
+          </li>
+          <li>
+            <span><b>Taxa de registro</b></span>
+            <em class="is-zero">R$ 0</em>
+          </li>
+          <li>
+            <span><b>Certificado digital e-CNPJ</b></span>
+            <em>R$ 209</em>
+          </li>
+          <li>
+            <span><b>Mensalidade</b></span>
+            <em>R$ 29<i>/mês</i></em>
+          </li>
+          </ul>
+          <p class="plano-conta-total"><span>Total de hoje</span><strong>R$ 238,00</strong></p>
+        </div>
+
+        <p class="plano-fidelidade">Fidelidade de 12 meses do CNPJ. Saindo antes, multa de 30% do saldo. Em troca: abertura por nossa conta e 3 meses a R$ 29. <a href="#perguntas">Detalhe</a>.</p>
+        <a class="btn plano-btn-2" href="#validador">Ver se eu sou MEI</a>
+      </article>
+
+      <!-- ME: o produto principal. Recebe o destaque e o CTA cheio. -->
+      <article class="plano is-destaque">
+        <div class="plano-cabeca">
+          <div class="plano-cabeca-txt">
+            <p class="plano-selo">MAIS ESCOLHIDO</p>
+            <p class="plano-nome">ME · Simples Nacional</p>
+          </div>
+          <img class="plano-ico" src="/_lab/atendimento/icones/regime-me-coral.webp" alt="" aria-hidden="true" loading="lazy" width="140" height="129">
+        </div>
+        <p class="plano-preco"><strong>R$ 99</strong><span>/por mês</span></p>
+        <p class="plano-oferta is-forte">Nos 3 primeiros meses<br>Depois R$ 139/mês</p>
+        <p class="plano-quem">Acima disso, com sócio ou crescendo. Sede em BH, ou use a nossa.</p>
+      <!-- 📱 11/09: no MOBILE a lista "o que entra" nasce COLAPSADA. Um <details>
+           e nao um botão com JS de proposito: abre e fecha sem script, responde a
+           teclado e o leitor de tela ja anuncia o estado. O atributo `open` vem no
+           HTML, entao sem JS a pagina fica EXPANDIDA (degrada mostrando conteudo,
+           nunca escondendo). Quem tira o `open` abaixo de 900px e o script no fim
+           do arquivo. No desktop o <details> vira `display:contents` e some da
+           arvore de layout, pra nao entrar como item flex entre o cartao e os
+           blocos (era isso que quebraria a sincronia de altura das 3 colunas). -->
+      <details class="plano-detalhes" open>
+        <summary class="plano-detalhes-btn">
+          <span>Ver o que está incluso</span>
+          <svg viewBox="0 0 24 24" aria-hidden="true"><path fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" d="m6 9 6 6 6-6"/></svg>
+        </summary>
+        <div class="plano-blocos" aria-label="O que entra no plano">
+          <p class="plano-features-titulo is-vazio" aria-hidden="true" data-cat="O que você paga de imposto"></p>
+          <ul class="plano-features is-status">
+            <li><img class="plano-check" src="/_lab/assets/check-3d.webp?v=2" alt="" aria-hidden="true" width="146" height="146" loading="lazy" decoding="async"><span class="pf-nota">6% em vez de 15,5%</span><span class="sr-only">Cálculo do Fator R todo mês: incluso</span></li>
+            <li><img class="plano-check" src="/_lab/assets/check-3d.webp?v=2" alt="" aria-hidden="true" width="146" height="146" loading="lazy" decoding="async"><span class="pf-nota">DAS e DARF, calculados</span><span class="sr-only">A guia do mês, calculada e avisada: incluso</span></li>
+          </ul>
+          <p class="plano-features-titulo is-vazio" aria-hidden="true" data-cat="Quem responde por você"></p>
+          <ul class="plano-features is-status">
+            <li><img class="plano-check" src="/_lab/assets/check-3d.webp?v=2" alt="" aria-hidden="true" width="146" height="146" loading="lazy" decoding="async"><span class="pf-nota">Junto com o contador</span><span class="sr-only">Léo, o agente contábil, no WhatsApp: incluso</span></li>
+            <li><img class="plano-check" src="/_lab/assets/check-3d.webp?v=2" alt="" aria-hidden="true" width="146" height="146" loading="lazy" decoding="async"><span class="pf-nota">Com registro no CRC-MG</span><span class="sr-only">Contador com CRC no WhatsApp: incluso</span></li>
+            <li><img class="plano-check" src="/_lab/assets/check-3d.webp?v=2" alt="" aria-hidden="true" width="146" height="146" loading="lazy" decoding="async"><span class="pf-nota">Assinada por contador</span><span class="sr-only">Contabilidade completa, com balanço e DRE: incluso</span></li>
+          </ul>
+          <p class="plano-features-titulo is-vazio" aria-hidden="true" data-cat="Quanto custa pra abrir"></p>
+          <ul class="plano-features is-status">
+            <li><img class="plano-check" src="/_lab/assets/check-3d.webp?v=2" alt="" aria-hidden="true" width="146" height="146" loading="lazy" decoding="async"><span class="pf-nota">R$ 0</span><span class="sr-only">Honorário da abertura: incluso</span></li>
+            <li><img class="plano-check" src="/_lab/assets/check-3d.webp?v=2" alt="" aria-hidden="true" width="146" height="146" loading="lazy" decoding="async"><span class="pf-nota">Incluso e renovado</span><span class="sr-only">Certificado digital e-CNPJ: incluso</span></li>
+          </ul>
+          <p class="plano-features-titulo is-vazio" aria-hidden="true" data-cat="O dia a dia no app"></p>
+          <ul class="plano-features is-status">
+            <li><img class="plano-check" src="/_lab/assets/check-3d.webp?v=2" alt="" aria-hidden="true" width="146" height="146" loading="lazy" decoding="async"><span class="pf-nota">Sem custo por nota</span><span class="sr-only">Emissão de nota pelo app, sem limite: incluso</span></li>
+            <li><img class="plano-check" src="/_lab/assets/check-3d.webp?v=2" alt="" aria-hidden="true" width="146" height="146" loading="lazy" decoding="async"><span class="pf-nota">Com recibo e INSS</span><span class="sr-only">Pró-labore: você escolhe o valor: incluso</span></li>
+          </ul>
+          <p class="plano-features-titulo is-vazio" aria-hidden="true" data-cat="Quando você crescer"></p>
+          <ul class="plano-features is-status">
+            <li><img class="plano-check" src="/_lab/assets/check-3d.webp?v=2" alt="" aria-hidden="true" width="146" height="146" loading="lazy" decoding="async"><span class="pf-nota">Até 4, CLT não conta dobrado</span><span class="sr-only">Sócios na empresa: incluso</span></li>
+            <li><img class="plano-check" src="/_lab/assets/check-3d.webp?v=2" alt="" aria-hidden="true" width="146" height="146" loading="lazy" decoding="async"><span class="pf-nota">Até 10, R$ 39 cada</span><span class="sr-only">Colaboradores na folha: incluso</span></li>
+            <li><img class="plano-check" src="/_lab/assets/check-3d.webp?v=2" alt="" aria-hidden="true" width="146" height="146" loading="lazy" decoding="async"><span class="pf-nota">R$ 360 mil por ano</span><span class="sr-only">Aviso antes de bater o teto: incluso</span></li>
+            <li><img class="plano-check" src="/_lab/assets/check-3d.webp?v=2" alt="" aria-hidden="true" width="146" height="146" loading="lazy" decoding="async"><span class="pf-nota">Vira EPP sem trocar de time</span><span class="sr-only">A transição é por nossa conta: incluso</span></li>
+          </ul>
+        </div>
+
+        <!-- ✂️ "Abertura sem honorário R$ 0" e "certificado incluso" saíram: as
+             duas aparecem com número na conta da abertura, na dobra logo
+             acima. Aqui viravam a terceira vez que a página diz o mesmo. -->
+
+      </details>
+
+        <div class="plano-conta">
+          <p class="plano-conta-titulo">A conta da abertura</p>
+          <ul class="vs-conta">
+            <li>
+            <span><b>Abrir a sua empresa</b></span>
+            <em class="is-zero">R$ 0</em>
+          </li>
+          <li>
+            <span><b>Certificado digital e-CNPJ</b></span>
+            <em class="is-zero">R$ 0</em>
+          </li>
+          <li>
+            <span><b>Mensalidade</b></span>
+            <em>R$ 99<i>/mês</i></em>
+          </li>
+          <li>
+            <span><b>Taxa da Junta (DAE)</b></span>
+            <em>R$ 281,08</em>
+          </li>
+          </ul>
+          <p class="plano-conta-total"><span>Total de hoje</span><strong>R$ 380,08</strong></p>
+        </div>
+
+        <p class="plano-fidelidade">Fidelidade de 12 meses do CNPJ. Saindo antes, multa de 30% mais o certificado (R$ 209). Em troca: abertura e certificado inclusos. <a href="#perguntas">Detalhe</a>.</p>
+        <a class="btn btn-primary" href="#validador">Ver se a gente atende você</a>
+      </article>
+
+    </div>
+
+
+    <!-- ✂️ 11/09: a lista completa (37 linhas em sanfona) foi REMOVIDA.
+         O pente-fino mostrou o que ela entregava de fato: 12 linhas repetiam,
+         com outra redacao, os 12 itens visiveis; 6 ja eram outra dobra da
+         pagina (os "Tres passos" e a dobra do contador); 16 eram encanamento
+         implicito. Sobravam TRES informacoes novas, e as tres foram absorvidas
+         nos tooltips que ja existiam. Manter 37 linhas escondidas pra entregar
+         3 e o mesmo defeito que a gente critica no concorrente, so que fechado.
+         E tinha custo de manutencao: o mesmo fato morava em tres lugares. -->
+
+    <!-- 🔄 A CONTA DA ABERTURA agora vive DENTRO de cada cartão de plano, como
+         uma seção do próprio plano. Antes eram dois cartões soltos embaixo, e
+         a pessoa precisava cruzar na cabeça qual conta era de qual plano.
+         Junto do preço, cada conta responde na hora "o que eu pago HOJE se
+         escolher este aqui". -->
+    <!-- 🔄 DUAS CONTAS, lado a lado: a dobra vende dois planos e a conta só
+         existia pro ME. Quem chega pelo MEI via um preço que não é o dele.
+
+         ⚠️ Números do MEI, com fonte:
+           · abertura sem taxa de registro · Portal do Empreendedor (é a lei,
+             não cortesia nossa) — mesmo fato já listado no cartão do plano
+           · honorário de abertura R$ 0 · decisão D1 14/07 ("não se cobra o
+             trabalho de abrir"), vale pros dois regimes
+           · certificado FORA da mensalidade do MEI · ADR 28/08 (reverte o
+             "incluso" de 04/08). Cobrado na ENTRADA, à parte: R$ 209
+             (`CERTIFICADO_PRECO`, fechado com o Pedro em 30/08 — é o preço de
+             1 ano de certificadora). No ME ele é incluso, e é isso que a
+             coluna do lado mostra
+           · mensalidade R$ 49 · `MENSALIDADE_MEI` (redondo, ADR 20/08)
+         Nenhum valor de DAS aqui: o DAS é imposto mensal do MEI, não custo de
+         abertura, e cravar número sem fonte é regra quebrada. -->
+  </div>
+</section>
+
+<!-- ============================================================ NÓS vs OS OUTROS -->
+<section class="vs" aria-labelledby="vs-title">
+  <div class="container">
+    <div class="section-head reveal">
+      <h2 id="vs-title">Sem citar nomes. Mas compare aí.</h2>
+    </div>
+    <!-- 🔄 Mesmo tratamento das dobras acima. Aqui a tabela FICA: comparação
+         é o formato certo pra esta dobra, e trocá-la por telas jogaria fora a
+         única coisa que a página tem de leitura lado a lado.
+         ✂️ De 5 linhas pra 3. "Foco" (negócio em dia × vitrine de produto) e
+         "Linguagem" (português de gente × contabilês) saíram: eram as duas
+         sem prova em lugar nenhum da página, e as duas que qualquer
+         concorrente escreve igual sobre si mesmo. Comparação só vale enquanto
+         cada linha é checável — o resto vira barulho e enfraquece as que são.
+         ✂️ A tela da conta saiu daqui e virou o fecho da dobra de PLANOS: aqui
+         ela provava um preço que a página só apresentava depois. O que a tela
+         mostrava (E7 `/plano`, "A conta da abertura") segue idêntico, só mudou
+         de dobra. Referência dos números:
+         honorário de abertura R$ 0 (decisão D1, 14/07: "não se cobra o trabalho
+         de abrir"), taxa da Junta R$ 281,08 identificada como repasse ao
+         Estado, a mensalidade de R$ 139 e o certificado digital incluso
+         (`CERTIFICADO_PRECO: 209`, fechado com o Pedro em 30/08 — é o preço
+         que uma certificadora cobra por ano, e no ME não é cobrado).
+         Fonte: CUSTOS em lib/fiscal.ts.
+         Dizer "sem taxa-surpresa" numa célula de tabela é promessa; mostrar a
+         conta aberta, com o que é nosso e o que é do governo, é prova. -->
+    <!-- 📱 Só no mobile: a tabela rola de lado, e rolagem sem aviso é rolagem
+         que ninguém usa. A dica some acima de 720px, onde as 3 colunas cabem
+         inteiras e não há o que arrastar. `aria-hidden` porque quem usa
+         leitor de tela navega a tabela por células, não por arrasto. -->
+    <p class="vs-arraste" aria-hidden="true">Arraste para o lado para ver os outros</p>
+    <div class="vs-table-wrap reveal d1 is-solo">
+      <table class="vs-table">
+        <thead>
+          <tr>
+            <th scope="col" class="vs-what"><span class="sr-only">Critério</span></th>
+            <!-- a logo horizontal inteira no lugar de "símbolo + nome
+                 digitado": é a nossa assinatura na comparação, e escrita à
+                 mão ela ficava com o mesmo peso do "Os outros" ao lado. -->
+            <th scope="col" class="vs-us">
+              <svg class="vs-logo" viewBox="0 0 659.73 130" role="img" aria-label="Legalizaí">
+        <g fill="var(--ink-900)">
+          <path d="M160.38,84.81V17.54h0c-10.75,0-19.47,8.72-19.47,19.47v50.46c0,9.28,7.53,16.81,16.81,16.81h36.66c0-10.75-8.72-19.47-19.47-19.47h-14.53Z"/>
+          <path d="M251.92,41.66c-4.78-3.12-10.65-4.68-17.6-4.68-5.29,0-10.01.93-14.16,2.78-4.15,1.86-7.6,4.37-10.37,7.52-2.77,3.16-4.88,6.74-6.34,10.72-1.46,3.99-2.19,8.16-2.19,12.5v2.37c0,4.19.73,8.28,2.19,12.26,1.46,3.99,3.59,7.58,6.4,10.78,2.8,3.2,6.32,5.75,10.55,7.64,4.22,1.9,9.1,2.84,14.63,2.84s10.27-.95,14.46-2.84c4.19-1.9,7.66-4.54,10.43-7.94,2.76-3.4,4.62-7.27,5.57-11.61h-4.9c-6.01,0-11.84,1.79-16.95,4.94-.02.01-.04.03-.07.04-2.21,1.34-5.06,2.01-8.53,2.01-3.79,0-6.87-.79-9.24-2.37-2.37-1.58-4.11-3.81-5.21-6.7-.62-1.6-1.05-3.36-1.33-5.27h47.42v-6.4c0-5.92-1.26-11.39-3.79-16.41-2.53-5.02-6.18-9.08-10.96-12.21ZM220.69,61.21c1.19-2.88,2.92-5.08,5.21-6.58,2.29-1.5,5.1-2.25,8.41-2.25s5.94.73,8.12,2.19c2.17,1.46,3.81,3.58,4.92,6.34.6,1.5,1.03,3.16,1.3,4.98h-29.27c.3-1.71.73-3.28,1.31-4.68Z"/>
+          <path d="M329,52.98c-.29-.73-.6-1.45-.95-2.14-2.21-4.42-5.23-7.78-9.07-10.07-3.83-2.29-8.35-3.44-13.57-3.44-4.5,0-8.61.81-12.32,2.43-3.71,1.62-6.91,3.89-9.6,6.81-2.69,2.92-4.74,6.36-6.16,10.31-1.42,3.95-2.13,8.22-2.13,12.8v2.73c0,4.58.67,8.83,2.01,12.74,1.34,3.91,3.28,7.33,5.81,10.25,2.53,2.92,5.59,5.2,9.18,6.81,3.59,1.62,7.6,2.43,12.03,2.43,5.13,0,9.56-1.09,13.27-3.26,3.68-2.15,6.56-5.26,8.65-9.31v5.58c0,3.79-.75,6.89-2.25,9.3-1.5,2.41-3.85,4.21-7.05,5.39-3.2,1.19-7.37,1.78-12.5,1.78-2.77,0-5.83-.14-9.18-.41-.03,0-.07,0-.1,0-4.89-.41-9.08,3.42-9.08,8.32v6.67c2.76.39,5.81.71,9.12.95s6.56.36,9.72.36c8.85,0,16.18-1.15,21.98-3.44,5.81-2.29,10.13-5.89,12.98-10.78,2.84-4.9,4.27-11.34,4.27-19.32v-42.19c0-8.31-6.74-15.05-15.05-15.05h0v13.75ZM325.8,72.17c0,3.48-.69,6.44-2.07,8.89-1.38,2.45-3.26,4.32-5.63,5.63-2.37,1.3-5.02,1.95-7.94,1.95-3.08,0-5.83-.69-8.24-2.07-2.41-1.38-4.31-3.4-5.69-6.04-1.38-2.65-2.07-5.83-2.07-9.54s.67-6.79,2.01-9.48c1.34-2.68,3.24-4.78,5.69-6.28,2.45-1.5,5.25-2.25,8.41-2.25,2.68,0,5.21.61,7.58,1.84,2.37,1.23,4.28,3,5.75,5.33,1.46,2.33,2.19,5.2,2.19,8.59v3.44Z"/>
+          <path d="M400.87,41c-4.54-1.9-10.13-2.84-16.77-2.84-2.29,0-4.74.04-7.35.12-2.61.08-5.14.2-7.58.36-2.45.16-4.58.32-6.4.47v7.86c0,4.4,3.69,7.9,8.09,7.67h.09c3-.16,5.92-.28,8.77-.36,2.84-.08,5.13-.12,6.87-.12,3.48,0,6,.83,7.58,2.49,1.58,1.66,2.37,4.15,2.37,7.47v.24h-11.73c-5.77,0-10.86.73-15.29,2.19-4.43,1.46-7.86,3.71-10.31,6.75-2.45,3.04-3.67,6.93-3.67,11.67,0,4.35.99,8.08,2.96,11.2,1.97,3.12,4.72,5.51,8.24,7.17,3.51,1.66,7.6,2.49,12.26,2.49s8.31-.83,11.44-2.49c3.12-1.66,5.57-4.03,7.35-7.11.79-1.37,1.44-2.89,1.95-4.55h0c0,6.9,5.59,12.49,12.49,12.49h2.56v-39.82c0-6-1.18-10.92-3.55-14.75-2.37-3.83-5.83-6.7-10.37-8.59ZM390.44,91.54c-1.7.75-3.61,1.13-5.75,1.13-3.32,0-5.87-.81-7.64-2.43-1.78-1.62-2.67-3.73-2.67-6.34,0-2.76.89-4.96,2.67-6.58,1.78-1.62,4.32-2.43,7.64-2.43h11.85v5.21c-.16,3.24-.79,5.77-1.9,7.58-1.11,1.82-2.51,3.1-4.21,3.85Z"/>
+          <path d="M424.04,17.66v13.98h7.7v53.44c0,10.54,8.54,19.08,19.08,19.08h0V17.66h-26.78Z"/>
+          <path d="M462.66,39.23v13.98h8.65v32c0,10.47,8.49,18.96,18.96,18.96h0v-50.95h0c0-7.72-6.26-13.98-13.98-13.98h-13.63Z"/>
+          <path d="M525.01,88.13l21.23-25.44c5.49-6.58,8.5-14.89,8.5-23.46h0s-36.5,0-36.5,0c-8.05,0-14.58,6.53-14.58,14.58h0s28.35,0,28.35,0l1.22,1.52-29.68,35.57h0c0,7.33,5.94,13.27,13.27,13.27h24.29c8.05,0,14.58-6.53,14.58-14.58h0s-29.51,0-29.51,0l-1.17-1.46Z"/>
+        </g>
+        <g fill="var(--coral-500)">
+          <path d="M607.65,41c-4.54-1.9-10.13-2.84-16.77-2.84-2.29,0-4.74.04-7.35.12-2.61.08-5.14.2-7.58.36-2.41.16-4.52.31-6.32.47-.05,0-.08.04-.08.09v7.69c0,4.45,3.73,7.99,8.18,7.75h0c3-.16,5.92-.28,8.77-.36,2.84-.08,5.13-.12,6.87-.12,3.48,0,6,.83,7.58,2.49,1.58,1.66,2.37,4.15,2.37,7.47v.24h-11.73c-5.77,0-10.86.73-15.29,2.19-4.43,1.46-7.86,3.71-10.31,6.75-2.45,3.04-3.67,6.93-3.67,11.67,0,4.35.99,8.08,2.96,11.2,1.97,3.12,4.72,5.51,8.24,7.17,3.51,1.66,7.6,2.49,12.26,2.49s8.31-.83,11.44-2.49c3.12-1.66,5.57-4.03,7.35-7.11.71-1.23,1.3-2.57,1.78-4.02.03-.1.17-.08.17.03h0c0,6.59,5.34,11.94,11.94,11.94h3.02s.09-.04.09-.09v-39.73c0-6-1.18-10.92-3.55-14.75-2.37-3.83-5.83-6.7-10.37-8.59ZM597.22,91.54c-1.7.75-3.61,1.13-5.75,1.13-3.32,0-5.87-.81-7.64-2.43-1.78-1.62-2.67-3.73-2.67-6.34,0-2.76.89-4.96,2.67-6.58,1.78-1.62,4.32-2.43,7.64-2.43h11.76s.09.04.09.09v5.13c-.16,3.24-.79,5.77-1.9,7.58-1.11,1.82-2.51,3.1-4.21,3.85Z"/>
+          <path d="M632.12,39.23v13.98h8.65v32c0,10.47,8.49,18.96,18.96,18.96h0v-50.95h0c0-7.72-6.26-13.98-13.98-13.98h-13.63Z"/>
+          <circle cx="479.45" cy="25.28" r="7.62"/>
+          <path d="M632.12,17.8h20.14c4.12,0,7.47,3.35,7.47,7.47h0c0,4.12-3.35,7.47-7.47,7.47h-20.14v-14.94h0Z" transform="translate(1291.8483 50.535) rotate(-180)"/>
+        </g>
+        <path fill="var(--coral-500)" d="M72.64,95.27c-6.56,6.56-17.21,6.56-23.77,0L13.91,60.32c7.6-7.6,19.93-7.6,27.54,0l19.31,19.31,60.67-60.67C121.28,8.46,112.74,0,102.21,0H19.23C8.61,0,0,8.61,0,19.23v82.98c0,10.62,8.61,19.23,19.23,19.23h82.98c10.62,0,19.23-8.61,19.23-19.23v-55.74l-48.8,48.8Z"/>
+        <path fill="#fff" d="M121.43,18.95l-60.67,60.67-19.33-19.33c-7.6-7.6-19.93-7.6-27.54,0h0s34.97,34.97,34.97,34.97c6.56,6.56,17.21,6.56,23.77,0l48.79-48.79v-27.54Z"/>
+      </svg>
+            </th>
+            <th scope="col" class="vs-them">Os outros</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <th scope="row">Atendimento</th>
+            <td class="vs-us"><img class="vs-check" src="/_lab/assets/check-3d.webp?v=2" alt="" aria-hidden="true" width="146" height="146" loading="lazy" decoding="async"> Gente de verdade no WhatsApp</td>
+            <td class="vs-them"><img class="vs-check" src="/_lab/assets/x-3d.webp?v=2" alt="" aria-hidden="true" width="105" height="105" loading="lazy" decoding="async"> Robô e ticket sem resposta</td>
+          </tr>
+          <tr>
+            <th scope="row">Preço</th>
+            <td class="vs-us"><img class="vs-check" src="/_lab/assets/check-3d.webp?v=2" alt="" aria-hidden="true" width="146" height="146" loading="lazy" decoding="async"> R$ 139 é R$ 139, sem adicional por faturamento</td>
+            <td class="vs-them"><img class="vs-check" src="/_lab/assets/x-3d.webp?v=2" alt="" aria-hidden="true" width="105" height="105" loading="lazy" decoding="async"> "A partir de" e taxa-surpresa no boleto</td>
+          </tr>
+          <tr>
+            <th scope="row">Celular</th>
+            <td class="vs-us"><img class="vs-check" src="/_lab/assets/check-3d.webp?v=2" alt="" aria-hidden="true" width="146" height="146" loading="lazy" decoding="async"> Tudo no app, de verdade</td>
+            <td class="vs-them"><img class="vs-check" src="/_lab/assets/x-3d.webp?v=2" alt="" aria-hidden="true" width="105" height="105" loading="lazy" decoding="async"> "Tem app", mas manda pro computador</td>
+          </tr>
+          <!-- as duas linhas novas seguem a régra das outras três: cada uma é
+               checável em algum lugar da própria página.
+                 · Abertura → a tela "A conta da abertura" ao lado, com o
+                   honorário em R$ 0 e a taxa da Junta identificada como repasse
+                   (decisão D1, 14/07: "não se cobra o trabalho de abrir").
+                 · Acompanhamento → a tela de status do passo 3, logo acima
+                   (`ETAPAS_ABERTURA` em painel.tsx). -->
+          <tr>
+            <th scope="row">Abertura</th>
+            <td class="vs-us"><img class="vs-check" src="/_lab/assets/check-3d.webp?v=2" alt="" aria-hidden="true" width="146" height="146" loading="lazy" decoding="async"> R$ 0 de honorário. Você paga a taxa da Junta, que é do Estado</td>
+            <td class="vs-them"><img class="vs-check" src="/_lab/assets/x-3d.webp?v=2" alt="" aria-hidden="true" width="105" height="105" loading="lazy" decoding="async"> Honorário de abertura, e as taxas por fora</td>
+          </tr>
+          <tr>
+            <th scope="row">Acompanhamento</th>
+            <td class="vs-us"><img class="vs-check" src="/_lab/assets/check-3d.webp?v=2" alt="" aria-hidden="true" width="146" height="146" loading="lazy" decoding="async"> Status de cada etapa no app, sem precisar perguntar</td>
+            <td class="vs-them"><img class="vs-check" src="/_lab/assets/x-3d.webp?v=2" alt="" aria-hidden="true" width="105" height="105" loading="lazy" decoding="async"> Você liga pra saber onde parou</td>
+          </tr>
+          <!-- 🆕 11/09: três linhas novas, cada uma checável num documento
+               lido por inteiro, não em impressão de mercado. Fonte: o contrato
+               de adesão do concorrente, transcrito na íntegra em
+               `legalize/produto/evidencias/fontes/`.
+                 · O que está incluso → lá, a mesma obrigação acessória aparece
+                   como inclusa numa cláusula e é vendida à parte no catálogo.
+                 · Se você crescer → cláusula que permite encerrar o contrato
+                   sem aviso prévio quando a condição do cliente muda.
+                 · Se faturar menos → a tabela de faixas deles não prevê queda
+                   automática; a nossa prevê, e está na cláusula de preço.
+               ⚠️ Afirmações sobre concorrente identificável. Enviadas para
+               parecer jurídico junto com o contrato. -->
+          <tr>
+            <th scope="row">O que está incluso</th>
+            <td class="vs-us"><img class="vs-check" src="/_lab/assets/check-3d.webp?v=2" alt="" aria-hidden="true" width="146" height="146" loading="lazy" decoding="async"> Escrito no contrato, na mesma página do preço</td>
+            <td class="vs-them"><img class="vs-check" src="/_lab/assets/x-3d.webp?v=2" alt="" aria-hidden="true" width="105" height="105" loading="lazy" decoding="async"> O contrato diz incluso e o app vende à parte</td>
+          </tr>
+          <tr>
+            <th scope="row">Se você crescer</th>
+            <td class="vs-us"><img class="vs-check" src="/_lab/assets/check-3d.webp?v=2" alt="" aria-hidden="true" width="146" height="146" loading="lazy" decoding="async"> Continua aqui. A transição é nossa, e o valor é dito antes</td>
+            <td class="vs-them"><img class="vs-check" src="/_lab/assets/x-3d.webp?v=2" alt="" aria-hidden="true" width="105" height="105" loading="lazy" decoding="async"> Contrato permite encerrar sem aviso prévio</td>
+          </tr>
+          <tr>
+            <th scope="row">Se faturar menos</th>
+            <td class="vs-us"><img class="vs-check" src="/_lab/assets/check-3d.webp?v=2" alt="" aria-hidden="true" width="146" height="146" loading="lazy" decoding="async"> A faixa desce sozinha, sem você pedir</td>
+            <td class="vs-them"><img class="vs-check" src="/_lab/assets/x-3d.webp?v=2" alt="" aria-hidden="true" width="105" height="105" loading="lazy" decoding="async"> Sobe sozinho. Desce só se você reclamar</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+  </div>
+</section>
+
+<!-- ============================================================ MEI QUE CRESCEU
+     Persona B (35 a 50, serviço, veio do MEI) é 30 a 35% do volume esperado e não
+     tinha nenhuma representação na página: todo exemplo era Persona A (dev/sites).
+     O gatilho aqui é concreto: teto do MEI de R$ 81 mil por ano. -->
+<!-- 🔄 REFEITA a partir das TELAS DO APP (não de uma ilustração inventada):
+     a coluna da direita reproduz o gate de teto do MEI como ele acontece de
+     verdade no produto — a régua de faixas, o aviso e a porta pro ME. Fonte:
+     `FaixaView` (regimeMei) em legalize/app/src/components/gate-telas.tsx, o
+     mesmo trecho que o simulador da seção #validador já executa.
+
+     Por que mostrar a tela em vez de descrever: esta dobra fala de um momento
+     ESPECÍFICO ("você passou do teto") e a página inteira promete que esse
+     momento não vira susto. Mostrar o aviso real, com a saída ao lado, prova a
+     promessa em vez de repetir ela.
+
+     ⚠️ A tela é ILUSTRAÇÃO: `aria-hidden` e o "botão" é um <span>. Um botão de
+     verdade inerte aqui seria uma armadilha pra teclado e leitor de tela — o
+     CTA real é o da coluna da esquerda. Os ícones vêm da pasta do simulador
+     (mesmos PNGs do app) pra não existirem duas cópias no repo. -->
+<section class="crescer" aria-labelledby="crescer-title">
+  <!-- 🔄 `.container` e o CARTÃO deixam de ser o mesmo elemento. O container
+       carrega 20px de padding lateral e o box-sizing é border-box, então a
+       borda do cartão era desenhada na largura CHEIA (1120px), 20px mais larga
+       de cada lado que os cartões das outras dobras, que nascem DENTRO desse
+       padding. Agora o container só limita a largura, e o cartão vive dentro
+       dele, alinhado com todo o resto da página. -->
+  <div class="container">
+   <div class="crescer-inner">
+    <div class="crescer-copy reveal">
+      <!-- 🔴 eyebrow "Cresceu demais pro MEI?" REMOVIDA (pedido do Pedro): a
+           tela ao lado já mostra o caso ("o MEI não serve" com o número em
+           cima), e o h2 abre a dobra sozinho. -->
+      <h2 id="crescer-title">Passar do teto não pode pegar você de surpresa.</h2>
+      <!-- 🔄 A frase terminava em "paga a diferença de imposto retroativa, com
+           multa". O fato continua aqui — quem passa do teto acerta a diferença
+           do período — mas sem a palavra que transforma informação em ameaça.
+           A dobra vende ACOMPANHAMENTO; quem vende acompanhamento não precisa
+           assustar com a punição, precisa mostrar que avisa antes. -->
+      <p class="crescer-lead">O MEI para em <strong>R$ 81 mil por ano</strong>, R$ 6.750 por mês. Quem passa disso precisa virar ME, e quem só percebe no fim do ano acerta a diferença de imposto de todo o período de uma vez. Depois vem o teto do ME, <strong>R$ 360 mil por ano</strong>: passou dali, a empresa vira EPP. <strong>Nos dois degraus você continua aqui.</strong></p>
+
+      <!-- Mesma gramática do check-list do app, agora com o CHECK 3D da marca
+           (`assets/check-3d.webp?v=2`, dos ícones finais de pagamento) no lugar do
+           círculo verde chapado: é o mesmo desenho que os cartões de escolha do
+           simulador usam, então a dobra fala a língua do produto. -->
+      <ul class="crescer-checks">
+        <li>
+          <img class="crescer-check" src="/_lab/assets/check-3d.webp?v=2" alt="" aria-hidden="true" width="146" height="146" loading="lazy" decoding="async">
+          <strong>A gente avisa antes</strong><span>você fica sabendo enquanto ainda dá tempo de ajustar</span>
+        </li>
+        <li>
+          <img class="crescer-check" src="/_lab/assets/check-3d.webp?v=2" alt="" aria-hidden="true" width="146" height="146" loading="lazy" decoding="async">
+          <strong>A transição é nossa</strong><span>a gente faz o desenquadramento na Junta, e diz o valor antes</span>
+        </li>
+        <li>
+          <img class="crescer-check" src="/_lab/assets/check-3d.webp?v=2" alt="" aria-hidden="true" width="146" height="146" loading="lazy" decoding="async">
+          <strong>Você não troca de contador</strong><span>da primeira nota até R$ 4,8 milhões, é a mesma gente</span>
+        </li>
+      </ul>
+
+      <p class="crescer-cta"><a class="btn btn-primary" href="#validador">Ver se a gente atende a sua atividade</a></p>
+    </div>
+
+    <!-- A TELA: cópia fiel do E5F no ramo MEI (régua de faixas + gate de teto). -->
+    <div class="crescer-tela reveal d1" aria-hidden="true">
+      <div class="crescer-tela-top">
+        <span class="crescer-tela-meta">No app · quando o número sobe</span>
+      </div>
+      <p class="crescer-tela-titulo">Quanto você vai faturar por mês?</p>
+
+      <!-- ⚠️ Estado retratado: MEI que DIGITOU o valor exato. É o único jeito
+           de o gate de teto acender hoje — a grade do MEI termina em R$ 6.750,
+           então nenhum cartão dela estoura o teto. A versão anterior deste
+           mock mostrava as faixas do ME (5–10, 10–20, 20–30 mil) numa tela de
+           MEI, com o cartão de R$ 10 a 20 mil selecionado: um estado que o app
+           não produz. Se a grade do MEI mudar em
+           `/_lab/atendimento/atendimento.js` (FAIXAS_MEI), muda aqui também. -->
+      <div class="crescer-regua">
+        <span class="crescer-faixa"><img src="/_lab/atendimento/icones/faixa-1-coral.webp" alt="" width="140" height="142" loading="lazy" decoding="async"><em>Não sei ainda</em></span>
+        <span class="crescer-faixa"><img src="/_lab/atendimento/icones/faixa-2-coral.webp" alt="" width="140" height="142" loading="lazy" decoding="async"><em>Até R$ 2 mil</em></span>
+        <span class="crescer-faixa"><img src="/_lab/atendimento/icones/faixa-3-coral.webp" alt="" width="140" height="142" loading="lazy" decoding="async"><em>R$ 2 a 4 mil</em></span>
+        <span class="crescer-faixa"><img src="/_lab/atendimento/icones/faixa-4-coral.webp" alt="" width="140" height="142" loading="lazy" decoding="async"><em>R$ 4 a 6.750</em></span>
+      </div>
+
+      <div class="crescer-valor">
+        <span class="crescer-valor-titulo">Ou informe o valor exato</span>
+        <span class="crescer-valor-campo"><i>R$</i><b>9.400</b></span>
+      </div>
+
+      <div class="crescer-aviso">
+        <img class="crescer-aviso-mark" src="/_lab/assets/alerta-3d.webp?v=2" alt="" aria-hidden="true" width="106" height="106" loading="lazy" decoding="async">
+        <span>
+          <b>Com esse faturamento, o MEI não serve</b>
+          Não é impedimento: é sinal de que o seu caso agora é ME.
+        </span>
+      </div>
+
+      <!-- 🔄 O botão "Continuar como ME" saiu do mock: ele tinha o mesmo peso
+           visual do CTA de verdade ao lado (mesmo coral, mesma largura) e a
+           dobra passava a ter dois botões disputando o clique — sendo que este
+           é figura, não clica em nada. A tela mockada termina no aviso. -->
+    </div>
+   </div>
+  </div>
+</section>
+
+<!-- ✂️ DOBRA "O QUE A GENTE AINDA NÃO FAZ" REMOVIDA (06/09, decisão do Pedro).
+     Motivo: o simulador no topo da página já é o filtro — quem não é atendido
+     descobre lá, com o caso dele na mão, e sai pela lista de espera. A dobra
+     repetia esse serviço em forma de lista genérica, no meio do caminho de
+     quem JÁ tinha passado pelo filtro.
+     O conteúdo não se perdeu: os 4 limites (atividade de conselho, indústria/
+     comércio, folha grande, Lucro Real) continuam sendo aplicados pelo
+     simulador (categorias de `PILLS` e `REGULAMENTADAS` em
+     /_lab/atendimento/atendimento.js), e a tela de "ainda não" que a dobra
+     ilustrava é a que o próprio simulador mostra no veredito de fila.
+     Se um dia voltar, o markup está no git. -->
+
+<!-- ============================================================ FAQ -->
+<!-- 🔄 2 COLUNAS: coluna de apoio à esquerda (título + recado + CTA), lista de
+     perguntas à direita.
+     O slot de ilustração recebeu o ÍCONE 3D DE INTERROGAÇÃO (`faq-interrogacao.png`,
+     família de ícone isolado glossy, mesma do wizard) em vez do Léo inteiro: a
+     coluna é estreita e o assunto da dobra é a dúvida, não o personagem.
+     Arquivo: PNG 300×475 com alpha real, exportado pelo Pedro. (A primeira
+     versão veio do Gemini como JPG com o xadrez de "transparência" rasterizado
+     dentro — sempre conferir se o alpha é REAL antes de subir.) -->
+<section class="faq" id="perguntas" aria-labelledby="faq-title">
+  <div class="container faq-grid">
+   <!-- coluna de apoio: título grande em cima, texto + CTA colados na base
+        (referência que o Pedro trouxe). No mobile ela volta a ser só um
+        cabeçalho normal, empilhado antes das perguntas. -->
+   <div class="faq-aside reveal">
+     <!-- 🔄 Cartão com DUAS colunas por dentro: texto à esquerda (título e
+          recado empilhados), interrogação à direita. Antes o ícone ficava
+          sozinho numa faixa entre o título e o pé, e a coluna virava três
+          blocos soltos um debaixo do outro. -->
+     <div class="faq-aside-topo">
+       <div class="faq-aside-texto">
+         <h2 id="faq-title">Perguntas de quem tá chegando.</h2>
+         <p>Se a sua não estiver aqui, tem gente de verdade do outro lado pra responder, antes de você assinar qualquer coisa.</p>
+       </div>
+       <img class="faq-simbolo" src="/_lab/assets/faq-interrogacao.webp" alt="" aria-hidden="true" loading="lazy" width="300" height="475">
+     </div>
+
+     <a class="btn faq-aside-btn oculto-por-ora" hidden href="https://wa.me/5531900000000?text=Oi!%20Vim%20pelo%20site%20e%20tenho%20uma%20d%C3%BAvida.">Falar com a gente</a>
+   </div>
+
+   <div class="faq-inner">
+    <div class="faq-list reveal d1">
+      <!-- 🔄 Todas FECHADAS ao carregar (pedido do Pedro). A primeira nascia
+           aberta pra mostrar que as respostas são de verdade, mas isso dava um
+           bloco de texto no topo antes de a pessoa perguntar qualquer coisa. -->
+      <details>
+        <summary>Vocês têm contador de verdade?<span class="faq-ico" aria-hidden="true"></span></summary>
+        <p>Temos, e é o coração da coisa. <strong>No plano ME você conversa com um contador especializado</strong>, com registro no CRC-MG, de um escritório com 22 anos de estrada em BH. O app organiza e avisa; quem responde e assume a responsabilidade é gente de carne e osso. <strong>O contador atende no plano ME</strong>: no MEI, quem cuida da rotina do dia a dia é um assistente virtual.</p>
+      </details>
+      <details>
+        <summary>Quanto custa?<span class="faq-ico" aria-hidden="true"></span></summary>
+        <p><strong>R$ 139/mês</strong> no plano ME, que é o Simples Nacional para quem presta serviço. Se você é MEI, são <strong>R$ 49/mês</strong>. Preço fechado, sem "a partir de" e sem taxa-surpresa no boleto: o valor que você vê é o valor que você paga.</p>
+        <p>Na oferta de lançamento, os <strong>3 primeiros meses</strong> saem por <strong>R$ 99 no ME</strong> e <strong>R$ 29 no MEI</strong>, até 31/12/2026. Do quarto mês em diante vale o preço cheio: R$ 139 e R$ 49. A data da virada está escrita no contrato, e a gente avisa antes dela chegar. Sem reversão silenciosa e sem plano que muda sozinho.</p>
+        <p>Se o seu faturamento crescer e a empresa virar EPP, a mensalidade passa a seguir a <strong>faixa de receita dos últimos 12 meses</strong>. E ela <strong>desce sozinha</strong> se o faturamento cair: você não precisa pedir.</p>
+      </details>
+      <details>
+        <summary>E se eu não gostar?<span class="faq-ico" aria-hidden="true"></span></summary>
+        <p>São <strong>7 dias pra mudar de ideia, com dinheiro de volta</strong> (Código de Defesa do Consumidor, art. 49). Desistir antes de autorizar o envio pra Junta devolve tudo, porque nada foi gasto ainda. Depois que a empresa está aberta o serviço já foi feito: a taxa paga ao Estado não volta, e vale a regra de cancelamento do plano.</p>
+        <p>Passados os 7 dias, o plano tem <strong>fidelidade de 12 meses</strong>, contada de quando o CNPJ sai. Ela vale nos dois planos, e no ME a contrapartida é concreta: abertura sem honorário, certificado digital incluso e o preço de lançamento nos 3 primeiros meses. Saindo antes do fim, o certificado já emitido (R$ 209) também entra na conta. Saindo antes do fim, a multa é de <strong>30% sobre o que ainda faltava</strong>, nunca sobre o que você já pagou. Está no contrato desde o primeiro dia.</p>
+      </details>
+      <details>
+        <summary>Já tenho contador. Dá pra mudar?<span class="faq-ico" aria-hidden="true"></span></summary>
+        <p>Dá, e a mudança é com a gente: você informa o CNPJ, a gente puxa seus dados e cuida da transição inteira com o contador atual. Você não briga com ninguém. 😄</p>
+      </details>
+      <details>
+        <summary>Atende a minha atividade?<span class="faq-ico" aria-hidden="true"></span></summary>
+        <p>Descubra em 10 segundos no <a href="#validador">validador aqui em cima</a>, de graça, antes de entrar na lista. Se ainda não atendemos, você entra na lista e é avisado assim que abrir.</p>
+      </details>
+      <!-- 🔴 PENDÊNCIA: falta o valor do honorário de baixa/encerramento. O vault
+           não tem esse número fechado (só a multa de 30% do saldo, vault
+           10-CONTRATO). Enquanto ele não existe, a resposta declara o que É
+           sabido e não inventa preço. Diferencial nº5 do posicionamento
+           ("custo de saída declarado") só fica completo quando o número entrar
+           aqui. -->
+      <details>
+        <summary>E se eu quiser sair, ou encerrar a empresa?<span class="faq-ico" aria-hidden="true"></span></summary>
+        <p>Sair do plano dentro dos 12 meses de fidelidade tem multa de <strong>30% sobre o que ainda faltava</strong>, nunca sobre o que você já pagou. Depois da fidelidade, é só avisar: não tem multa. <strong>Encerrar a empresa</strong> é outro serviço, com taxas próprias do Estado que não ficam com a gente, e a gente te passa o valor fechado antes de começar. Você não descobre custo de saída no meio do caminho.</p>
+      </details>
+      <details>
+        <summary>Quanto tempo demora?<span class="faq-ico" aria-hidden="true"></span></summary>
+        <p>Depende de quem está do outro lado: a Junta Comercial e a prefeitura têm o próprio ritmo, e ninguém honesto crava um número antes de olhar o seu caso. O que a gente garante é o prazo real informado antes de você começar, e aviso a cada etapa, sem você precisar perguntar.</p>
+      </details>
+    </div>
+   </div>
+
+  </div>
+</section>
+
+<!-- ============================================================ BLOG
+     Posição de propósito: DEPOIS de todo o argumento de conversão e logo antes
+     do CTA final. Conteúdo tira gente da página, então não pode aparecer antes
+     de a pessoa ter tido a chance de validar a atividade e falar com a gente.
+     Aqui ele funciona como rede pra quem ia embora sem converter.
+     Títulos e resumos são os posts reais do app (blog/dados.ts), não copy nova. -->
+<!-- 🙈 OCULTA POR ORA (11/09, pedido do Pedro): a dobra volta quando houver
+     tempo pra cuidar do conteúdo. Está OCULTA, não removida, e vale nos dois
+     modos (app e lançamento), por isso a classe é `oculto-por-ora` e não
+     `.so-app`/`.so-espera`: isto não é estado de lançamento, é pendência.
+     Pra reativar: apagar a classe daqui e dos 2 links de menu marcados igual.
+     O `hidden` acompanha a classe pra tirar a dobra também do leitor de tela
+     e da navegação por teclado; só CSS deixaria os links tabuláveis. -->
+<section class="blog oculto-por-ora" id="blog" aria-labelledby="blog-title" hidden>
+  <div class="container">
+    <div class="section-head reveal">
+      <h2 id="blog-title">Aprenda o essencial. Sem precisar virar contador.</h2>
+    </div>
+    <!-- 🔄 MESMO CARTÃO da página do blog (classes bp-*): capa com véu coral,
+         pílula de autor vazando pra dentro do corpo, categoria, título,
+         resumo, meta (data · visualizações) e "Leia mais". Antes a home tinha
+         um cartão próprio (.blog-card, sem imagem) e a linha de tradução —
+         dois desenhos diferentes pro mesmo conteúdo, e o daqui era o mais
+         pobre dos dois.
+         ⚠️ Os ícones estão INLINE (não `<use href="#i-...">`): o sprite de
+         símbolos mora no <svg> escondido de /_lab/blog/index.html e não existe
+         nesta página. Foto/autor são placeholder (picsum + pravatar, seeds
+         fixos por post — iguais aos da listagem, então o mesmo post mostra a
+         mesma capa nos dois lugares). -->
+    <ul class="blog-grid reveal d1">
+      <li class="bp-item">
+        <a class="bp-link" href="/_lab/blog/post.html">
+          <div class="bp-media bp-media-impostos">
+            <img class="bp-media-img" src="https://picsum.photos/seed/fator-r/640/420" alt="" width="640" height="420" loading="lazy">
+            <span class="bp-author"><img src="https://i.pravatar.cc/64?img=47" alt="" width="26" height="26" loading="lazy" decoding="async">Larissa Prado</span>
+          </div>
+          <div class="bp-body">
+            <span class="bp-cat">Dicas de negócio</span>
+            <h3>Separar PJ e PF: o que muda no seu fim de mês</h3>
+            <p>Conta da empresa e conta pessoal misturadas é o erro mais comum de quem abre CNPJ. Como organizar sem virar contador.</p>
+            <div class="bp-divider"></div>
+            <div class="bp-meta">
+              <span><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="4.5" width="18" height="16" rx="2" fill="none" stroke="currentColor" stroke-width="1.8"/><path fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" d="M16 2.5v4M8 2.5v4M3 9.5h18"/></svg>18 mar</span>
+              <span><svg viewBox="0 0 24 24" aria-hidden="true"><path fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" d="M2 12s3.5-7 10-7 10 7 10 7-3.5 7-10 7-10-7-10-7Z"/><circle cx="12" cy="12" r="2.6" fill="none" stroke="currentColor" stroke-width="1.8"/></svg>2,4K visualizações</span>
+            </div>
+            <span class="btn bp-cta is-solid">Leia mais</span>
+          </div>
+        </a>
+      </li>
+      <li class="bp-item">
+        <a class="bp-link" href="/_lab/blog/">
+          <div class="bp-media bp-media-obrigacoes">
+            <img class="bp-media-img" src="https://picsum.photos/seed/nota-fiscal/640/420" alt="" width="640" height="420" loading="lazy">
+            <span class="bp-author"><img src="https://i.pravatar.cc/64?img=32" alt="" width="26" height="26" loading="lazy" decoding="async">Rafael Nunes</span>
+          </div>
+          <div class="bp-body">
+            <span class="bp-cat">Obrigações</span>
+            <h3>Sua primeira nota fiscal, passo a passo</h3>
+            <p>Emitir nota assusta na primeira vez. Na prática, são dois campos e a gente cuida do resto.</p>
+            <div class="bp-divider"></div>
+            <div class="bp-meta">
+              <span><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="4.5" width="18" height="16" rx="2" fill="none" stroke="currentColor" stroke-width="1.8"/><path fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" d="M16 2.5v4M8 2.5v4M3 9.5h18"/></svg>22 mar</span>
+              <span><svg viewBox="0 0 24 24" aria-hidden="true"><path fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" d="M2 12s3.5-7 10-7 10 7 10 7-3.5 7-10 7-10-7-10-7Z"/><circle cx="12" cy="12" r="2.6" fill="none" stroke="currentColor" stroke-width="1.8"/></svg>1,1K visualizações</span>
+            </div>
+            <span class="btn bp-cta">Leia mais</span>
+          </div>
+        </a>
+      </li>
+      <li class="bp-item">
+        <a class="bp-link" href="/_lab/blog/">
+          <div class="bp-media bp-media-abertura">
+            <img class="bp-media-img" src="https://picsum.photos/seed/mei-ou-me/640/420" alt="" width="640" height="420" loading="lazy">
+            <span class="bp-author"><img src="https://i.pravatar.cc/64?img=68" alt="" width="26" height="26" loading="lazy" decoding="async">Camila Duarte</span>
+          </div>
+          <div class="bp-body">
+            <span class="bp-cat">Abertura de empresa</span>
+            <h3>MEI ou ME: qual faz sentido pra você</h3>
+            <p>Os dois têm CNPJ e emitem nota. A diferença está no teto, no imposto e no que você pode fazer.</p>
+            <div class="bp-divider"></div>
+            <div class="bp-meta">
+              <span><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="4.5" width="18" height="16" rx="2" fill="none" stroke="currentColor" stroke-width="1.8"/><path fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" d="M16 2.5v4M8 2.5v4M3 9.5h18"/></svg>02 abr</span>
+              <span><svg viewBox="0 0 24 24" aria-hidden="true"><path fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" d="M2 12s3.5-7 10-7 10 7 10 7-3.5 7-10 7-10-7-10-7Z"/><circle cx="12" cy="12" r="2.6" fill="none" stroke="currentColor" stroke-width="1.8"/></svg>3,8K visualizações</span>
+            </div>
+            <span class="btn bp-cta">Leia mais</span>
+          </div>
+        </a>
+      </li>
+      <!-- 🔄 QUARTO card (09/10): a fileira passou de 3 pra 4 no desktop. Não é
+           só "mais um post" — com 3, cada cartão pegava 344px e a dobra inteira
+           ficava alta demais pro notebook; com 4 ele cai pra 258px e a seção
+           encolhe junto (ver .blog-grid no @media 1000px). -->
+      <li class="bp-item">
+        <a class="bp-link" href="/_lab/blog/">
+          <div class="bp-media bp-media-guias">
+            <img class="bp-media-img" src="https://picsum.photos/seed/das-atrasado/640/420" alt="" width="640" height="420" loading="lazy">
+            <span class="bp-author"><img src="https://i.pravatar.cc/64?img=12" alt="" width="26" height="26" loading="lazy" decoding="async">Bruno Sales</span>
+          </div>
+          <div class="bp-body">
+            <span class="bp-cat">Impostos</span>
+            <h3>DAS atrasado: o que acontece e como resolver</h3>
+            <p>Multa, juros e o CNPJ em risco de baixa. O que muda a cada mês parado e por onde começar a regularizar.</p>
+            <div class="bp-divider"></div>
+            <div class="bp-meta">
+              <span><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="4.5" width="18" height="16" rx="2" fill="none" stroke="currentColor" stroke-width="1.8"/><path fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" d="M16 2.5v4M8 2.5v4M3 9.5h18"/></svg>11 abr</span>
+              <span><svg viewBox="0 0 24 24" aria-hidden="true"><path fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" d="M2 12s3.5-7 10-7 10 7 10 7-3.5 7-10 7-10-7-10-7Z"/><circle cx="12" cy="12" r="2.6" fill="none" stroke="currentColor" stroke-width="1.8"/></svg>1,7K visualizações</span>
+            </div>
+            <span class="btn bp-cta">Leia mais</span>
+          </div>
+        </a>
+      </li>
+    </ul>
+    <p class="blog-cta reveal d2"><a class="btn btn-primary" href="/blog">Ver todos os posts</a></p>
+  </div>
+</section>
+
+<!-- ✂️ DOBRA "BORA TIRAR A BUROCRACIA DA FRENTE?" REMOVIDA (07/09, decisão do
+     Pedro). Ela repetia o que a página inteira já fez: o convite ("conte o que
+     você faz"), a oferta e os badges das lojas. Os badges não se perderam —
+     desceram pro RODAPÉ, ao lado da marca, onde já existia a coluna "O app"
+     apontando pras mesmas lojas em texto.
+     Consequência: a última coisa da página passa a ser o blog, e quem chega
+     até lá encontra as lojas logo abaixo, no rodapé. O markup antigo está no
+     git se um dia fizer falta. -->
+
+</div><!-- /.campo -->
+
+</main>
+
+<!-- ============================================================ FOOTER -->
+<!-- 🔄 RODAPÉ EM COLUNAS. Era uma pilha: marca, 3 links soltos e 3 parágrafos
+     jurídicos corridos — o dado que mais pesa (CRC do responsável técnico)
+     ficava enterrado na última linha de texto miúdo, do lado de dois CNPJs.
+     Nada de conteúdo obrigatório saiu: os mesmos CNPJs, endereço, CRC do
+     escritório e do contador responsável continuam aqui, palavra por palavra.
+     O que mudou é a ORGANIZAÇÃO — cada bloco vira um grupo rotulado, e o selo
+     do contador sobe pra marca, onde ele funciona como prova e não como
+     letra miúda. -->
+<footer class="site-footer" id="rodape">
+  <div class="container footer-topo">
+
+    <!-- 🔄 A coluna da marca virou LOGO + LOJAS, e mais nada. Saíram daqui o
+         símbolo pequeno, a linha "contabilidade digital da Legalize Digital ·
+         Belo Horizonte · 22 anos" e o selo do CRC.
+         ⚠️ Nada de conteúdo obrigatório se perdeu: CNPJ da operadora, endereço,
+         CRC do escritório e o nome + CRC do contador responsável continuam,
+         palavra por palavra, no bloco legal logo abaixo (.footer-legal). O que
+         saiu era repetição dele em letra maior. -->
+    <div class="footer-marca">
+      <!-- logo e lojas viram UM bloco de largura própria (`width:fit-content`):
+           é isso que permite centrar a logo em cima dos DOIS badges, e não no
+           meio da coluna inteira do rodapé. O bloco fica colado embaixo
+           (`margin-top:auto`), então a base dele bate com a última linha das
+           colunas de links ao lado. -->
+      <div class="footer-marca-bloco">
+        <svg class="footer-logo-full" viewBox="0 0 659.73 130" role="img" aria-label="Legalizaí">
+        <g fill="#fff">
+          <path d="M160.38,84.81V17.54h0c-10.75,0-19.47,8.72-19.47,19.47v50.46c0,9.28,7.53,16.81,16.81,16.81h36.66c0-10.75-8.72-19.47-19.47-19.47h-14.53Z"/>
+          <path d="M251.92,41.66c-4.78-3.12-10.65-4.68-17.6-4.68-5.29,0-10.01.93-14.16,2.78-4.15,1.86-7.6,4.37-10.37,7.52-2.77,3.16-4.88,6.74-6.34,10.72-1.46,3.99-2.19,8.16-2.19,12.5v2.37c0,4.19.73,8.28,2.19,12.26,1.46,3.99,3.59,7.58,6.4,10.78,2.8,3.2,6.32,5.75,10.55,7.64,4.22,1.9,9.1,2.84,14.63,2.84s10.27-.95,14.46-2.84c4.19-1.9,7.66-4.54,10.43-7.94,2.76-3.4,4.62-7.27,5.57-11.61h-4.9c-6.01,0-11.84,1.79-16.95,4.94-.02.01-.04.03-.07.04-2.21,1.34-5.06,2.01-8.53,2.01-3.79,0-6.87-.79-9.24-2.37-2.37-1.58-4.11-3.81-5.21-6.7-.62-1.6-1.05-3.36-1.33-5.27h47.42v-6.4c0-5.92-1.26-11.39-3.79-16.41-2.53-5.02-6.18-9.08-10.96-12.21ZM220.69,61.21c1.19-2.88,2.92-5.08,5.21-6.58,2.29-1.5,5.1-2.25,8.41-2.25s5.94.73,8.12,2.19c2.17,1.46,3.81,3.58,4.92,6.34.6,1.5,1.03,3.16,1.3,4.98h-29.27c.3-1.71.73-3.28,1.31-4.68Z"/>
+          <path d="M329,52.98c-.29-.73-.6-1.45-.95-2.14-2.21-4.42-5.23-7.78-9.07-10.07-3.83-2.29-8.35-3.44-13.57-3.44-4.5,0-8.61.81-12.32,2.43-3.71,1.62-6.91,3.89-9.6,6.81-2.69,2.92-4.74,6.36-6.16,10.31-1.42,3.95-2.13,8.22-2.13,12.8v2.73c0,4.58.67,8.83,2.01,12.74,1.34,3.91,3.28,7.33,5.81,10.25,2.53,2.92,5.59,5.2,9.18,6.81,3.59,1.62,7.6,2.43,12.03,2.43,5.13,0,9.56-1.09,13.27-3.26,3.68-2.15,6.56-5.26,8.65-9.31v5.58c0,3.79-.75,6.89-2.25,9.3-1.5,2.41-3.85,4.21-7.05,5.39-3.2,1.19-7.37,1.78-12.5,1.78-2.77,0-5.83-.14-9.18-.41-.03,0-.07,0-.1,0-4.89-.41-9.08,3.42-9.08,8.32v6.67c2.76.39,5.81.71,9.12.95s6.56.36,9.72.36c8.85,0,16.18-1.15,21.98-3.44,5.81-2.29,10.13-5.89,12.98-10.78,2.84-4.9,4.27-11.34,4.27-19.32v-42.19c0-8.31-6.74-15.05-15.05-15.05h0v13.75ZM325.8,72.17c0,3.48-.69,6.44-2.07,8.89-1.38,2.45-3.26,4.32-5.63,5.63-2.37,1.3-5.02,1.95-7.94,1.95-3.08,0-5.83-.69-8.24-2.07-2.41-1.38-4.31-3.4-5.69-6.04-1.38-2.65-2.07-5.83-2.07-9.54s.67-6.79,2.01-9.48c1.34-2.68,3.24-4.78,5.69-6.28,2.45-1.5,5.25-2.25,8.41-2.25,2.68,0,5.21.61,7.58,1.84,2.37,1.23,4.28,3,5.75,5.33,1.46,2.33,2.19,5.2,2.19,8.59v3.44Z"/>
+          <path d="M400.87,41c-4.54-1.9-10.13-2.84-16.77-2.84-2.29,0-4.74.04-7.35.12-2.61.08-5.14.2-7.58.36-2.45.16-4.58.32-6.4.47v7.86c0,4.4,3.69,7.9,8.09,7.67h.09c3-.16,5.92-.28,8.77-.36,2.84-.08,5.13-.12,6.87-.12,3.48,0,6,.83,7.58,2.49,1.58,1.66,2.37,4.15,2.37,7.47v.24h-11.73c-5.77,0-10.86.73-15.29,2.19-4.43,1.46-7.86,3.71-10.31,6.75-2.45,3.04-3.67,6.93-3.67,11.67,0,4.35.99,8.08,2.96,11.2,1.97,3.12,4.72,5.51,8.24,7.17,3.51,1.66,7.6,2.49,12.26,2.49s8.31-.83,11.44-2.49c3.12-1.66,5.57-4.03,7.35-7.11.79-1.37,1.44-2.89,1.95-4.55h0c0,6.9,5.59,12.49,12.49,12.49h2.56v-39.82c0-6-1.18-10.92-3.55-14.75-2.37-3.83-5.83-6.7-10.37-8.59ZM390.44,91.54c-1.7.75-3.61,1.13-5.75,1.13-3.32,0-5.87-.81-7.64-2.43-1.78-1.62-2.67-3.73-2.67-6.34,0-2.76.89-4.96,2.67-6.58,1.78-1.62,4.32-2.43,7.64-2.43h11.85v5.21c-.16,3.24-.79,5.77-1.9,7.58-1.11,1.82-2.51,3.1-4.21,3.85Z"/>
+          <path d="M424.04,17.66v13.98h7.7v53.44c0,10.54,8.54,19.08,19.08,19.08h0V17.66h-26.78Z"/>
+          <path d="M462.66,39.23v13.98h8.65v32c0,10.47,8.49,18.96,18.96,18.96h0v-50.95h0c0-7.72-6.26-13.98-13.98-13.98h-13.63Z"/>
+          <path d="M525.01,88.13l21.23-25.44c5.49-6.58,8.5-14.89,8.5-23.46h0s-36.5,0-36.5,0c-8.05,0-14.58,6.53-14.58,14.58h0s28.35,0,28.35,0l1.22,1.52-29.68,35.57h0c0,7.33,5.94,13.27,13.27,13.27h24.29c8.05,0,14.58-6.53,14.58-14.58h0s-29.51,0-29.51,0l-1.17-1.46Z"/>
+        </g>
+        <g fill="#fff">
+          <path d="M607.65,41c-4.54-1.9-10.13-2.84-16.77-2.84-2.29,0-4.74.04-7.35.12-2.61.08-5.14.2-7.58.36-2.41.16-4.52.31-6.32.47-.05,0-.08.04-.08.09v7.69c0,4.45,3.73,7.99,8.18,7.75h0c3-.16,5.92-.28,8.77-.36,2.84-.08,5.13-.12,6.87-.12,3.48,0,6,.83,7.58,2.49,1.58,1.66,2.37,4.15,2.37,7.47v.24h-11.73c-5.77,0-10.86.73-15.29,2.19-4.43,1.46-7.86,3.71-10.31,6.75-2.45,3.04-3.67,6.93-3.67,11.67,0,4.35.99,8.08,2.96,11.2,1.97,3.12,4.72,5.51,8.24,7.17,3.51,1.66,7.6,2.49,12.26,2.49s8.31-.83,11.44-2.49c3.12-1.66,5.57-4.03,7.35-7.11.71-1.23,1.3-2.57,1.78-4.02.03-.1.17-.08.17.03h0c0,6.59,5.34,11.94,11.94,11.94h3.02s.09-.04.09-.09v-39.73c0-6-1.18-10.92-3.55-14.75-2.37-3.83-5.83-6.7-10.37-8.59ZM597.22,91.54c-1.7.75-3.61,1.13-5.75,1.13-3.32,0-5.87-.81-7.64-2.43-1.78-1.62-2.67-3.73-2.67-6.34,0-2.76.89-4.96,2.67-6.58,1.78-1.62,4.32-2.43,7.64-2.43h11.76s.09.04.09.09v5.13c-.16,3.24-.79,5.77-1.9,7.58-1.11,1.82-2.51,3.1-4.21,3.85Z"/>
+          <path d="M632.12,39.23v13.98h8.65v32c0,10.47,8.49,18.96,18.96,18.96h0v-50.95h0c0-7.72-6.26-13.98-13.98-13.98h-13.63Z"/>
+          <circle cx="479.45" cy="25.28" r="7.62"/>
+          <path d="M632.12,17.8h20.14c4.12,0,7.47,3.35,7.47,7.47h0c0,4.12-3.35,7.47-7.47,7.47h-20.14v-14.94h0Z" transform="translate(1291.8483 50.535) rotate(-180)"/>
+        </g>
+        <path fill="#fff" d="M72.64,95.27c-6.56,6.56-17.21,6.56-23.77,0L13.91,60.32c7.6-7.6,19.93-7.6,27.54,0l19.31,19.31,60.67-60.67C121.28,8.46,112.74,0,102.21,0H19.23C8.61,0,0,8.61,0,19.23v82.98c0,10.62,8.61,19.23,19.23,19.23h82.98c10.62,0,19.23-8.61,19.23-19.23v-55.74l-48.8,48.8Z"/>
+        
+      </svg>
+
+<a class="btn btn-primary so-espera footer-btn-espera" href="/em-breve">Entrar na lista de espera</a>
+      <div class="footer-lojas">
+      <a class="store-badge store-badge-light" href="/em-breve">
+      <svg viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M17.05 12.54c-.03-2.89 2.36-4.27 2.47-4.34-1.35-1.97-3.44-2.24-4.18-2.27-1.78-.18-3.47 1.05-4.37 1.05-.9 0-2.29-1.02-3.77-1-1.94.03-3.72 1.13-4.72 2.86-2.01 3.49-.51 8.66 1.45 11.49.96 1.39 2.1 2.94 3.6 2.89 1.45-.06 1.99-.93 3.74-.93s2.24.93 3.77.9c1.56-.03 2.54-1.41 3.49-2.8 1.1-1.61 1.55-3.17 1.58-3.25-.04-.02-3.03-1.16-3.06-4.6zM14.16 4.06c.8-.97 1.34-2.32 1.19-3.66-1.15.05-2.55.77-3.38 1.74-.74.85-1.39 2.23-1.22 3.54 1.29.1 2.6-.65 3.41-1.62z"/></svg>
+      <span><small>Em breve na</small><strong>App Store</strong></span>
+      </a>
+      <a class="store-badge store-badge-light" href="/em-breve">
+      <svg viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M3.6 1.8c-.34.36-.54.91-.54 1.62v17.15c0 .71.2 1.26.55 1.61l.09.08 9.61-9.61v-.22L3.7 1.72l-.1.08zm13.51 13.14-3.2-3.2v-.22l3.2-3.21 3.87 2.2c1.1.62 1.1 1.65 0 2.28l-3.87 2.15zm-.9.86L12.9 12.5 3.6 21.8c.36.38.96.42 1.63.05l10.98-6.05zM3.6 1.72l9.3 9.3 3.31-3.3L5.23 1.67C4.56 1.3 3.96 1.35 3.6 1.72z"/></svg>
+      <span><small>Em breve no</small><strong>Google Play</strong></span>
+      </a>
+      </div>
+      </div>
+    </div>
+
+    <nav class="footer-col" aria-labelledby="fcol-site">
+      <p class="footer-col-titulo" id="fcol-site">A página</p>
+      <a href="#validador">Atendemos você?</a>
+      <a href="#como-funciona">Como funciona</a>
+      <a href="#perguntas">Perguntas</a>
+      <a class="oculto-por-ora" href="/blog" hidden>Blog</a>
+    </nav>
+
+    <nav class="footer-col" aria-labelledby="fcol-app">
+      <p class="footer-col-titulo" id="fcol-app">O app</p>
+      <a class="so-app" href="#rodape">Baixar na App Store</a>
+      <a class="so-app" href="#rodape">Baixar no Google Play</a>
+      <a class="so-espera" href="/em-breve">Entrar na lista de espera</a>
+      <a href="#rodape">Oferta de lançamento</a>
+    </nav>
+
+    <nav class="footer-col" aria-labelledby="fcol-falar">
+      <p class="footer-col-titulo" id="fcol-falar">Falar com a gente</p>
+      <!-- placeholder: trocar 5531900000000 pelo WhatsApp real -->
+      <a class="oculto-por-ora" hidden href="https://wa.me/5531900000000?text=Oi!%20Vim%20pelo%20site%20e%20tenho%20uma%20d%C3%BAvida.">WhatsApp</a>
+      <a href="mailto:contato@legalizai.com.br">contato@legalizai.com.br</a>
+      <a href="/termos">Termos de uso</a>
+      <a href="/privacidade">Privacidade</a>
+      <!-- abre o painel de preferências (consentimento.js); sem JS, vai pra política -->
+      <a href="/cookies" data-lz-cookies>Cookies</a>
+    </nav>
+
+  </div>
+
+  <div class="container footer-legal">
+    <!-- as 2 pessoas jurídicas ficam separadas e rotuladas: antes eram dois
+         parágrafos corridos que o olho lia como um bloco só de números. -->
+    <div class="footer-legal-grid">
+      <p><span>Quem opera o app</span>Legalizai Tecnologia Ltda · CNPJ 41.569.345/0001-48 · R. Satélite, 328, sala 411, Caiçara-Adelaide, Belo Horizonte/MG</p>
+      <p><span>Responsabilidade técnica</span>Legalize Auditoria e Consultoria Contábil LTDA · CNPJ 12.423.332/0001-68 · CRC-MG 007900/O · Contador responsável: Mauro Lopes de Faria, CRC-MG 094967/O-0</p>
+    </div>
+    <p class="footer-copy">© 2026 Legalizaí. A parte chata da burocracia é com a gente. 🧡</p>
+  </div>
+</footer>
+
+<!-- ✂️ LOTTIE INTEIRA REMOVIDA (313 KB de JS que animavam NADA).
+     Histórico: três lotties da dobra DIFERENCIAIS saíram numa auditoria
+     anterior, e sobrou a do aviãozinho do hero. Só que o aviãozinho era do hero
+     ANTIGO — o hero novo (shapeShowcase) nunca teve `#lot-phone-plane`. A
+     página baixava lottie.min.js (305 KB) + paperplane-data.js (8 KB), rodava
+     `initLotties()` e não encontrava um único elemento pra animar.
+     Nada visual se perdeu aqui: não havia nada acontecendo. -->
+<script src="/_lab/script.js?v=67" defer></script>
+<!-- banner + painel de cookies (LGPD). O default negado já rodou no <head>. -->
+<script src="/_lab/consentimento.js?v=4" defer></script>
+<!-- 🧪 TESTE: vidro líquido em WebGL nos cartões dos 3 passos. Sai calado se
+     não houver WebGL ou se o usuário pedir menos movimento — nesses casos a
+     dobra fica com o vidro em CSS de sempre. -->
+<script src="/_lab/vidro-liquido.js?v=30" defer></script>
+<script src="/_lab/atendimento/atendimento.js?v=65" defer></script>
+
+<!-- ═══ DADOS ESTRUTURADOS (schema.org) ═══════════════════════════════════
+     Três blocos, cada um respondendo a uma pergunta diferente do buscador:
+
+     · FAQPage — as 7 perguntas do #perguntas, palavra por palavra. É o de
+       maior retorno: vira rich snippet expansível na própria página de
+       resultado. ⚠️ O Google exige que a resposta marcada seja EXATAMENTE a
+       que aparece na tela; mexeu no texto de uma pergunta, mexe aqui também.
+     · ProfessionalService — quem é a empresa: CNPJ, endereço, faixa de preço,
+       cidade atendida e o contador responsável com o registro no CRC. É o que
+       alimenta o painel lateral e a busca local ("contador em BH").
+     · Service + OfferCatalog — os dois planos com preço em BRL, ligados à
+       organização pelo @id.
+
+     Fica no fim do <body> de propósito: não bloqueia nada, e o rastreador lê
+     o documento inteiro antes de interpretar. -->
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"FAQPage","mainEntity":[{"@type":"Question","name":"Vocês têm contador de verdade?","acceptedAnswer":{"@type":"Answer","text":"Temos, e é o coração da coisa. No plano ME você conversa com um contador especializado , com registro no CRC-MG, de um escritório com 22 anos de estrada em BH. O app organiza e avisa; quem responde e assume a responsabilidade é gente de carne e osso. O contador atende no plano ME : no MEI, quem cuida da rotina do dia a dia é um assistente virtual."}},{"@type":"Question","name":"Quanto custa?","acceptedAnswer":{"@type":"Answer","text":"R$ 139/mês no plano ME, que é o Simples Nacional para quem presta serviço. Se você é MEI, são R$ 49/mês. Preço fechado, sem taxa-surpresa no boleto: o valor que você vê é o valor que você paga. Na oferta de lançamento, os 3 primeiros meses saem por R$ 99 no ME e R$ 29 no MEI, até 31/12/2026. Do quarto mês em diante vale o preço cheio: R$ 139 e R$ 49, com aviso antes da virada."}},{"@type":"Question","name":"E se eu não gostar?","acceptedAnswer":{"@type":"Answer","text":"São 7 dias pra mudar de ideia, com dinheiro de volta (Código de Defesa do Consumidor, art. 49). Desistir antes de autorizar o envio pra Junta devolve tudo, porque nada foi gasto ainda. Depois que a empresa está aberta o serviço já foi feito: a taxa paga ao Estado não volta, e vale a regra de cancelamento do plano. Passados os 7 dias, o plano tem fidelidade de 12 meses , contada de quando o CNPJ sai. Ela vale nos dois planos, e no ME a contrapartida é concreta: abertura sem honorário, certificado digital incluso e o preço promocional dos primeiros meses. Saindo antes do fim, a multa é de 30% sobre o que ainda faltava , nunca sobre o que você já pagou. Está no contrato desde o primeiro dia."}},{"@type":"Question","name":"Já tenho contador. Dá pra mudar?","acceptedAnswer":{"@type":"Answer","text":"Dá, e a mudança é com a gente: você informa o CNPJ, a gente puxa seus dados e cuida da transição inteira com o contador atual. Você não briga com ninguém. 😄"}},{"@type":"Question","name":"Atende a minha atividade?","acceptedAnswer":{"@type":"Answer","text":"Descubra em 10 segundos no validador aqui em cima , de graça, antes de baixar. Se ainda não atendemos, você entra na lista e é avisado assim que abrir."}},{"@type":"Question","name":"E se eu quiser sair, ou encerrar a empresa?","acceptedAnswer":{"@type":"Answer","text":"Sair do plano dentro dos 12 meses de fidelidade tem multa de 30% sobre o que ainda faltava , nunca sobre o que você já pagou. Depois da fidelidade, é só avisar: não tem multa. Encerrar a empresa é outro serviço, com taxas próprias do Estado que não ficam com a gente, e a gente te passa o valor fechado antes de começar. Você não descobre custo de saída no meio do caminho."}},{"@type":"Question","name":"Quanto tempo demora?","acceptedAnswer":{"@type":"Answer","text":"Depende de quem está do outro lado: a Junta Comercial e a prefeitura têm o próprio ritmo, e ninguém honesto crava um número antes de olhar o seu caso. O que a gente garante é o prazo real informado antes de você começar, e aviso a cada etapa, sem você precisar perguntar."}}]}</script>
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"ProfessionalService","@id":"https://legalizai.com.br/#organizacao","name":"Legalizaí","alternateName":"Legalizai Tecnologia Ltda","url":"https://legalizai.com.br","image":"https://legalizai.com.br/assets/og-legalizai.jpg","logo":"https://legalizai.com.br/assets/apple-touch-icon.png","email":"contato@legalizai.com.br","description":"Contabilidade digital para MEI e ME do Simples Nacional, com contador registrado no CRC-MG atendendo por WhatsApp.","priceRange":"R$ 49 - R$ 139","taxID":"41.569.345/0001-48","areaServed":{"@type":"City","name":"Belo Horizonte","address":{"@type":"PostalAddress","addressRegion":"MG","addressCountry":"BR"}},"address":{"@type":"PostalAddress","streetAddress":"R. Satélite, 328, sala 411","addressLocality":"Belo Horizonte","addressRegion":"MG","addressCountry":"BR"},"knowsLanguage":"pt-BR","employee":{"@type":"Person","name":"Mauro Lopes de Faria","jobTitle":"Contador responsável","identifier":"CRC-MG 094967/O-0"}}</script>
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"Service","name":"Abertura e contabilidade de MEI e ME","provider":{"@id":"https://legalizai.com.br/#organizacao"},"areaServed":{"@type":"City","name":"Belo Horizonte"},"hasOfferCatalog":{"@type":"OfferCatalog","name":"Planos Legalizaí","itemListElement":[{"@type":"Offer","name":"MEI","price":"49.00","priceCurrency":"BRL","description":"Abertura do MEI sem taxa da Junta, nota fiscal e DAS pelo app, assistente virtual. Até R$ 6.750/mês, sem sócio.","url":"https://legalizai.com.br/#planos"},{"@type":"Offer","name":"ME · Simples Nacional","price":"139.00","priceCurrency":"BRL","description":"Tudo do MEI, mais contador com CRC no WhatsApp, contabilidade do Simples com Fator R acompanhado, sócios e sem teto de faturamento.","url":"https://legalizai.com.br/#planos"}]}}</script>
+
+
+<!-- 🎯 ALINHAMENTO: o offset da coluna de rotulos e MEDIDO, nao chutado.
+     A esquerda comeca depois do titulo e do subtitulo; a direita, depois do
+     preco. As duas alturas mudam com a largura da tela e com a fonte que
+     carregar, entao qualquer numero fixo aqui erraria em alguma viewport.
+     O script empurra a coluna de rotulos ate o topo dela bater com o topo do
+     primeiro bloco de categorias do cartao. Abaixo de 900px as colunas
+     empilham e o ajuste e desligado. -->
+<script>
+(function(){
+  var rot=document.querySelector('.planos-rotulos');
+  var blocos=[].slice.call(document.querySelectorAll('.planos-cards .plano-blocos'));
+  if(!rot||!blocos.length) return;
+
+  // as tres colunas sao subarvores separadas: nao ha grid comum. Este script e
+  // que faz linha bater com linha, medindo a mais alta de cada indice e
+  // aplicando nas outras. Com ele, mudar copy ou espacamento nao desalinha.
+  var cols=[rot].concat(blocos);
+  // o titulo + subtitulo da coluna da esquerda. O vao entre eles e a 1a
+  // categoria era todo empurrado pra baixo do subtitulo, e o bloco de texto
+  // ficava grudado no topo do cartao com um rasgo embaixo. Agora o mesmo vao e
+  // dividido em dois: metade acima do titulo, metade abaixo do subtitulo, o
+  // que centra o bloco no espaco vazio sem inventar numero nenhum. O total
+  // continua sendo exatamente `d`, entao o alinhamento com os cartoes nao muda.
+  var cab=rot.parentElement.querySelector('h2');
+  function linhas(col){ return [].slice.call(col.querySelectorAll('.pr-cat,.plano-features-titulo,li')); }
+
+  function sync(){
+    var listas=cols.map(linhas);
+    listas.forEach(function(l){ l.forEach(function(e){ e.style.height=''; }); });
+    if(window.innerWidth<900){
+      rot.style.marginTop='';
+      if(cab) cab.style.marginTop='';
+      return;
+    }
+
+    // 1. alinha o INICIO: a esquerda comeca depois do titulo, a direita depois do preco
+    rot.style.marginTop='0px';
+    if(cab) cab.style.marginTop='0px';
+    var d=blocos[0].getBoundingClientRect().top-rot.getBoundingClientRect().top;
+    d=(d>0?d:0);
+    // empurrar o titulo pra baixo desloca tudo que vem depois dele, entao o
+    // que sobra pros rotulos e `d - meio`, nao `d`
+    var meio=Math.round(d/2);
+    if(cab) cab.style.marginTop=meio+'px';
+    rot.style.marginTop=(d-meio)+'px';
+
+    // 2. iguala linha a linha
+    var n=Math.min.apply(null,listas.map(function(l){return l.length;}));
+    for(var i=0;i<n;i++){
+      var alt=0;
+      listas.forEach(function(l){ var r=l[i].getBoundingClientRect().height; if(r>alt) alt=r; });
+      listas.forEach(function(l){ l[i].style.height=alt+'px'; });
+    }
+  }
+
+  var t; function agenda(){ clearTimeout(t); t=setTimeout(sync,80); }
+  sync();
+  addEventListener('resize',agenda);
+  addEventListener('load',sync);
+  if(document.fonts&&document.fonts.ready) document.fonts.ready.then(sync);
+})();
+</script>
+
+
+<!-- 🎯 TOOLTIPS "?": um de cada vez, e fecha ao clicar fora.
+     O <details> nativo nao faz nenhuma das duas coisas sozinho: fica aberto ate
+     alguem clicar no proprio resumo. Na coluna de rotulos, onde o tooltip e um
+     popover flutuante, dois abertos se sobrepoem. -->
+<script>
+(function(){
+  var dets=[].slice.call(document.querySelectorAll('.pr-det'));
+  if(!dets.length) return;
+
+  function fechaTodos(exceto){
+    dets.forEach(function(d){ if(d!==exceto && d.open) d.open=false; });
+  }
+  dets.forEach(function(d){
+    d.addEventListener('toggle',function(){ if(d.open) fechaTodos(d); });
+  });
+
+  // clique fora: o clique no proprio resumo tambem chega aqui, por isso o
+  // closest() barra antes de fechar o que acabou de abrir
+  document.addEventListener('click',function(e){
+    if(e.target.closest && e.target.closest('.pr-det')) return;
+    fechaTodos(null);
+  });
+  document.addEventListener('keydown',function(e){
+    if(e.key==='Escape'||e.key==='Esc') fechaTodos(null);
+  });
+})();
+</script>
+
+<!-- 📱 COLAPSO DOS CARTÕES DE PLANO NO MOBILE
+     O `open` vem escrito no HTML de propósito: sem JS a página fica EXPANDIDA,
+     que é a falha certa (degrada mostrando conteúdo, nunca escondendo). Este
+     script só TIRA o `open` abaixo de 900px, o mesmo ponto em que as colunas
+     empilham e a coluna de rótulos some.
+
+     Ele respeita o que a pessoa fez: assim que ela abre ou fecha um cartão com
+     a mão, aquele cartão passa a ser dela e o resize não mexe mais nele. Sem
+     isso, girar o aparelho fecharia a lista que ela acabou de abrir. -->
+<script>
+(function(){
+  var cards=[].slice.call(document.querySelectorAll('.plano-detalhes'));
+  if(!cards.length) return;
+  var estreito=window.matchMedia('(max-width:899px)');
+
+  cards.forEach(function(d){
+    d.addEventListener('toggle',function(){ d.dataset.mao='1'; });
+  });
+
+  function aplica(){
+    cards.forEach(function(d){
+      if(d.dataset.mao) return;      // a pessoa já decidiu por este cartão
+      d.open=!estreito.matches;
+    });
+  }
+  aplica();
+  // addListener é o nome antigo; Safari < 14 não tem addEventListener aqui
+  if(estreito.addEventListener) estreito.addEventListener('change',aplica);
+  else if(estreito.addListener) estreito.addListener(aplica);
+})();
+</script>
+
+</body>
+</html>
