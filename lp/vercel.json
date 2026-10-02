@@ -16,6 +16,8 @@
     }
   ],
   "rewrites": [
-    { "source": "/home", "destination": "/" }
+    { "source": "/home", "destination": "/" },
+    { "source": "/em-breve/obrigado/mei", "destination": "/em-breve/obrigado" },
+    { "source": "/em-breve/obrigado/me-simples", "destination": "/em-breve/obrigado" }
   ]
 }

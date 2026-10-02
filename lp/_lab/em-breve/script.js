@@ -59,6 +59,14 @@
      então dar F5 lá não reabre com dado de uma sessão antiga. */
   var THANKS_STORAGE_KEY = 'legalizai_thanks';
 
+  /* Um slug por plano, pra conversão separar MEI de ME na URL (GA4, Ads,
+     conversão personalizada do Meta). As duas URLs servem o MESMO
+     obrigado/index.html via rewrite (vercel.json e, local, serve.json).
+     "me-simples" e não "me": "/obrigado/me" é prefixo de "/obrigado/mei",
+     e uma regra "URL contém" pegaria os dois. Plano desconhecido cai na
+     URL base, que continua funcionando. */
+  var OBRIGADO_SLUG = { mei: 'mei', me: 'me-simples' };
+
   console.log('[waitlist-debug] script inicializado', { form: !!form, submitBtn: !!submitBtn });
 
   function irParaObrigado(primeiroNome, plano) {
@@ -67,7 +75,8 @@
     } catch (e) {
       console.log('[waitlist-debug] sessionStorage indisponível, seguindo sem salvar nome/plano', e);
     }
-    window.location.href = '/_lab/em-breve/obrigado';
+    var slug = OBRIGADO_SLUG[plano];
+    window.location.href = '/_lab/em-breve/obrigado' + (slug ? '/' + slug : '');
   }
 
   function digits(s) { return (s || '').replace(/\D/g, ''); }

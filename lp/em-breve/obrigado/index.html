@@ -18,9 +18,17 @@
        Lê a chave e já apaga na hora: um "obrigado" é o fechamento de UMA
        navegação, não um estado permanente — dar F5 ou voltar pelo
        histórico deve mandar pra /em-breve de novo, não reabrir a festa
-       com dado velho de uma sessão anterior. -->
+       com dado velho de uma sessão anterior.
+       Esta página responde em duas URLs, uma por plano (rewrite no
+       vercel.json e no serve.json): /em-breve/obrigado/mei e
+       /em-breve/obrigado/me-simples. O slug manda no plano: é ele que a
+       conversão lê na URL, então o card e o Lead do Pixel seguem o slug
+       pra nunca divergir dele. -->
   <script>
   (function () {
+    var SLUG_PLANO = { 'mei': 'mei', 'me-simples': 'me' };
+    var slugPlano = SLUG_PLANO[location.pathname.replace(/\/+$/, '').split('/').pop()];
+
     /* Atalho de preview pra trabalhar layout: ?preview (opcional
        &plano=mei|me e &nome=Fulano) entrega dado falso sem passar pelo
        formulário, e sem consumir chave nenhuma — então F5 continua aqui.
@@ -33,7 +41,7 @@
         window.__legalizaiPreview = true;
         window.__legalizaiThanks = {
           nome: q.get('nome') || 'Pedro',
-          plano: q.get('plano') || 'mei'
+          plano: slugPlano || q.get('plano') || 'mei'
         };
         return;
       }
@@ -45,6 +53,7 @@
     try {
       window.__legalizaiThanks = JSON.parse(raw);
       sessionStorage.removeItem('legalizai_thanks');
+      if (slugPlano) window.__legalizaiThanks.plano = slugPlano;
     } catch (e) {
       location.replace('/em-breve');
     }

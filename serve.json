@@ -1,3 +1,9 @@
 {
-  "trailingSlash": true
+  "trailingSlash": true,
+  "rewrites": [
+    { "source": "/em-breve/obrigado/mei", "destination": "/em-breve/obrigado/index.html" },
+    { "source": "/em-breve/obrigado/me-simples", "destination": "/em-breve/obrigado/index.html" },
+    { "source": "/_lab/em-breve/obrigado/mei", "destination": "/_lab/em-breve/obrigado/index.html" },
+    { "source": "/_lab/em-breve/obrigado/me-simples", "destination": "/_lab/em-breve/obrigado/index.html" }
+  ]
 }
