@@ -15,6 +15,9 @@
       "headers": [{ "key": "Cache-Control", "value": "public, max-age=604800, must-revalidate" }]
     }
   ],
+  "redirects": [
+    { "source": "/coming-soon/:path*", "destination": "/em-breve/:path*", "permanent": true }
+  ],
   "rewrites": [
     { "source": "/home", "destination": "/" },
     { "source": "/em-breve/obrigado/mei", "destination": "/em-breve/obrigado" },

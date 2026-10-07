@@ -19,18 +19,24 @@ Editar direto aqui é o certo: `vercel.json`, `robots.txt`, `sitemap.xml`,
 
 ---
 
-## Dia do lançamento
+## 🌐 Domínio canônico: `www.legalizai.com.br`
 
-Hoje `/` redireciona pra `/em-breve` e a LP responde em `/home`. Pra virar:
+A Vercel serve o site em `www` e manda `legalizai.com.br` pra lá com 308.
+Então **toda URL absoluta do site é com www**: `<link rel="canonical">`,
+`og:url`, `og:image`, `twitter:image`, o JSON-LD, as `<loc>` do `sitemap.xml`
+e a linha `Sitemap:` do `robots.txt`.
 
-1. **`vercel.json`** — apague o bloco `redirects` inteiro.
-   O `rewrites` de `/home` pode ficar: vira atalho antigo e não atrapalha.
-2. **`robots.txt`** — apague a linha `Disallow: /home`.
-   Ela existe porque indexar `/home` agora obrigaria o Google a reaprender a
-   raiz depois, e trocar URL canônica de página já indexada custa semanas de
-   posição.
-3. **Search Console** — peça a indexação de `https://legalizai.com.br/`.
-   O `sitemap.xml` já lista a raiz.
+Até 07/10/2026 isso tudo apontava pro domínio sem www — pra URLs que
+redirecionam. O Google ignorou o canonical, indexou o www por conta própria e
+deixou `/atendimento` e `/blog` fora do índice ("Detectada, mas não indexada").
+
+Página nova: ela ganha `<link rel="canonical" href="https://www.legalizai.com.br/<rota>">`
+e entra no `sitemap.xml` com www.
+
+## Redirects
+
+- `/coming-soon/*` → `/em-breve/*` (308). Slug antigo da página de espera; o
+  Google ainda tinha a URL e acusava 404.
 
 ---
 

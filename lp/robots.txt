@@ -1,4 +1,4 @@
-# Legalizaí — https://legalizai.com.br
+# Legalizaí — https://www.legalizai.com.br
 #
 # 🚀 11/09/2026 — A LP VIROU A RAIZ. O redirect de "/" pra /em-breve saiu do
 # vercel.json, e com ele saiu o "Disallow: /home" que existia só pra impedir o
@@ -9,9 +9,15 @@
 # /em-breve segue FORA do índice de propósito. Ela continua no ar e continua
 # sendo onde a fila de espera é captada, mas é página de captura, não conteúdo:
 # indexá-la criaria uma segunda porta competindo com a raiz pelo mesmo termo.
+#
+# 🌐 07/10/2026 — O DOMÍNIO CANÔNICO É O WWW. A Vercel manda legalizai.com.br
+# pra www.legalizai.com.br (308), mas sitemap, canonical e og:url apontavam pro
+# domínio sem www — ou seja, pra URLs que redirecionam. O Google ignorou o
+# canonical, indexou o www por conta própria e largou /atendimento e /blog em
+# "Detectada, mas não indexada". Toda URL absoluta do site é com www.
 
 User-agent: *
 Allow: /
 Disallow: /em-breve
 
-Sitemap: https://legalizai.com.br/sitemap.xml
+Sitemap: https://www.legalizai.com.br/sitemap.xml
