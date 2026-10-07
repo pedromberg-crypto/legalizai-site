@@ -91,7 +91,7 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
   <link rel="preload" href="/assets/fonts/sora-latin.woff2" as="font" type="font/woff2" crossorigin>
 
   <!-- LAB: ?v muda a cada rodada de ajuste; sem isso o Chrome serve o css antigo -->
-  <link rel="stylesheet" href="/_lab/styles.css?v=294">
+  <link rel="stylesheet" href="/_lab/styles.css?v=295">
   <!-- simulador de atendimento (seção #validador). MESMO par de arquivos
        servido em /_lab/atendimento/ — a página standalone e a seção da home
        não são cópias, dividem css e js. -->
@@ -731,7 +731,11 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
         <div class="step-legenda">
           <span class="step-num">3</span>
           <h3>Deixe a burocracia com a gente</h3>
-          <p>A gente abre a sua empresa, ou traz pra cá a que você já tem, e mantém tudo em dia. Você acompanha pelo app, no celular.</p>
+          <!-- 🔄 07/10/2026: era "A gente abre a sua empresa". A política do
+               Google Ads de serviços do governo reprovou os anúncios lendo a
+               página como venda de registro de empresa. O que a Legalizaí vende
+               é a contabilidade; a abertura vem junto do plano, sem honorário. -->
+          <p>Empresa nova ou a que você já tem: a contabilidade é com a gente, e a abertura vem junto com o plano, sem honorário. Você acompanha tudo pelo app, no celular.</p>
         </div>
       </li>
     </ol>
@@ -846,7 +850,7 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
           </ul>
           <p class="pr-cat">Quanto custa pra abrir</p>
           <ul class="pr-lista">
-            <li><details class="pr-det"><summary>Honorário da abertura<span class="pr-info" aria-hidden="true">?</span></summary><p class="pr-tip">A gente não cobra pelo trabalho de abrir. A receita é a mensalidade. A taxa de registro existe, é do Estado, e aparece destacada na conta acima.</p></details></li>
+            <li><details class="pr-det"><summary>Honorário da abertura<span class="pr-info" aria-hidden="true">?</span></summary><p class="pr-tip">A gente não cobra pelo trabalho de abrir: ele vem junto com o plano de contabilidade, e a receita é a mensalidade. A taxa de registro existe, é do Estado, e aparece separada na conta de cada plano. No MEI não tem taxa: a formalização é gratuita no Portal do Empreendedor (gov.br).</p></details></li>
             <li><details class="pr-det"><summary>Certificado digital e-CNPJ<span class="pr-info" aria-hidden="true">?</span></summary><p class="pr-tip">Sem ele não dá para emitir nota nem acessar os sistemas da Receita. No ME vem incluso e é renovado todo ano enquanto o contrato estiver ativo. No MEI é contratado à parte.</p></details></li>
           </ul>
           <p class="pr-cat">O dia a dia no app</p>
@@ -909,7 +913,7 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
         </div>
         <p class="plano-preco"><strong>R$ 29</strong><span>/por mês</span></p>
         <p class="plano-oferta">Nos 3 primeiros meses<br>Depois R$ 49/mês</p>
-        <p class="plano-quem">Até R$ 6.750/mês, sem sócio. Abre em qualquer cidade do Brasil.</p>
+        <p class="plano-quem">Até R$ 6.750/mês, sem sócio. Vale pra qualquer cidade do Brasil.</p>
         <!-- ✂️ 11/09: o titulo da categoria fica VAZIO aqui de proposito.
              O nome da categoria e escrito uma vez so, na coluna da esquerda.
              O elemento continua existindo com a mesma caixa e a mesma
@@ -976,15 +980,20 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
              que muda. -->
       </details>
 
+        <!-- 🔄 07/10/2026: "Abrir o seu MEI · R$ 0" virou "Honorário da
+             abertura" e a taxa diz que o MEI é isento. Abrir MEI é gratuito no
+             gov.br, e oferecer como vantagem um serviço que o governo dá de
+             graça é o ponto mais sensível da política do Google Ads de
+             serviços do governo. Os números não mudaram. -->
         <div class="plano-conta">
           <p class="plano-conta-titulo">A conta da abertura</p>
           <ul class="vs-conta">
             <li>
-            <span><b>Abrir o seu MEI</b></span>
+            <span><b>Honorário da abertura</b></span>
             <em class="is-zero">R$ 0</em>
           </li>
           <li>
-            <span><b>Taxa de registro</b></span>
+            <span><b>Taxa do governo (MEI é isento)</b></span>
             <em class="is-zero">R$ 0</em>
           </li>
           <li>
@@ -999,7 +1008,7 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
           <p class="plano-conta-total"><span>Total de hoje</span><strong>R$ 238,00</strong></p>
         </div>
 
-        <p class="plano-fidelidade">Fidelidade de 12 meses do CNPJ. Saindo antes, multa de 30% do saldo. Em troca: abertura por nossa conta e 3 meses a R$ 29. <a href="#perguntas">Detalhe</a>.</p>
+        <p class="plano-fidelidade">Fidelidade de 12 meses do CNPJ. Saindo antes, multa de 30% do saldo. Em troca: 3 meses a R$ 29 e a abertura sem honorário. <a href="#perguntas">Detalhe</a>.</p>
         <a class="btn plano-btn-2" href="#validador">Ver se eu sou MEI</a>
       </article>
 
@@ -1069,7 +1078,7 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
           <p class="plano-conta-titulo">A conta da abertura</p>
           <ul class="vs-conta">
             <li>
-            <span><b>Abrir a sua empresa</b></span>
+            <span><b>Honorário da abertura</b></span>
             <em class="is-zero">R$ 0</em>
           </li>
           <li>
@@ -1420,6 +1429,15 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
         <p>Na oferta de lançamento, os <strong>3 primeiros meses</strong> saem por <strong>R$ 99 no ME</strong> e <strong>R$ 29 no MEI</strong>, até 31/12/2026. Do quarto mês em diante vale o preço cheio: R$ 139 e R$ 49. A data da virada está escrita no contrato, e a gente avisa antes dela chegar. Sem reversão silenciosa e sem plano que muda sozinho.</p>
         <p>Se o seu faturamento crescer e a empresa virar EPP, a mensalidade passa a seguir a <strong>faixa de receita dos últimos 12 meses</strong>. E ela <strong>desce sozinha</strong> se o faturamento cair: você não precisa pedir.</p>
       </details>
+      <!-- 🆕 07/10/2026: o aviso que os anúncios do Google exigem, dito como
+           pergunta de verdade. Diz o que a Legalizaí NÃO é (órgão público), onde
+           o registro acontece e que o MEI é gratuito no gov.br. Espelhado
+           palavra por palavra no FAQPage do JSON-LD, no fim do arquivo. -->
+      <details>
+        <summary>Vocês são do governo? Preciso de vocês pra abrir CNPJ?<span class="faq-ico" aria-hidden="true"></span></summary>
+        <p>Não somos órgão público. A Legalizaí é uma <strong>empresa privada de contabilidade</strong>, com responsabilidade técnica de um escritório registrado no CRC-MG. O registro da empresa acontece nos órgãos do governo (Junta Comercial, Receita Federal e Prefeitura), e você pode fazer por conta própria: o <strong>MEI, por exemplo, é aberto de graça no Portal do Empreendedor</strong>, no gov.br.</p>
+        <p>O que a gente vende é a <strong>contabilidade de todo mês</strong>. A abertura vem junto com o plano, sem honorário, e as taxas do governo são do governo: aparecem separadas na conta, antes de você pagar.</p>
+      </details>
       <details>
         <summary>E se eu não gostar?<span class="faq-ico" aria-hidden="true"></span></summary>
         <p>São <strong>7 dias pra mudar de ideia, com dinheiro de volta</strong> (Código de Defesa do Consumidor, art. 49). Desistir antes de autorizar o pedido de abertura devolve tudo, porque nada foi gasto ainda. Depois que a empresa está aberta o serviço já foi feito: a taxa paga ao Estado não volta, e vale a regra de cancelamento do plano.</p>
@@ -1677,6 +1695,7 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
       <p><span>Quem opera o app</span>Legalizai Tecnologia Ltda · CNPJ 41.569.345/0001-48 · R. Satélite, 328, sala 411, Caiçara-Adelaide, Belo Horizonte/MG</p>
       <p><span>Responsabilidade técnica</span>Legalize Auditoria e Consultoria Contábil LTDA · CNPJ 12.423.332/0001-68 · CRC-MG 007900/O · Contador responsável: Mauro Lopes de Faria, CRC-MG 094967/O-0</p>
     </div>
+    <p class="footer-aviso">A Legalizaí é uma empresa privada de contabilidade, sem vínculo com órgãos do governo. As taxas de registro são dos órgãos públicos, e o MEI pode ser aberto de graça no Portal do Empreendedor (gov.br).</p>
     <p class="footer-copy">© 2026 Legalizaí. A parte chata da burocracia é com a gente. 🧡</p>
   </div>
 </footer>
@@ -1700,7 +1719,7 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
 <!-- ═══ DADOS ESTRUTURADOS (schema.org) ═══════════════════════════════════
      Três blocos, cada um respondendo a uma pergunta diferente do buscador:
 
-     · FAQPage — as 7 perguntas do #perguntas, palavra por palavra. É o de
+     · FAQPage — as 8 perguntas do #perguntas, palavra por palavra. É o de
        maior retorno: vira rich snippet expansível na própria página de
        resultado. ⚠️ O Google exige que a resposta marcada seja EXATAMENTE a
        que aparece na tela; mexeu no texto de uma pergunta, mexe aqui também.
@@ -1712,9 +1731,9 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
 
      Fica no fim do <body> de propósito: não bloqueia nada, e o rastreador lê
      o documento inteiro antes de interpretar. -->
-<script type="application/ld+json">{"@context":"https://schema.org","@type":"FAQPage","mainEntity":[{"@type":"Question","name":"Vocês têm contador de verdade?","acceptedAnswer":{"@type":"Answer","text":"Temos, e é o coração da coisa. No plano ME você conversa com um contador especializado , com registro no CRC-MG, de um escritório com 22 anos de estrada em BH. O app organiza e avisa; quem responde e assume a responsabilidade é gente de carne e osso. O contador atende no plano ME : no MEI, quem cuida da rotina do dia a dia é um assistente virtual."}},{"@type":"Question","name":"Quanto custa?","acceptedAnswer":{"@type":"Answer","text":"R$ 139/mês no plano ME, que é o Simples Nacional para quem presta serviço. Se você é MEI, são R$ 49/mês. Preço fechado, sem \"a partir de\" e sem taxa-surpresa no boleto: o valor que você vê é o valor que você paga. Na oferta de lançamento, os 3 primeiros meses saem por R$ 99 no ME e R$ 29 no MEI, até 31/12/2026. Do quarto mês em diante vale o preço cheio: R$ 139 e R$ 49. A data da virada está escrita no contrato, e a gente avisa antes dela chegar. Sem reversão silenciosa e sem plano que muda sozinho. Se o seu faturamento crescer e a empresa virar EPP, a mensalidade passa a seguir a faixa de receita dos últimos 12 meses. E ela desce sozinha se o faturamento cair: você não precisa pedir."}},{"@type":"Question","name":"E se eu não gostar?","acceptedAnswer":{"@type":"Answer","text":"São 7 dias pra mudar de ideia, com dinheiro de volta (Código de Defesa do Consumidor, art. 49). Desistir antes de autorizar o pedido de abertura devolve tudo, porque nada foi gasto ainda. Depois que a empresa está aberta o serviço já foi feito: a taxa paga ao Estado não volta, e vale a regra de cancelamento do plano. Passados os 7 dias, o plano tem fidelidade de 12 meses, contada de quando o CNPJ sai. Ela vale nos dois planos, e no ME a contrapartida é concreta: abertura sem honorário, certificado digital incluso e o preço de lançamento nos 3 primeiros meses. Saindo antes do fim, a multa é de 30% sobre o que ainda faltava, nunca sobre o que você já pagou, e o certificado já emitido (R$ 209) também entra na conta. Está no contrato desde o primeiro dia."}},{"@type":"Question","name":"Já tenho contador. Dá pra mudar?","acceptedAnswer":{"@type":"Answer","text":"Dá, e a mudança é com a gente: você informa o CNPJ, a gente puxa seus dados e cuida da transição inteira com o contador atual. Você não briga com ninguém. 😄"}},{"@type":"Question","name":"Atende a minha atividade?","acceptedAnswer":{"@type":"Answer","text":"Descubra em 10 segundos no validador aqui em cima, de graça, antes de entrar na lista. Se ainda não atendemos, você entra na lista e é avisado assim que abrir."}},{"@type":"Question","name":"E se eu quiser sair, ou encerrar a empresa?","acceptedAnswer":{"@type":"Answer","text":"Sair do plano dentro dos 12 meses de fidelidade tem multa de 30% sobre o que ainda faltava , nunca sobre o que você já pagou. Depois da fidelidade, é só avisar: não tem multa. Encerrar a empresa é outro serviço, com taxas próprias do Estado que não ficam com a gente, e a gente te passa o valor fechado antes de começar. Você não descobre custo de saída no meio do caminho."}},{"@type":"Question","name":"Quanto tempo demora?","acceptedAnswer":{"@type":"Answer","text":"Depende de quem está do outro lado: o registro da empresa tem o próprio ritmo, que não depende só da gente, e ninguém honesto crava um número antes de olhar o seu caso. O que a gente garante é o prazo real informado antes de você começar, e aviso a cada etapa, sem você precisar perguntar."}}]}</script>
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"FAQPage","mainEntity":[{"@type":"Question","name":"Vocês têm contador de verdade?","acceptedAnswer":{"@type":"Answer","text":"Temos, e é o coração da coisa. No plano ME você conversa com um contador especializado , com registro no CRC-MG, de um escritório com 22 anos de estrada em BH. O app organiza e avisa; quem responde e assume a responsabilidade é gente de carne e osso. O contador atende no plano ME : no MEI, quem cuida da rotina do dia a dia é um assistente virtual."}},{"@type":"Question","name":"Quanto custa?","acceptedAnswer":{"@type":"Answer","text":"R$ 139/mês no plano ME, que é o Simples Nacional para quem presta serviço. Se você é MEI, são R$ 49/mês. Preço fechado, sem \"a partir de\" e sem taxa-surpresa no boleto: o valor que você vê é o valor que você paga. Na oferta de lançamento, os 3 primeiros meses saem por R$ 99 no ME e R$ 29 no MEI, até 31/12/2026. Do quarto mês em diante vale o preço cheio: R$ 139 e R$ 49. A data da virada está escrita no contrato, e a gente avisa antes dela chegar. Sem reversão silenciosa e sem plano que muda sozinho. Se o seu faturamento crescer e a empresa virar EPP, a mensalidade passa a seguir a faixa de receita dos últimos 12 meses. E ela desce sozinha se o faturamento cair: você não precisa pedir."}},{"@type":"Question","name":"Vocês são do governo? Preciso de vocês pra abrir CNPJ?","acceptedAnswer":{"@type":"Answer","text":"Não somos órgão público. A Legalizaí é uma empresa privada de contabilidade, com responsabilidade técnica de um escritório registrado no CRC-MG. O registro da empresa acontece nos órgãos do governo (Junta Comercial, Receita Federal e Prefeitura), e você pode fazer por conta própria: o MEI, por exemplo, é aberto de graça no Portal do Empreendedor, no gov.br. O que a gente vende é a contabilidade de todo mês. A abertura vem junto com o plano, sem honorário, e as taxas do governo são do governo: aparecem separadas na conta, antes de você pagar."}},{"@type":"Question","name":"E se eu não gostar?","acceptedAnswer":{"@type":"Answer","text":"São 7 dias pra mudar de ideia, com dinheiro de volta (Código de Defesa do Consumidor, art. 49). Desistir antes de autorizar o pedido de abertura devolve tudo, porque nada foi gasto ainda. Depois que a empresa está aberta o serviço já foi feito: a taxa paga ao Estado não volta, e vale a regra de cancelamento do plano. Passados os 7 dias, o plano tem fidelidade de 12 meses, contada de quando o CNPJ sai. Ela vale nos dois planos, e no ME a contrapartida é concreta: abertura sem honorário, certificado digital incluso e o preço de lançamento nos 3 primeiros meses. Saindo antes do fim, a multa é de 30% sobre o que ainda faltava, nunca sobre o que você já pagou, e o certificado já emitido (R$ 209) também entra na conta. Está no contrato desde o primeiro dia."}},{"@type":"Question","name":"Já tenho contador. Dá pra mudar?","acceptedAnswer":{"@type":"Answer","text":"Dá, e a mudança é com a gente: você informa o CNPJ, a gente puxa seus dados e cuida da transição inteira com o contador atual. Você não briga com ninguém. 😄"}},{"@type":"Question","name":"Atende a minha atividade?","acceptedAnswer":{"@type":"Answer","text":"Descubra em 10 segundos no validador aqui em cima, de graça, antes de entrar na lista. Se ainda não atendemos, você entra na lista e é avisado assim que abrir."}},{"@type":"Question","name":"E se eu quiser sair, ou encerrar a empresa?","acceptedAnswer":{"@type":"Answer","text":"Sair do plano dentro dos 12 meses de fidelidade tem multa de 30% sobre o que ainda faltava , nunca sobre o que você já pagou. Depois da fidelidade, é só avisar: não tem multa. Encerrar a empresa é outro serviço, com taxas próprias do Estado que não ficam com a gente, e a gente te passa o valor fechado antes de começar. Você não descobre custo de saída no meio do caminho."}},{"@type":"Question","name":"Quanto tempo demora?","acceptedAnswer":{"@type":"Answer","text":"Depende de quem está do outro lado: o registro da empresa tem o próprio ritmo, que não depende só da gente, e ninguém honesto crava um número antes de olhar o seu caso. O que a gente garante é o prazo real informado antes de você começar, e aviso a cada etapa, sem você precisar perguntar."}}]}</script>
 <script type="application/ld+json">{"@context":"https://schema.org","@type":"ProfessionalService","@id":"https://www.legalizai.com.br/#organizacao","name":"Legalizaí","alternateName":"Legalizai Tecnologia Ltda","url":"https://www.legalizai.com.br","image":"https://www.legalizai.com.br/assets/og-legalizai.jpg","logo":"https://www.legalizai.com.br/assets/apple-touch-icon.png","email":"contato@legalizai.com.br","description":"Contabilidade digital para MEI e ME do Simples Nacional, com contador registrado no CRC-MG atendendo por WhatsApp.","priceRange":"R$ 49 - R$ 139","taxID":"41.569.345/0001-48","areaServed":{"@type":"City","name":"Belo Horizonte","address":{"@type":"PostalAddress","addressRegion":"MG","addressCountry":"BR"}},"address":{"@type":"PostalAddress","streetAddress":"R. Satélite, 328, sala 411","addressLocality":"Belo Horizonte","addressRegion":"MG","addressCountry":"BR"},"knowsLanguage":"pt-BR","employee":{"@type":"Person","name":"Mauro Lopes de Faria","jobTitle":"Contador responsável","identifier":"CRC-MG 094967/O-0"}}</script>
-<script type="application/ld+json">{"@context":"https://schema.org","@type":"Service","name":"Abertura e contabilidade de MEI e ME","provider":{"@id":"https://www.legalizai.com.br/#organizacao"},"areaServed":{"@type":"City","name":"Belo Horizonte"},"hasOfferCatalog":{"@type":"OfferCatalog","name":"Planos Legalizaí","itemListElement":[{"@type":"Offer","name":"MEI","price":"49.00","priceCurrency":"BRL","description":"Abertura do MEI sem taxa de registro, nota fiscal e DAS pelo app, assistente virtual. Até R$ 6.750/mês, sem sócio.","url":"https://www.legalizai.com.br/#planos"},{"@type":"Offer","name":"ME · Simples Nacional","price":"139.00","priceCurrency":"BRL","description":"Tudo do MEI, mais contador com CRC no WhatsApp, contabilidade do Simples com Fator R acompanhado, sócios e sem teto de faturamento.","url":"https://www.legalizai.com.br/#planos"}]}}</script>
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"Service","name":"Contabilidade online para MEI e ME","provider":{"@id":"https://www.legalizai.com.br/#organizacao"},"areaServed":{"@type":"City","name":"Belo Horizonte"},"hasOfferCatalog":{"@type":"OfferCatalog","name":"Planos Legalizaí","itemListElement":[{"@type":"Offer","name":"MEI","price":"49.00","priceCurrency":"BRL","description":"Contabilidade do MEI pelo app: nota fiscal, DAS com aviso e assistente virtual. Abertura sem honorário. Até R$ 6.750/mês, sem sócio.","url":"https://www.legalizai.com.br/#planos"},{"@type":"Offer","name":"ME · Simples Nacional","price":"139.00","priceCurrency":"BRL","description":"Tudo do MEI, mais contador com CRC no WhatsApp, contabilidade do Simples com Fator R acompanhado, sócios e sem teto de faturamento.","url":"https://www.legalizai.com.br/#planos"}]}}</script>
 
 
 <!-- 🎯 ALINHAMENTO: o offset da coluna de rotulos e MEDIDO, nao chutado.

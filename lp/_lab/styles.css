@@ -3200,6 +3200,12 @@ details[open] .faq-ico::after { opacity:0; transform:translate(-50%,-50%) rotate
      visto. `--ink-400` dá 6,06:1 e passa com folga. */
   color:var(--ink-400);
 }
+/* 🆕 07/10/2026: aviso de que a Legalizaí não é órgão público, exigido na
+   prática pela política do Google Ads de serviços do governo. Mesmo tom e cor
+   do bloco legal; centrado como o copyright logo abaixo, com largura de linha
+   limitada pra não virar uma faixa de 1200px de texto miúdo. */
+.footer-aviso { margin:22px auto 0; max-width:72ch; font-size:.76rem; line-height:1.6; color:var(--ink-400); text-align:center; }
+.footer-aviso + .footer-copy { margin-top:10px; }
 .footer-copy { margin-top:20px; font-size:.78rem; color:var(--ink-400); text-align:center; }
 
 /* ============================================================ SCROLL REVEAL */
