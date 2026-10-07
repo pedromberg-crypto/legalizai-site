@@ -11,8 +11,8 @@ minifica a saída. `node build-lp.mjs --raw` publica sem minificar (só pra
 depurar algo que aparece apenas em produção).
 
 **Não edite os arquivos gerados em `lp/`** — `index.html`, `styles.css`,
-`script.js`, `vidro-liquido.js`, `atendimento/`, `blog/`, `assets/`. O próximo
-build sobrescreve.
+`script.js`, `vidro-liquido.js`, `consentimento.js`, `origem.js`, `atendimento/`,
+`blog/`, `assets/`. O próximo build sobrescreve.
 
 Editar direto aqui é o certo: `vercel.json`, `robots.txt`, `sitemap.xml`,
 `favicon.ico`, `privacidade.html`, `termos.html`, `em-breve/`, `build-lp.mjs`.
@@ -55,3 +55,20 @@ arquivo**, não lá.
 | `/assets/*` | 1 ano, `immutable` | nome estável, muda junto com o deploy |
 | `*.html` | sempre revalida | correção de copy tem que aparecer na hora |
 | `styles.css`, `script.js`, `vidro-liquido.js` | 7 dias, revalida | já carregam `?v=N` no HTML |
+
+## Origem da visita (UTM e clique de anúncio)
+
+O anúncio cai na home, mas o cadastro acontece no `/em-breve`. Pra origem não
+se perder no caminho:
+
+- `origem.js` (fonte em `_lab/`) roda em home, `/atendimento`, `/blog` e
+  `/em-breve`. Na primeira página da sessão, ou num clique novo vindo de fora,
+  ele grava no sessionStorage `legalizai_origem` (gclid, gbraid, wbraid,
+  fbclid, página de entrada, referrer) e `legalizai_utm`.
+- `em-breve/script.js` manda esses campos no cadastro. O schema do backend
+  descarta campo não declarado, então o backend precisa declarar `gclid`,
+  `gbraid`, `wbraid`, `landingPage` e `referrer` pra passar a gravar.
+- Toda página tem `gtag('set','url_passthrough',true)` no consentimento
+  padrão, e o redirect pro obrigado leva os parâmetros de clique do Google
+  (`gclid`, `gbraid`, `wbraid`, `dclid`, `gclsrc`, `_gl`). Página nova: copiar
+  o bloco de consentimento de uma página existente, com essa linha.

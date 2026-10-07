@@ -11,7 +11,7 @@
   if(!c||c.v!==1||!(Date.now()-c.t<31536e6))c={};
   var a=c.analytics?'granted':'denied',m=c.marketing?'granted':'denied';
   gtag('consent','default',{analytics_storage:a,ad_storage:m,ad_user_data:m,ad_personalization:m,functionality_storage:'granted',security_storage:'granted',wait_for_update:500});
-  gtag('set','ads_data_redaction',m==='denied');window.lzMarketing=m==='granted';})();
+  gtag('set','ads_data_redaction',m==='denied');gtag('set','url_passthrough',true);window.lzMarketing=m==='granted';})();
   </script>
 
   <!-- Google Tag Manager -->
@@ -106,6 +106,7 @@
       <tbody>
         <tr><td><code>lz_consent</code></td><td>Legalizaí</td><td>Guarda a sua escolha sobre cookies, pra não perguntar de novo a cada página.</td><td>12 meses</td></tr>
         <tr><td><code>legalizai_utm</code></td><td>Legalizaí</td><td>Guarda de onde você chegou ao site (ex: um anúncio), pra registrar junto do seu cadastro.</td><td>Até fechar a aba</td></tr>
+        <tr><td><code>legalizai_origem</code></td><td>Legalizaí</td><td>Guarda o código do clique no anúncio (quando houver), a página por onde você entrou e o site que te trouxe, pra registrar junto do seu cadastro.</td><td>Até fechar a aba</td></tr>
         <tr><td><code>legalizai_thanks</code></td><td>Legalizaí</td><td>Leva seu primeiro nome e o plano escolhido até a página de confirmação do cadastro.</td><td>Apagado ao abrir a confirmação</td></tr>
       </tbody>
     </table>

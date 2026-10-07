@@ -8,7 +8,7 @@ window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments);
 if(!c||c.v!==1||!(Date.now()-c.t<31536e6))c={};
 var a=c.analytics?'granted':'denied',m=c.marketing?'granted':'denied';
 gtag('consent','default',{analytics_storage:a,ad_storage:m,ad_user_data:m,ad_personalization:m,functionality_storage:'granted',security_storage:'granted',wait_for_update:500});
-gtag('set','ads_data_redaction',m==='denied');window.lzMarketing=m==='granted';})();
+gtag('set','ads_data_redaction',m==='denied');gtag('set','url_passthrough',true);window.lzMarketing=m==='granted';})();
 </script>
  <!-- Google Tag Manager -->
 <script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
@@ -539,6 +539,7 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
   </div>
 </footer>
 
+<script src="/_lab/origem.js?v=1" defer></script>
 <script src="/_lab/script.js?v=64" defer></script>
 <script src="/_lab/blog/blog.js?v=2" defer></script>
 <script src="/_lab/consentimento.js?v=4" defer></script>

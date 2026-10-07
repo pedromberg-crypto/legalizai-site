@@ -40,6 +40,30 @@
 
   var utms = captureUtms();
 
+  /* Origem da visita gravada pelo /origem.js, que roda antes deste script em
+     toda página: clique de anúncio (gclid/gbraid/wbraid/fbclid), página de
+     entrada e referrer. É o que liga o lead ao anúncio, já que o clique do
+     Google Ads cai na home e não aqui. Campo vazio não vai no payload. */
+  var ORIGEM_STORAGE_KEY = 'legalizai_origem';
+  var ORIGEM_CAMPOS = ['gclid', 'gbraid', 'wbraid', 'fbclid', 'landingPage', 'referrer'];
+  function lerOrigem() {
+    try { return JSON.parse(sessionStorage.getItem(ORIGEM_STORAGE_KEY)) || {}; } catch (e) { return {}; }
+  }
+
+  /* Parâmetros de clique que o url_passthrough do Google põe na URL quando o
+     consentimento está negado (sem cookie, é a URL que carrega o clique). O
+     redirect pro obrigado leva só esses: sem eles a conversão de lá não se
+     liga ao anúncio. UTM não vai junto: repetir UTM no meio da sessão pode
+     abrir sessão nova no GA4. */
+  var CLIQUE_PASSTHROUGH = ['gclid', 'gbraid', 'wbraid', 'dclid', 'gclsrc', '_gl'];
+  function queryDeClique() {
+    var atual = new URLSearchParams(window.location.search);
+    var vai = new URLSearchParams();
+    CLIQUE_PASSTHROUGH.forEach(function (k) { if (atual.get(k)) vai.set(k, atual.get(k)); });
+    var s = vai.toString();
+    return s ? '?' + s : '';
+  }
+
   var form = $('soon-form');
   var nome = $('soon-nome');
   var email = $('soon-email');
@@ -82,7 +106,7 @@
     } catch (e) {
       console.log('[waitlist-debug] sessionStorage indisponível, seguindo sem salvar nome/plano', e);
     }
-    window.location.href = '/_lab/em-breve/obrigado/' + slug;
+    window.location.href = '/_lab/em-breve/obrigado/' + slug + queryDeClique();
   }
 
   function digits(s) { return (s || '').replace(/\D/g, ''); }
@@ -404,9 +428,10 @@
 
   form.addEventListener('submit', function (e) {
     e.preventDefault();
+    /* 🔒 07/10/2026: o log mostrava nome, e-mail, WhatsApp e cidade no console
+       de produção (dado pessoal, LGPD). Agora só diz SE cada campo veio. */
     console.log('[waitlist-debug] submit handler disparado', {
-      nome: nome.value, email: email.value,
-      whatsapp: whatsapp.value, cidade: cidade.value, tipo: tipo.value,
+      temNome: !!nome.value.trim(), temCidade: !!cidade.value.trim(), tipo: tipo.value,
       emailValid: email.validity && email.validity.valid,
       whatsappDigits: digits(whatsapp.value).length,
     });
@@ -465,6 +490,10 @@
         };
         var uf = resolveUf();
         if (uf) payload.estado = uf;
+        /* o schema zod do backend descarta campo que ainda não declara (não
+           recusa), então mandar antes de o backend gravar não quebra nada */
+        var origem = lerOrigem();
+        ORIGEM_CAMPOS.forEach(function (k) { if (origem[k]) payload[k] = String(origem[k]).slice(0, 500); });
         return fetch(WAITLIST_ENDPOINT, {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },

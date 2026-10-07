@@ -9,14 +9,18 @@
       negado e só vira 'granted' se a pessoa já aceitou antes (lz_consent no
       localStorage). O banner e o painel vêm de /_lab/consentimento.js, no fim
       do <body>. ⚠️ Chave, versão (v:1) e validade (12 meses) espelham as de
-      consentimento.js — mudou lá, muda aqui e nas outras páginas. -->
+      consentimento.js — mudou lá, muda aqui e nas outras páginas.
+      🆕 07/10/2026: url_passthrough. Com marketing negado não há cookie de
+      clique, então o próprio Google leva o gclid na URL dos links internos;
+      sem isso a conversão do obrigado não se ligava ao anúncio. -->
+
 <script>
 window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments);}
 (function(){var c=null;try{c=JSON.parse(localStorage.getItem('lz_consent'));}catch(e){}
 if(!c||c.v!==1||!(Date.now()-c.t<31536e6))c={};
 var a=c.analytics?'granted':'denied',m=c.marketing?'granted':'denied';
 gtag('consent','default',{analytics_storage:a,ad_storage:m,ad_user_data:m,ad_personalization:m,functionality_storage:'granted',security_storage:'granted',wait_for_update:500});
-gtag('set','ads_data_redaction',m==='denied');window.lzMarketing=m==='granted';})();
+gtag('set','ads_data_redaction',m==='denied');gtag('set','url_passthrough',true);window.lzMarketing=m==='granted';})();
 </script>
  <!-- Google Tag Manager -->
 <script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
@@ -1707,6 +1711,7 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
      página baixava lottie.min.js (305 KB) + paperplane-data.js (8 KB), rodava
      `initLotties()` e não encontrava um único elemento pra animar.
      Nada visual se perdeu aqui: não havia nada acontecendo. -->
+<script src="/_lab/origem.js?v=1" defer></script>
 <script src="/_lab/script.js?v=67" defer></script>
 <!-- banner + painel de cookies (LGPD). O default negado já rodou no <head>. -->
 <script src="/_lab/consentimento.js?v=4" defer></script>
