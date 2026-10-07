@@ -2075,7 +2075,7 @@ h2 { font-size:clamp(1.5rem, 2vw + .8rem, 2.05rem); font-weight:800; line-height
   content:''; position:absolute; inset:0; z-index:1; pointer-events:none;
   background:linear-gradient(165deg, rgba(242,100,60,.32), rgba(133,42,21,.42));
 }
-.bp-media-abertura   { background:linear-gradient(135deg, var(--coral-100), var(--coral-300)); }
+.bp-media-primeiros-passos { background:linear-gradient(135deg, var(--coral-100), var(--coral-300)); }
 .bp-media-impostos   { background:linear-gradient(135deg, var(--coral-50), var(--coral-200)); }
 .bp-media-mei        { background:linear-gradient(135deg, var(--coral-200), var(--coral-400)); }
 .bp-media-obrigacoes { background:linear-gradient(135deg, var(--coral-50), var(--coral-100)); }
