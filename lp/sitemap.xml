@@ -13,13 +13,10 @@
     <changefreq>weekly</changefreq>
     <priority>1.0</priority>
   </url>
-  <!-- simulador "a gente consegue te atender?" -->
-  <url>
-    <loc>https://www.legalizai.com.br/atendimento</loc>
-    <lastmod>2026-09-08</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.8</priority>
-  </url>
+  <!-- 🔄 08/10/2026: /atendimento (simulador de abertura) saiu do sitemap e
+       redireciona pra home (vercel.json) até o lançamento: o Google Ads lê
+       abertura de empresa como serviço de governo (identificador de empresa).
+       Ao voltar, recolocar aqui com lastmod novo. -->
   <!-- índice do blog -->
   <url>
     <loc>https://www.legalizai.com.br/blog</loc>

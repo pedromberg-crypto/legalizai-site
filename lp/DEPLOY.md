@@ -37,6 +37,12 @@ e entra no `sitemap.xml` com www.
 
 - `/coming-soon/*` → `/em-breve/*` (308). Slug antigo da página de espera; o
   Google ainda tinha a URL e acusava 404.
+- `/atendimento` → `/` (307, temporário), desde 08/10/2026. A página é o
+  simulador de abertura de empresa, e a política do Google Ads de serviços do
+  governo lê abertura como identificador de empresa (CNPJ). Ela saiu também do
+  `sitemap.xml` e volta no lançamento, como página de abertura. **Só a rota
+  exata redireciona**: `/atendimento/atendimento.css` e `/atendimento/icones/`
+  continuam servidos porque a home usa os dois.
 
 ---
 
