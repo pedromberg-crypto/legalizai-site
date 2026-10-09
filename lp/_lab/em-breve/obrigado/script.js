@@ -124,9 +124,8 @@
   }
 
   /* ---------- compartilhar ----------
-     O texto fala de contabilidade, nunca de "abrir empresa": a política do
-     Google Ads lê promessa de abertura como venda de registro de empresa
-     (serviço de governo). Mesma regra da home e do /em-breve. */
+     O texto fala só da contabilidade de todo mês, igual à home e ao
+     /em-breve. */
   var shareUrl = window.location.origin + '/_lab/em-breve';
   var waMsg = 'Contabilidade online com contador de verdade, em BH: nos 3 primeiros meses, a partir de R$29/mês. Entra na lista de espera da Legalizaí: ' + shareUrl;
   var waLink = $('obrigado-whatsapp');

@@ -95,11 +95,10 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
   <link rel="preload" href="/assets/fonts/sora-latin.woff2" as="font" type="font/woff2" crossorigin>
 
   <!-- LAB: ?v muda a cada rodada de ajuste; sem isso o Chrome serve o css antigo -->
-  <link rel="stylesheet" href="/_lab/styles.css?v=299">
-  <!-- simulador de atendimento (seção #validador). MESMO par de arquivos
-       servido em /_lab/atendimento/ — a página standalone e a seção da home
-       não são cópias, dividem css e js. -->
-  <link rel="stylesheet" href="/_lab/atendimento/atendimento.css?v=83">
+  <link rel="stylesheet" href="/_lab/styles.css?v=300">
+  <!-- ✂️ 09/10: atendimento.css saiu junto com o validador (ver a nota onde a
+       seção ficava). Os ícones de /atendimento/icones/ continuam: os planos e
+       a régua de faixas usam. -->
   <noscript><style>.reveal{opacity:1;transform:none}</style></noscript>
 
   <!-- ─── PRIORIDADE DE CARREGAMENTO ───────────────────────────────────────
@@ -174,7 +173,6 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
     </a>
     <nav class="header-nav" aria-label="Navegação principal">
       <a href="#topo">Início</a>
-      <a href="#validador">Atendemos você?</a>
       <a href="#como-funciona">Como funciona</a>
       <a href="#planos">Planos</a>
       <a href="#perguntas">Perguntas</a>
@@ -372,34 +370,39 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
           </div>
         </div>
 
+        <!-- 🔄 09/10: este cartão era o recomendador de CNAE ("Sua atividade na
+             Receita · CNAE 6201-5/02 · O que esse CNAE cobre"). Escolher CNAE é etapa
+             da abertura de empresa, que a política de serviços do governo do Google
+             Ads reprova. Virou o fechamento do mês (rotina contábil), com a mesma
+             estrutura. A classe float-card-cnae ficou: é dela que vem a posição. -->
         <div class="float-card float-card-cnae" aria-hidden="true">
           <div class="fc-row-between">
             <div>
-              <span class="fc-tag-success">★ Recomendado</span>
-              <p class="fc-title">Criação de sites e web design</p>
+              <span class="fc-tag-success">✓ Conferido</span>
+              <p class="fc-title">Fechamento de setembro</p>
             </div>
-            <span class="fc-badge-success">94% compatível</span>
+            <span class="fc-badge-success">Em dia</span>
           </div>
-          <p class="fc-desc">Você entrega sites e presença digital pra outras empresas.</p>
+          <p class="fc-desc">Notas do mês conferidas e imposto já calculado.</p>
           <div class="fc-stats">
             <div class="fc-stat">
-              <p class="fc-stat-label">Sua atividade<br>na Receita</p>
-              <p class="fc-stat-value">CNAE 6201-5/02</p>
+              <p class="fc-stat-label">Faturamento<br>do mês</p>
+              <p class="fc-stat-value">R$ 12.400</p>
             </div>
             <div class="fc-stat fc-stat-success">
               <p class="fc-stat-label">Imposto</p>
-              <p class="fc-stat-value">mais baixo</p>
-              <p class="fc-stat-sub">entre os que servem</p>
+              <p class="fc-stat-value">R$ 744</p>
+              <p class="fc-stat-sub">6% no Simples</p>
             </div>
           </div>
-          <p class="fc-subheading">O que esse CNAE cobre</p>
+          <p class="fc-subheading">O que já está pronto</p>
           <div class="fc-check-item">
             <span class="fc-check-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="m5 12 4.5 4.5L19 7"/></svg></span>
-            <span>Criar e desenvolver sites, páginas e portais na internet</span>
+            <span>DAS gerado e no app, pronto pra pagar</span>
           </div>
           <div class="fc-check-item">
             <span class="fc-check-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="m5 12 4.5 4.5L19 7"/></svg></span>
-            <span>Desenhar a interface (o visual e a navegação) desses sites</span>
+            <span>Pró-labore e INSS do mês calculados</span>
           </div>
       </div>
 
@@ -445,84 +448,16 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
   </div>
 </section>
 
-<!-- ============================================================ VALIDADOR
-     🔄 TROCA SECA — esta seção era o "concierge" de CNAE (3 passos: MEI ou ME
-     → sua atividade → resultado). Foi substituída pelo SIMULADOR DE
-     ATENDIMENTO, que espelha o trecho E3.2 → E5F do flow real de abrir do app
-     (regime → atividade → endereço → sócios → faturamento → veredito).
-
-     Por que trocou, e não somou: as duas faziam a MESMA pergunta ("vocês me
-     atendem?"), e duas ferramentas iguais na mesma página não competem —
-     a de baixo morre por cansaço. O simulador responde mais e mente menos:
-     o antigo dizia "sua atividade entra", este diz "a gente abre a sua
-     empresa", que é a pergunta que a pessoa realmente faz.
-
-     ⚠️ A marcação e o comportamento vivem em /_lab/atendimento/ (css + js),
-     carregados no <head> e no fim do <body> desta página. A página
-     /_lab/atendimento/ continua existindo com o MESMO código, como destino
-     de anúncio/link direto — não é cópia, é o mesmo par de arquivos.
-
-     O JS antigo do concierge (seção 5 do script.js) morre sozinho: ele começa
-     com `if (!input) return;` justamente porque #v-input pode não existir na
-     página (guard criado quando o /blog foi montado). Nada a limpar lá.
-
-     Espelho do flow real (fonte: legalize/execucao/flow/versoes/v113):
-       E3.2 (MEI × ME) → E3.4 (categoria + endereço, os 2 gates)
-                       → E5T (sócios) → E5F (faixa) → veredito
-     Regras (CEP de BH, teto do MEI/ME, categorias sem MEI, endereço fiscal)
-     estão comentadas em /_lab/atendimento/atendimento.js — não duplicar aqui. -->
-<section class="validador sim-embed" id="validador" aria-labelledby="val-title">
-  <div class="container">
-    <div class="section-head reveal">
-      <h2 id="val-title">A gente atende o seu caso?</h2>
-      <p class="section-sub">Algumas perguntas rápidas, de graça e sem cadastro. No fim você sabe se o seu caso entra hoje.</p>
-    </div>
-
-    <div class="sim-grid" id="simulador">
-
-      <!-- Trilha de etapas: espelha o passo atual e marca o que já passou.
-           Em mobile some e vira a barra fina de progresso no topo do cartão. -->
-      <aside class="sim-rail" aria-hidden="true">
-        <p class="sim-rail-title">Acompanhe as etapas</p>
-        <ol class="sim-rail-list" id="sim-rail-list"></ol>
-
-        <ul class="sim-rail-trust">
-          <li>
-            <svg viewBox="0 0 24 24" aria-hidden="true"><path fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" d="m5 12 5 5L20 7"/></svg>
-            Escritório de verdade, 22 anos em BH
-          </li>
-          <li>
-            <svg viewBox="0 0 24 24" aria-hidden="true"><path fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" d="m5 12 5 5L20 7"/></svg>
-            Contador especializado, com registro no CRC
-          </li>
-          <li>
-            <svg viewBox="0 0 24 24" aria-hidden="true"><path fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" d="m5 12 5 5L20 7"/></svg>
-            Resposta na hora, sem falar com vendedor
-          </li>
-        </ul>
-      </aside>
-
-      <div class="sim-stage">
-        <div class="sim-bar" aria-hidden="true">
-          <div class="sim-bar-track"><span class="sim-bar-fill" id="sim-bar-fill"></span></div>
-          <p class="sim-bar-label" id="sim-bar-label"></p>
-        </div>
-
-        <!-- O CARTÃO-TELA: estrutura de 3 partes do app (título fixo / corpo /
-             CTA fixo). O JS injeta o miolo. -->
-        <div class="sim-screen" id="sim-screen"></div>
-
-        <p class="sr-only" role="status" aria-live="polite" id="sim-live"></p>
-
-        <p class="sim-disclaimer">
-          Simulação. As respostas ficam só no seu navegador. Nada é enviado,
-          gravado ou usado pra te ligar depois.
-        </p>
-      </div>
-
-    </div>
-  </div>
-</section>
+<!-- ✂️ 09/10/2026: o VALIDADOR saiu da home. Era o simulador de abertura de
+     empresa (atendimento.js renderizando em #sim-screen), e o redirect do
+     /atendimento em 08/10 não tirou ele do ar: o texto dele ("a abertura sai
+     da sua mão e vem pra nossa", "o app só abre empresa com sede em BH") é
+     gerado por JS e seguia na página que é destino dos anúncios. Pela política
+     de documentos e serviços do governo do Google Ads, oferecer o identificador
+     de empresa (CNPJ) é a categoria que reprova, e o Google avalia o domínio.
+     Volta no lançamento, junto com a página de abertura. O markup está no git
+     (commit anterior a esta remoção). Os links que apontavam pra #validador
+     (menu, planos, "crescer", FAQ) foram trocados junto. -->
 
 <!-- ============================================================ DIFERENCIAIS
      REDESENHO V2 (LAB) — o Pedro trouxe print de um app de viagem (mobile,
@@ -892,7 +827,7 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
             <li><details class="pr-det"><summary>Sócios na empresa<span class="pr-info" aria-hidden="true">?</span></summary><p class="pr-tip">Até 4 sócios no plano ME. E sócio com carteira assinada em outra empresa continua contando como um só: aqui não existe sócio que vale por dois.</p></details></li>
             <li><details class="pr-det"><summary>Colaboradores na folha<span class="pr-info" aria-hidden="true">?</span></summary><p class="pr-tip">Serviço adicional, contratado no app quando você precisar. R$ 39 por pessoa ativa no mês, até 10 pessoas, com eSocial, EFD-Reinf e DCTFWeb por nossa conta.</p></details></li>
             <li><details class="pr-det"><summary>Aviso antes de bater o teto<span class="pr-info" aria-hidden="true">?</span></summary><p class="pr-tip">O MEI para em R$ 81 mil por ano. O ME para em R$ 360 mil. Nos dois casos a gente acompanha o seu faturamento e avisa enquanto ainda dá tempo de ajustar.</p></details></li>
-            <li><details class="pr-det"><summary>A transição é por nossa conta<span class="pr-info" aria-hidden="true">?</span></summary><p class="pr-tip">Passou do teto do MEI, a gente vira ME. Passou do teto do ME, a gente faz o desenquadramento para EPP: honorário de R$ 139 mais a taxa de registro de R$ 290, dita antes. Você continua no mesmo app, com a mesma equipe. E se o faturamento cair, a faixa desce sozinha na competência seguinte: você não precisa pedir nem reclamar.</p></details></li>
+            <li><details class="pr-det"><summary>A transição é por nossa conta<span class="pr-info" aria-hidden="true">?</span></summary><p class="pr-tip">Passou do teto do MEI, você passa pro plano ME. Passou do teto do ME, o contador acompanha a passagem para EPP com você, com o valor dito antes de começar. Você continua no mesmo app, com a mesma equipe. E se o faturamento cair, a faixa desce sozinha na competência seguinte: você não precisa pedir nem reclamar.</p></details></li>
           </ul>
         </div>
 
@@ -1016,7 +951,7 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
              (R$ 209 à parte) continua dito na lista do cartão. -->
 
         <p class="plano-fidelidade">Fidelidade de 12 meses do CNPJ. Saindo antes, multa de 30% do saldo. Em troca: 3 meses a R$ 29. <a href="#perguntas">Detalhe</a>.</p>
-        <a class="btn plano-btn-2" href="#validador">Ver se eu sou MEI</a>
+        <a class="btn plano-btn-2" href="/em-breve">Garantir minha condição</a>
       </article>
 
       <!-- ME: o produto principal. Recebe o destaque e o CTA cheio. -->
@@ -1078,7 +1013,7 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
       </details>
 
         <p class="plano-fidelidade">Fidelidade de 12 meses do CNPJ. Saindo antes, multa de 30% mais o certificado (R$ 209). Em troca: certificado digital incluso. <a href="#perguntas">Detalhe</a>.</p>
-        <a class="btn btn-primary" href="#validador">Ver se a gente atende você</a>
+        <a class="btn btn-primary" href="/em-breve">Garantir minha condição</a>
       </article>
 
     </div>
@@ -1297,7 +1232,7 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
         </li>
         <li>
           <img class="crescer-check" src="/_lab/assets/check-3d.webp?v=2" alt="" aria-hidden="true" width="146" height="146" loading="lazy" decoding="async">
-          <strong>A transição é nossa</strong><span>a gente faz a mudança para EPP, e diz o valor antes</span>
+          <strong>A transição é nossa</strong><span>o contador acompanha a passagem para EPP e diz o valor antes</span>
         </li>
         <li>
           <img class="crescer-check" src="/_lab/assets/check-3d.webp?v=2" alt="" aria-hidden="true" width="146" height="146" loading="lazy" decoding="async">
@@ -1305,7 +1240,7 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
         </li>
       </ul>
 
-      <p class="crescer-cta"><a class="btn btn-primary" href="#validador">Ver se a gente atende a sua atividade</a></p>
+      <p class="crescer-cta"><a class="btn btn-primary" href="/em-breve">Garantir minha condição</a></p>
     </div>
 
     <!-- A TELA: cópia fiel do E5F no ramo MEI (régua de faixas + gate de teto). -->
@@ -1438,7 +1373,7 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
       </details>
       <details>
         <summary>Atende a minha atividade?<span class="faq-ico" aria-hidden="true"></span></summary>
-        <p>Descubra em 10 segundos no <a href="#validador">validador aqui em cima</a>, de graça, antes de entrar na lista. Se ainda não atendemos, você entra na lista e é avisado assim que abrir.</p>
+        <p>Hoje a gente atende <strong>MEI e ME do Simples Nacional</strong>, e o contador confirma o seu caso antes de qualquer cobrança. Se ainda não atendemos, você entra na lista e é avisado assim que a gente chegar aí.</p>
       </details>
       <!-- 🔴 PENDÊNCIA: falta o valor do honorário de baixa/encerramento. O vault
            não tem esse número fechado (só a multa de 30% do saldo, vault
@@ -1447,8 +1382,8 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
            ("custo de saída declarado") só fica completo quando o número entrar
            aqui. -->
       <details>
-        <summary>E se eu quiser sair, ou encerrar a empresa?<span class="faq-ico" aria-hidden="true"></span></summary>
-        <p>Sair do plano dentro dos 12 meses de fidelidade tem multa de <strong>30% sobre o que ainda faltava</strong>, nunca sobre o que você já pagou. Depois da fidelidade, é só avisar: não tem multa. <strong>Encerrar a empresa</strong> é outro serviço, com taxas próprias do Estado que não ficam com a gente, e a gente te passa o valor fechado antes de começar. Você não descobre custo de saída no meio do caminho.</p>
+        <summary>E se eu quiser sair?<span class="faq-ico" aria-hidden="true"></span></summary>
+        <p>Sair do plano dentro dos 12 meses de fidelidade tem multa de <strong>30% sobre o que ainda faltava</strong>, nunca sobre o que você já pagou. Depois da fidelidade, é só avisar: não tem multa. Você não descobre custo de saída no meio do caminho.</p>
       </details>
       <!-- 🔄 08/10/2026: saiu o "Quanto tempo demora?". A resposta era sobre o
            prazo do registro da empresa (abertura), que deixou a home (ADR
@@ -1649,7 +1584,6 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
 
     <nav class="footer-col" aria-labelledby="fcol-site">
       <p class="footer-col-titulo" id="fcol-site">A página</p>
-      <a href="#validador">Atendemos você?</a>
       <a href="#como-funciona">Como funciona</a>
       <a href="#perguntas">Perguntas</a>
       <a class="oculto-por-ora" href="/blog" hidden>Blog</a>
@@ -1699,14 +1633,13 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
 <!-- contagem do lançamento ANTES do script.js: ela tira o `hidden` do bloco, e
      o scroll reveal do script.js precisa encontrá-lo já visível -->
 <script src="/_lab/lancamento.js?v=1" defer></script>
-<script src="/_lab/script.js?v=67" defer></script>
+<script src="/_lab/script.js?v=68" defer></script>
 <!-- banner + painel de cookies (LGPD). O default negado já rodou no <head>. -->
 <script src="/_lab/consentimento.js?v=4" defer></script>
 <!-- 🧪 TESTE: vidro líquido em WebGL nos cartões dos 3 passos. Sai calado se
      não houver WebGL ou se o usuário pedir menos movimento — nesses casos a
      dobra fica com o vidro em CSS de sempre. -->
 <script src="/_lab/vidro-liquido.js?v=30" defer></script>
-<script src="/_lab/atendimento/atendimento.js?v=65" defer></script>
 
 <!-- ═══ DADOS ESTRUTURADOS (schema.org) ═══════════════════════════════════
      Três blocos, cada um respondendo a uma pergunta diferente do buscador:
@@ -1723,7 +1656,7 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
 
      Fica no fim do <body> de propósito: não bloqueia nada, e o rastreador lê
      o documento inteiro antes de interpretar. -->
-<script type="application/ld+json">{"@context":"https://schema.org","@type":"FAQPage","mainEntity":[{"@type":"Question","name":"Vocês têm contador de verdade?","acceptedAnswer":{"@type":"Answer","text":"Temos, e é o coração da coisa. No plano ME você conversa com um contador especializado , com registro no CRC-MG, de um escritório com 22 anos de estrada em BH. O app organiza e avisa; quem responde e assume a responsabilidade é gente de carne e osso. O contador atende no plano ME : no MEI, quem cuida da rotina do dia a dia é um assistente virtual."}},{"@type":"Question","name":"Quanto custa?","acceptedAnswer":{"@type":"Answer","text":"R$ 139/mês no plano ME, que é o Simples Nacional para quem presta serviço. Se você é MEI, são R$ 49/mês. Preço fechado, sem \"a partir de\" e sem taxa-surpresa no boleto: o valor que você vê é o valor que você paga. Na oferta de lançamento, os 3 primeiros meses saem por R$ 99 no ME e R$ 29 no MEI, até 31/12/2026. Do quarto mês em diante vale o preço cheio: R$ 139 e R$ 49. A data da virada está escrita no contrato, e a gente avisa antes dela chegar. Sem reversão silenciosa e sem plano que muda sozinho. Se o seu faturamento crescer e a empresa virar EPP, a mensalidade passa a seguir a faixa de receita dos últimos 12 meses. E ela desce sozinha se o faturamento cair: você não precisa pedir."}},{"@type":"Question","name":"Vocês são do governo?","acceptedAnswer":{"@type":"Answer","text":"Não somos órgão público. A Legalizaí é uma empresa privada de contabilidade, com responsabilidade técnica de um escritório registrado no CRC-MG, sem vínculo com órgãos do governo. O que a gente vende é a contabilidade de todo mês."}},{"@type":"Question","name":"E se eu não gostar?","acceptedAnswer":{"@type":"Answer","text":"São 7 dias pra mudar de ideia, com dinheiro de volta (Código de Defesa do Consumidor, art. 49). As condições completas estão nos Termos de uso. Passados os 7 dias, o plano tem fidelidade de 12 meses. Ela vale nos dois planos, e no ME a contrapartida é concreta: certificado digital incluso e o preço de lançamento nos 3 primeiros meses. Saindo antes do fim, a multa é de 30% sobre o que ainda faltava, nunca sobre o que você já pagou, e o certificado já emitido (R$ 209) também entra na conta. Está no contrato desde o primeiro dia."}},{"@type":"Question","name":"Já tenho contador. Dá pra mudar?","acceptedAnswer":{"@type":"Answer","text":"Dá, e a mudança é com a gente: você informa o CNPJ, a gente puxa seus dados e cuida da transição inteira com o contador atual. Você não briga com ninguém. 😄"}},{"@type":"Question","name":"Atende a minha atividade?","acceptedAnswer":{"@type":"Answer","text":"Descubra em 10 segundos no validador aqui em cima, de graça, antes de entrar na lista. Se ainda não atendemos, você entra na lista e é avisado assim que abrir."}},{"@type":"Question","name":"E se eu quiser sair, ou encerrar a empresa?","acceptedAnswer":{"@type":"Answer","text":"Sair do plano dentro dos 12 meses de fidelidade tem multa de 30% sobre o que ainda faltava , nunca sobre o que você já pagou. Depois da fidelidade, é só avisar: não tem multa. Encerrar a empresa é outro serviço, com taxas próprias do Estado que não ficam com a gente, e a gente te passa o valor fechado antes de começar. Você não descobre custo de saída no meio do caminho."}}]}</script>
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"FAQPage","mainEntity":[{"@type":"Question","name":"Vocês têm contador de verdade?","acceptedAnswer":{"@type":"Answer","text":"Temos, e é o coração da coisa. No plano ME você conversa com um contador especializado , com registro no CRC-MG, de um escritório com 22 anos de estrada em BH. O app organiza e avisa; quem responde e assume a responsabilidade é gente de carne e osso. O contador atende no plano ME : no MEI, quem cuida da rotina do dia a dia é um assistente virtual."}},{"@type":"Question","name":"Quanto custa?","acceptedAnswer":{"@type":"Answer","text":"R$ 139/mês no plano ME, que é o Simples Nacional para quem presta serviço. Se você é MEI, são R$ 49/mês. Preço fechado, sem \"a partir de\" e sem taxa-surpresa no boleto: o valor que você vê é o valor que você paga. Na oferta de lançamento, os 3 primeiros meses saem por R$ 99 no ME e R$ 29 no MEI, até 31/12/2026. Do quarto mês em diante vale o preço cheio: R$ 139 e R$ 49. A data da virada está escrita no contrato, e a gente avisa antes dela chegar. Sem reversão silenciosa e sem plano que muda sozinho. Se o seu faturamento crescer e a empresa virar EPP, a mensalidade passa a seguir a faixa de receita dos últimos 12 meses. E ela desce sozinha se o faturamento cair: você não precisa pedir."}},{"@type":"Question","name":"Vocês são do governo?","acceptedAnswer":{"@type":"Answer","text":"Não somos órgão público. A Legalizaí é uma empresa privada de contabilidade, com responsabilidade técnica de um escritório registrado no CRC-MG, sem vínculo com órgãos do governo. O que a gente vende é a contabilidade de todo mês."}},{"@type":"Question","name":"E se eu não gostar?","acceptedAnswer":{"@type":"Answer","text":"São 7 dias pra mudar de ideia, com dinheiro de volta (Código de Defesa do Consumidor, art. 49). As condições completas estão nos Termos de uso. Passados os 7 dias, o plano tem fidelidade de 12 meses. Ela vale nos dois planos, e no ME a contrapartida é concreta: certificado digital incluso e o preço de lançamento nos 3 primeiros meses. Saindo antes do fim, a multa é de 30% sobre o que ainda faltava, nunca sobre o que você já pagou, e o certificado já emitido (R$ 209) também entra na conta. Está no contrato desde o primeiro dia."}},{"@type":"Question","name":"Já tenho contador. Dá pra mudar?","acceptedAnswer":{"@type":"Answer","text":"Dá, e a mudança é com a gente: você informa o CNPJ, a gente puxa seus dados e cuida da transição inteira com o contador atual. Você não briga com ninguém. 😄"}},{"@type":"Question","name":"Atende a minha atividade?","acceptedAnswer":{"@type":"Answer","text":"Hoje a gente atende MEI e ME do Simples Nacional, e o contador confirma o seu caso antes de qualquer cobrança. Se ainda não atendemos, você entra na lista e é avisado assim que a gente chegar aí."}},{"@type":"Question","name":"E se eu quiser sair?","acceptedAnswer":{"@type":"Answer","text":"Sair do plano dentro dos 12 meses de fidelidade tem multa de 30% sobre o que ainda faltava , nunca sobre o que você já pagou. Depois da fidelidade, é só avisar: não tem multa. Você não descobre custo de saída no meio do caminho."}}]}</script>
 <script type="application/ld+json">{"@context":"https://schema.org","@type":"ProfessionalService","@id":"https://www.legalizai.com.br/#organizacao","name":"Legalizaí","alternateName":"Legalizai Tecnologia Ltda","url":"https://www.legalizai.com.br","image":"https://www.legalizai.com.br/assets/og-legalizai.jpg","logo":"https://www.legalizai.com.br/assets/apple-touch-icon.png","email":"contato@legalizai.com.br","description":"Contabilidade digital para MEI e ME do Simples Nacional, com contador registrado no CRC-MG atendendo por WhatsApp.","priceRange":"R$ 49 - R$ 139","taxID":"41.569.345/0001-48","areaServed":{"@type":"City","name":"Belo Horizonte","address":{"@type":"PostalAddress","addressRegion":"MG","addressCountry":"BR"}},"address":{"@type":"PostalAddress","streetAddress":"R. Satélite, 328, sala 411","addressLocality":"Belo Horizonte","addressRegion":"MG","addressCountry":"BR"},"knowsLanguage":"pt-BR","employee":{"@type":"Person","name":"Mauro Lopes de Faria","jobTitle":"Contador responsável","identifier":"CRC-MG 094967/O-0"}}</script>
 <script type="application/ld+json">{"@context":"https://schema.org","@type":"Service","name":"Contabilidade online para MEI e ME","provider":{"@id":"https://www.legalizai.com.br/#organizacao"},"areaServed":{"@type":"City","name":"Belo Horizonte"},"hasOfferCatalog":{"@type":"OfferCatalog","name":"Planos Legalizaí","itemListElement":[{"@type":"Offer","name":"MEI","price":"49.00","priceCurrency":"BRL","description":"Contabilidade do MEI pelo app: nota fiscal, DAS com aviso e assistente virtual. Até R$ 6.750/mês, sem sócio.","url":"https://www.legalizai.com.br/#planos"},{"@type":"Offer","name":"ME · Simples Nacional","price":"139.00","priceCurrency":"BRL","description":"Tudo do MEI, mais contador com CRC no WhatsApp, contabilidade do Simples com Fator R acompanhado, sócios e sem teto de faturamento.","url":"https://www.legalizai.com.br/#planos"}]}}</script>
 

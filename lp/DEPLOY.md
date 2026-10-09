@@ -41,8 +41,22 @@ e entra no `sitemap.xml` com www.
   simulador de abertura de empresa, e a política do Google Ads de serviços do
   governo lê abertura como identificador de empresa (CNPJ). Ela saiu também do
   `sitemap.xml` e volta no lançamento, como página de abertura. **Só a rota
-  exata redireciona**: `/atendimento/atendimento.css` e `/atendimento/icones/`
-  continuam servidos porque a home usa os dois.
+  exata redireciona**: `/atendimento/icones/` continua servido porque a home
+  usa os ícones.
+- 09/10/2026: o mesmo simulador rodava **dentro da home**, como "validador"
+  (`atendimento.js` renderizando em `#sim-screen`), com frases como "a
+  abertura sai da sua mão e vem pra nossa". A seção saiu da home, junto com o
+  `atendimento.css`/`.js`, e `atendimento/index.html` e `atendimento.js` saíram
+  do deploy pelo `.vercelignore`. No lançamento: apagar essas duas linhas do
+  `.vercelignore` e devolver a seção (o markup está no git).
+
+## O que não vai pro ar (`.vercelignore`)
+
+`_lab/`, este `DEPLOY.md`, `build-lp.mjs`, `em-breve/src.css` e os dois arquivos
+do simulador. Até 09/10/2026 o `DEPLOY.md` e o `build-lp.mjs` respondiam 200 no
+domínio. O `/em-breve` não passa pelo minificador, então **comentário escrito
+lá vai pro ar como está**: nada de nota sobre política do Google Ads, abertura
+de empresa ou CNPJ em comentário do `/em-breve` (fica no git, neste arquivo).
 
 ---
 

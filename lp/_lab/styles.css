@@ -2345,6 +2345,12 @@ h2 { font-size:clamp(1.5rem, 2vw + .8rem, 2.05rem); font-weight:800; line-height
   box-shadow:0 0 0 1px rgba(255,255,255,.14), 0 22px 50px -26px rgba(0,0,0,.6);
 }
 .planos-copy.is-vidro-dark > *:not(.step-vidro) { position:relative; z-index:1; }
+/* a lista de rótulos um nível acima do resto da coluna (09/10): as dicas "?"
+   abrem como balão absoluto PRA BAIXO, e a última ("A transição é por nossa
+   conta") caía em cima do .planos-leo. Com todos em z-index:1, quem vem depois
+   no HTML (a imagem) pinta por cima, e a dica ficava ilegível. Mesma
+   especificidade da regra acima e vem depois, então vence. */
+.planos-copy.is-vidro-dark > .planos-rotulos { z-index:2; }
 .planos-copy.is-vidro-dark h2,
 .planos-copy.is-vidro-dark .planos-argumentos strong { color:#fff; }
 /* 0,88 e não 0,74: sobre o vidro dark (que ainda deixa o coral passar por

@@ -843,9 +843,7 @@
   var ARQUIVOS = [
     location.pathname,
     '/styles.css',
-    '/script.js',
-    '/atendimento/atendimento.css',
-    '/atendimento/atendimento.js'
+    '/script.js'
   ];
   var assinatura = null;
   setInterval(function () {

@@ -1323,9 +1323,8 @@
   var ARQUIVOS = [
     location.pathname,
     '/_lab/styles.css',
-    '/_lab/script.js',
-    '/_lab/atendimento/atendimento.css',
-    '/_lab/atendimento/atendimento.js'
+    '/_lab/script.js'
+    // ✂️ 09/10: atendimento.css/.js saíram da lista junto com o validador
   ];
   var assinatura = null;
   setInterval(function () {

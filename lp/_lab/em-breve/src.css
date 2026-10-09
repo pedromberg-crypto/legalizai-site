@@ -900,6 +900,10 @@ body.soon-body { min-height:100dvh; display:flex; flex-direction:column; }
 .obrigado-footer { flex:none; padding:20px; text-align:center; }
 .obrigado-footer a { color:rgba(255,255,255,.75); font-size:.85rem; text-decoration:none; }
 .obrigado-footer a:hover { color:#fff; text-decoration:underline; }
+/* aviso "sem vínculo com órgãos do governo" (09/10), o mesmo do rodapé do
+   site. Branco PURO, não o .75 do link: o rodapé fica sobre o fim do
+   gradiente (coral-700), onde o branco dá ~5,6:1 e o .75 cai abaixo de AA. */
+.obrigado-aviso { margin-top:clamp(2px, .6vh, 6px); font-size:.68rem; line-height:1.4; color:#fff; }
 
 /* ---------- desktop: 2 colunas, tudo cabe em 100vh, sem scroll ---------- */
 @media (min-width:900px) and (min-height:600px) {
@@ -941,7 +945,12 @@ body.soon-body { min-height:100dvh; display:flex; flex-direction:column; }
      pontas. */
   .soon-col-form {
     display:flex; flex-direction:column; justify-content:safe center;
-    padding:4vh 48px; overflow-y:auto; overflow-x:hidden; height:100%;
+    /* 2.5vh (era 4vh, 09/10): o rodapé ganhou a linha "sem vínculo com órgãos
+       do governo" e ela custava 18px (1280+) a 33px (900-1024) de altura,
+       criando rolagem a 650px. Como o conteúdo é centralizado (safe center),
+       este padding só é o mínimo de respiro: em tela alta nada muda, e nas
+       baixas ele devolve ~19px a 650 de altura. */
+    padding:2.5vh 48px; overflow-y:auto; overflow-x:hidden; height:100%;
   }
 
   /* a frase do H1 muda de casa no desktop: some daqui e reaparece flutuando
@@ -1053,7 +1062,11 @@ body.soon-body { min-height:100dvh; display:flex; flex-direction:column; }
   #soon-price-mei .soon-price-value, #soon-price-me .soon-price-value { font-size:clamp(1.507rem, 2.695vh, 1.87rem); }
 
   .soon-consent { margin-top:clamp(3px, .8vh, 12px); padding:clamp(5px, .7vh, 10px) 12px; }
-  .soon-footer { flex:none; padding:clamp(2px, .5vh, 8px) 48px clamp(3px, .6vh, 10px); }
+  /* lateral clamp(24px, 3.75vw, 48px), não 48px fixo (09/10): no desktop mais
+     estreito (900px) a coluna tem 450px e os 48px de cada lado deixavam 354px
+     pro texto legal, que quebrava em mais linhas (o aviso de governo virava 2).
+     A 1280+ continua 48px, alinhado com o form. */
+  .soon-footer { flex:none; padding:clamp(2px, .5vh, 8px) clamp(24px, 3.75vw, 48px) clamp(3px, .6vh, 10px); }
   .soon-footer nav { gap:10px; margin-bottom:4px; }
   /* só o tamanho muda por breakpoint — cor/decoração/hover viraram utility
      class no HTML (piloto da migração pro Tailwind); isso aqui fica porque

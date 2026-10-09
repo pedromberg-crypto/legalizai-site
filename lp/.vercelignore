@@ -1,3 +1,18 @@
 # A Vercel serve lp/ como root. O _lab/ está no git (é a fonte do site),
 # mas não pode ir pro deploy: viraria rota pública em /_lab/.
 _lab
+
+# Documentação e ferramenta de build não são página e não precisam estar no
+# ar. Até 09/10/2026 estavam: /DEPLOY.md e /build-lp.mjs respondiam 200, e o
+# DEPLOY.md descreve o simulador de abertura e a política do Google Ads.
+# O src.css é a ENTRADA do Tailwind; a página usa o styles.css gerado.
+/DEPLOY.md
+/build-lp.mjs
+/em-breve/src.css
+
+# Simulador de abertura de empresa: fora do ar até o lançamento (09/10/2026).
+# A rota /atendimento já redireciona pra home (vercel.json), mas o HTML e o JS
+# continuavam acessíveis pela URL direta. Os ícones e o css da pasta ficam:
+# a home usa os ícones. No lançamento, apagar estas duas linhas.
+/atendimento/index.html
+/atendimento/atendimento.js

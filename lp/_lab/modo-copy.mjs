@@ -155,10 +155,21 @@ const EIXOS = {
         espera: '<a class="btn btn-primary" href="/em-breve">Quero entrar na lista</a>',
         app: '<a class="btn btn-primary" href="#rodape">Começar pelo passo 1</a>',
       },
+      // ✂️ 09/10: saiu o par 'FAQ · "antes de baixar"'. A frase era o convite
+      // pro validador, e o validador saiu da home (simulador de abertura, ver
+      // a nota no index.html). A resposta nova do FAQ vale nos dois modos.
       {
-        nome: 'FAQ · "antes de baixar"',
-        espera: 'validador aqui em cima</a>, de graça, antes de entrar na lista.',
-        app: 'validador aqui em cima</a>, de graça, antes de baixar.',
+        // 2 ocorrências: botão do cartão ME e o da dobra "crescer". Antes
+        // levavam ao validador ("Ver se a gente atende você").
+        nome: 'Botão do cartão ME + dobra "crescer"',
+        espera: '<a class="btn btn-primary" href="/em-breve">Garantir minha condição</a>',
+        app: '<a class="btn btn-primary" href="#rodape">Baixar o app</a>',
+      },
+      {
+        // era "Ver se eu sou MEI", que levava ao validador
+        nome: 'Botão do cartão MEI',
+        espera: '<a class="btn plano-btn-2" href="/em-breve">Garantir minha condição</a>',
+        app: '<a class="btn plano-btn-2" href="#rodape">Baixar o app</a>',
       },
       {
         nome: 'Comentário de rastreio no topo do arquivo',
