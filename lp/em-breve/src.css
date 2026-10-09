@@ -413,7 +413,14 @@ body.soon-body { min-height:100dvh; display:flex; flex-direction:column; }
   display:none; /* some no mobile — volta no desktop (ver @media) */
   position:absolute; z-index:2; left:calc(100% + 14px); top:74%; width:200px;
   color:var(--ink-50); font-weight:800; letter-spacing:-.01em;
-  font-size:clamp(.85rem, 1.9vh, 1.09rem); line-height:1.22;
+  /* teto .92rem (era 1.09rem, 09/10): medido em iframe, com 900px+ de altura e
+     até 1536 de largura a frase passava de 10 a 21px da borda da coluna e o
+     overflow:hidden cortava as letras do fim. Nessa faixa a escala do
+     .phone-stage é limitada pela LARGURA, mas a fonte seguia crescendo com a
+     ALTURA (1.9vh). Com .92rem sobram ≥10px em todo o desktop testado
+     (900–1920 x 600–1080). Abaixo de ~775px de altura nada muda: lá 1.9vh já
+     é menor que o teto. */
+  font-size:clamp(.85rem, 1.9vh, .92rem); line-height:1.22;
   animation:phoneTaglineFloat 8s ease-in-out infinite;
 }
 @keyframes phoneTaglineFloat {
@@ -504,6 +511,61 @@ body.soon-body { min-height:100dvh; display:flex; flex-direction:column; }
   font-weight:800; line-height:1.15; letter-spacing:-.02em;
 }
 .h1-muted { color:var(--ink-400); }
+
+/* ---------- contagem pro lançamento do app (09/10) ----------
+   A data e a lógica moram em /lancamento.js (fonte em lp/_lab/), o mesmo da
+   home. CSS de componente e não utility class: são duas cópias da mesma
+   marcação (a do card e a da tela do celular do mockup) com visual
+   diferente, trocado pela faixa desktop composta (largura E altura), que não
+   bate com breakpoint nenhum do Tailwind (mesmo motivo do .soon-footer).
+   Base = mobile, fundo claro: números em coral-600 passam AA de texto grande
+   (4,04:1 sobre branco, e são 28px em 800); rótulos em ink-500 dão 4,9:1.
+   Bloco = card do design system: branco sobre o papel + borda hairline
+   ink-200, sem sombra.
+   tabular-nums: sem ele os dígitos têm larguras diferentes e o bloco inteiro
+   "treme" de lado a cada segundo. */
+/* `hidden` precisa vencer o display:flex daqui (regra de autor ganha da do
+   navegador, e o preflight do Tailwind está desligado). O bloco dos segundos
+   também usa: some no movimento reduzido. */
+.contagem[hidden], .contagem [hidden] { display:none !important; }
+.contagem { margin-top:20px; display:flex; flex-direction:column; align-items:center; gap:10px; }
+.contagem-rotulo { font-size:.9rem; font-weight:600; color:var(--ink-600); line-height:1.4; }
+.contagem-rotulo strong { font-weight:800; color:var(--coral-700); }
+/* a data não se parte: "10 de / novembro!" quebrava no meio na tela do
+   celular do mockup. Se não couber, ela desce inteira pra linha de baixo. */
+.contagem-rotulo { text-wrap:balance; }
+.contagem-rotulo strong { white-space:nowrap; }
+.contagem-relogio { display:flex; justify-content:center; gap:8px; }
+.contagem-bloco {
+  display:flex; flex-direction:column; align-items:center;
+  min-width:64px; padding:9px 10px 8px; border-radius:14px;
+  background:#fff; border:1px solid var(--ink-200);
+}
+.contagem-bloco b {
+  font-size:1.75rem; font-weight:800; line-height:1; letter-spacing:-.02em;
+  font-variant-numeric:tabular-nums; color:var(--coral-600);
+}
+.contagem-bloco small { margin-top:5px; font-size:.75rem; font-weight:600; line-height:1; color:var(--ink-500); }
+/* NO ZERO: a frase da data e o relógio saem, entra "Chegou o dia".
+   Destaque pelo design system, versão fundo CLARO: borda branca (a da home,
+   sobre coral) sumiria no papel, então o par aqui é o tint de marca
+   (surface-tint-brand = coral-50) com borda coral-600 de 1,5px. "Chegou o
+   dia!" ganha linha própria, grande, em coral-700 (5,2:1 sobre o coral-50,
+   AA mesmo se encolher); a frase embaixo fica em ink-900.
+   Raio de card (16px) e não pílula: no celular a frase quebra em 2 linhas. */
+.contagem-zerada .contagem-rotulo { display:none; }
+.contagem-chegou {
+  max-width:34ch; padding:14px 20px; border-radius:16px; text-align:center; text-wrap:balance;
+  font-size:.95rem; font-weight:600; line-height:1.4; color:var(--ink-900);
+  background:var(--coral-50); border:1.5px solid var(--coral-600);
+}
+.contagem-chegou strong {
+  display:block; margin-bottom:.15em;
+  font-size:1.35rem; font-weight:800; line-height:1.15; letter-spacing:-.02em; color:var(--coral-700);
+}
+/* a cópia da tela do celular só existe no desktop (lá ela substitui o
+   aviãozinho, ver @media); no mobile a contagem é a do card, embaixo do h1 */
+.phone-illustration .contagem-tela { display:none; }
 
 .soon-sub { margin-top:14px; color:var(--ink-500); font-size:1.02rem; line-height:1.6; }
 
@@ -902,6 +964,40 @@ body.soon-body { min-height:100dvh; display:flex; flex-direction:column; }
   }
   .phone-tagline { display:block; }
 
+  /* contagem: igual ao h1, sai do card por clip (segue pro leitor de tela) e
+     reaparece decorativa DENTRO da tela do celular do mockup, no lugar do
+     aviãozinho (pedido do Pedro, 09/10). A coluna do form não tem altura pra
+     ela: já estoura a 1280x600 sem nada a mais (medido). */
+  .soon-card .contagem {
+    position:absolute; width:1px; height:1px; padding:0; margin:-1px;
+    overflow:hidden; clip:rect(0,0,0,0); white-space:nowrap; border:0;
+  }
+  /* troca: o aviãozinho some (e o phone-lottie.js nem baixa o Lottie nesta
+     faixa) e a contagem ocupa a mesma caixa, a .phone-illustration, que já é
+     flex:1 e centraliza. Nada mais da tela do app se mexe. */
+  .phone-illustration .phone-lottie { display:none; }
+  .phone-illustration .contagem-tela { display:flex; }
+  /* Medidas em px de TELA DO APP: o celular tem 220px (180 úteis) e herda a
+     escala do .phone-stage, então os números aqui crescem e encolhem junto
+     com o resto do mockup. Mesma linguagem dos cards do app (.phone-card):
+     branco, borda ink-200, raio 8. Os 4 blocos dividem os 180px (flex:1).
+     Rótulo do dia em coral-700, a cor de texto pequeno sobre claro do design
+     system (coral-600 só passa AA em texto grande). */
+  /* padding lateral de 10px: o cartão "Atalhos rápidos" flutua por cima da
+     borda direita da tela, e com a contagem de ponta a ponta o último bloco
+     ficava a ~3px dele (medido no print). Os cartões escalam junto com o
+     celular, então a folga vale igual em qualquer tela. */
+  .contagem-tela { width:100%; margin-top:0; gap:9px; padding:0 10px; }
+  .contagem-tela .contagem-rotulo { font-size:.66rem; font-weight:700; color:var(--ink-900); line-height:1.3; text-align:center; }
+  .contagem-tela .contagem-rotulo strong { color:var(--coral-700); }
+  .contagem-tela .contagem-relogio { width:100%; gap:5px; }
+  .contagem-tela .contagem-bloco { flex:1 1 0; min-width:0; padding:7px 2px 6px; border-radius:8px; }
+  .contagem-tela .contagem-bloco b { font-size:1.3rem; }
+  /* .55rem: no menor desktop (900px, mockup a 77%) as unidades ficam em ~7px,
+     do tamanho do resto do texto miúdo do app; a 1280 passam de 9px */
+  .contagem-tela .contagem-bloco small { margin-top:3px; font-size:.55rem; }
+  .contagem-tela .contagem-chegou { max-width:none; padding:10px 8px; border-radius:8px; font-size:.62rem; }
+  .contagem-tela .contagem-chegou strong { font-size:1rem; }
 
   /* daqui pra baixo: tipografia/espaçamento FLUIDOS via clamp() preso em vh
      — encolhem/crescem sozinhos com a altura da tela, sem JS medindo nada e

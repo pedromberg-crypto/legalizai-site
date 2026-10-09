@@ -19,7 +19,23 @@
     });
   }
 
+  /* No desktop do /em-breve o aviãozinho dá lugar à contagem do lançamento
+     (src.css, .phone-illustration). Lá ele fica display:none, então nem baixa
+     o runtime (305 KB) nem anima um SVG escondido a 50 fps. Se a janela
+     encolher pra faixa mobile depois, ele carrega nessa hora.
+     ⚠️ Mesma faixa do @media de desktop do src.css: mudou lá, muda aqui. */
+  var DESKTOP = window.matchMedia('(min-width:900px) and (min-height:600px)');
+
   document.querySelectorAll('.phone-lottie').forEach(function (el) {
+    if (!DESKTOP.matches) { iniciar(el); return; }
+    DESKTOP.addEventListener('change', function quandoMobile() {
+      if (DESKTOP.matches) return;
+      DESKTOP.removeEventListener('change', quandoMobile);
+      iniciar(el);
+    });
+  });
+
+  function iniciar(el) {
     var path = el.getAttribute('data-lottie-path');
     var fps = parseInt(el.getAttribute('data-lottie-fps'), 10) || 30;
     var reduzido = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
@@ -47,5 +63,5 @@
     }).catch(function () {
       /* asset falhou: ilustração some, resto da tela segue funcionando */
     });
-  });
+  }
 })();

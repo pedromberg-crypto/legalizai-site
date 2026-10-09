@@ -11,7 +11,7 @@
       "headers": [{ "key": "Cache-Control", "value": "public, max-age=0, must-revalidate" }]
     },
     {
-      "source": "/(styles.css|script.js|vidro-liquido.js|consentimento.js|origem.js)",
+      "source": "/(styles.css|script.js|vidro-liquido.js|consentimento.js|origem.js|lancamento.js)",
       "headers": [{ "key": "Cache-Control", "value": "public, max-age=604800, must-revalidate" }]
     }
   ],

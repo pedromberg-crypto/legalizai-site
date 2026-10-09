@@ -11,7 +11,7 @@ minifica a saída. `node build-lp.mjs --raw` publica sem minificar (só pra
 depurar algo que aparece apenas em produção).
 
 **Não edite os arquivos gerados em `lp/`** — `index.html`, `styles.css`,
-`script.js`, `vidro-liquido.js`, `consentimento.js`, `origem.js`, `atendimento/`,
+`script.js`, `vidro-liquido.js`, `consentimento.js`, `origem.js`, `lancamento.js`, `atendimento/`,
 `blog/`, `assets/`. O próximo build sobrescreve.
 
 Editar direto aqui é o certo: `vercel.json`, `robots.txt`, `sitemap.xml`,
@@ -78,3 +78,18 @@ se perder no caminho:
   padrão, e o redirect pro obrigado leva os parâmetros de clique do Google
   (`gclid`, `gbraid`, `wbraid`, `dclid`, `gclsrc`, `_gl`). Página nova: copiar
   o bloco de consentimento de uma página existente, com essa linha.
+
+## Contagem do lançamento do app
+
+Home (hero, logo abaixo do título; o subtítulo saiu em 09/10) e `/em-breve`
+(embaixo do título no celular; no desktop, dentro da tela do celular do mockup,
+no lugar do aviãozinho) contam até o lançamento. A data mora **só** em `_lab/lancamento.js`, na constante
+`LANCAMENTO`: hoje `2026-11-10T00:00:00-03:00` (sem horário fechado, conta até
+a virada do dia). Mudou a data ou fechou o horário: troca essa linha, sobe o
+`?v=` do `lancamento.js` na home, no `/em-breve` e no `_lab/em-breve`, e roda o
+build. O `/em-breve` usa o `/lancamento.js` gerado pelo build, igual ao
+`origem.js`.
+
+No zero, os números viram "Chegou o dia!" e ficam assim até o site ir pro modo
+app (`node _lab/modo-copy.mjs loja app`), que esconde o bloco da home pela
+classe `.so-espera`. O `/em-breve` não tem modo: sai do ar no lançamento.

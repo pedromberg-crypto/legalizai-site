@@ -51,7 +51,7 @@ const MINIFICAR = !process.argv.includes('--raw');
 
 /* o que sai do _lab e vira rota pública */
 const COPIAR = ['index.html', 'styles.css', 'script.js', 'vidro-liquido.js',
-                'consentimento.js', 'origem.js', 'atendimento', 'blog', 'assets'];
+                'consentimento.js', 'origem.js', 'lancamento.js', 'atendimento', 'blog', 'assets'];
 
 /* material de trabalho do sandbox: nunca vai junto */
 const IGNORAR = new Set(['_inbox', 'arquivo-morto']);

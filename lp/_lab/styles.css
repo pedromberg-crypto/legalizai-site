@@ -606,6 +606,74 @@ h2 { font-size:clamp(1.5rem, 2vw + .8rem, 2.05rem); font-weight:800; line-height
 .hero-proof svg { width:18px; height:18px; flex:none; color:#fff; }
 .hero-proof strong { color:#fff; font-weight:700; }
 
+/* ---------- contagem pro lançamento do app (09/10) ----------
+   Logo abaixo do título: o subtítulo saiu (pedido do Pedro, 09/10) e a
+   contagem faz dupla com o h1. A data e a lógica moram em lancamento.js.
+
+   MEDIDA-MESTRE: --cont-num, o tamanho do número. Bloco, respiro, raio do
+   "Chegou o dia" e rótulo das unidades saem dela por razão, então pra deixar
+   a contagem maior ou menor mexe-se SÓ aqui. Fluida: 26px no celular (piso,
+   o mesmo de antes), ~40px a 1280 e teto de 45px, perto dos 49,5px do h1 no
+   desktop, pra ler como par do título e não como nota de rodapé.
+
+   Contraste: os blocos usam o mesmo véu ESCURO dos badges (coral-900 a 22%,
+   ver nota em .store-row): véu claro derrubaria o branco abaixo de AA. Sobre
+   o fundo do hero com o scrim, o branco no bloco dá ~6,2:1 (calculado), então
+   até o rótulo das unidades passa AA de texto normal.
+   tabular-nums: sem ele, os dígitos têm largura diferente e o bloco inteiro
+   "treme" de lado a cada segundo. */
+/* `hidden` precisa vencer o display:flex daqui (regra de autor ganha da do
+   navegador). O bloco dos segundos também usa: some no movimento reduzido. */
+.contagem[hidden], .contagem [hidden] { display:none !important; }
+.contagem {
+  --cont-num:clamp(1.75rem, 2vw + 1rem, 3rem);
+  margin-top:clamp(20px, 2vw, 28px);
+  display:flex; flex-direction:column; align-items:center;
+  gap:calc(var(--cont-num) * .32);
+}
+.contagem-rotulo { font-size:clamp(.95rem, .45vw + .8rem, 1.2rem); font-weight:700; color:#fff; line-height:1.3; }
+.contagem-rotulo strong { font-weight:800; }
+/* a data não se parte: "10 de / novembro!" quebrava no meio na tela do
+   celular do mockup. Se não couber, ela desce inteira pra linha de baixo. */
+.contagem-rotulo { text-wrap:balance; }
+.contagem-rotulo strong { white-space:nowrap; }
+.contagem-relogio { display:flex; gap:max(8px, calc(var(--cont-num) * .25)); }
+.contagem-bloco {
+  display:flex; flex-direction:column; align-items:center;
+  min-width:max(64px, calc(var(--cont-num) * 2.2));
+  padding:calc(var(--cont-num) * .3) calc(var(--cont-num) * .25) calc(var(--cont-num) * .26);
+  border-radius:16px;                 /* radius-lg, o raio de card do design system */
+  background:rgba(92,31,15,.22); border:1px solid rgba(255,255,255,.32);
+}
+.contagem-bloco b {
+  font-size:var(--cont-num); font-weight:800; line-height:1; letter-spacing:-.02em;
+  font-variant-numeric:tabular-nums; color:#fff;
+}
+.contagem-bloco small {
+  margin-top:calc(var(--cont-num) * .16);
+  font-size:max(.75rem, calc(var(--cont-num) * .3)); font-weight:600; line-height:1; color:#fff;
+}
+
+/* NO ZERO: a frase da data e o relógio saem, entra "Chegou o dia".
+   Destaque com BORDA BRANCA de 1,5px a 80%, a mesma do botão "Entrar na lista"
+   do topo (.header-cta): é o contorno que o site já usa pra peça que pede
+   atenção sobre o coral. O véu escuro fica, porque é ele que segura o
+   contraste do texto. "Chegou o dia!" vira uma linha própria, grande
+   (75% do número da contagem), e a frase vem embaixo.
+   Raio de card (16px) e não pílula: no celular a frase quebra em 2 linhas,
+   e pílula de 2 linhas vira um estádio. */
+.contagem-zerada .contagem-rotulo { display:none; }
+.contagem-chegou {
+  max-width:34ch; padding:calc(var(--cont-num) * .4) calc(var(--cont-num) * .6);
+  border-radius:16px; text-align:center; text-wrap:balance;
+  font-size:clamp(1rem, .4vw + .9rem, 1.2rem); font-weight:600; line-height:1.35; color:#fff;
+  background:rgba(92,31,15,.22); border:1.5px solid rgba(255,255,255,.8);
+}
+.contagem-chegou strong {
+  display:block; margin-bottom:.2em;
+  font-size:calc(var(--cont-num) * .75); font-weight:800; line-height:1.1; letter-spacing:-.02em;
+}
+
 /* ---------- painel glass com recorte que abraça o mockup ---------- */
 .hero-showcase {
   /* ÚNICO número a mexer pra redimensionar o conjunto: todo o resto (altura,

@@ -95,7 +95,7 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
   <link rel="preload" href="/assets/fonts/sora-latin.woff2" as="font" type="font/woff2" crossorigin>
 
   <!-- LAB: ?v muda a cada rodada de ajuste; sem isso o Chrome serve o css antigo -->
-  <link rel="stylesheet" href="/_lab/styles.css?v=296">
+  <link rel="stylesheet" href="/_lab/styles.css?v=299">
   <!-- simulador de atendimento (seção #validador). MESMO par de arquivos
        servido em /_lab/atendimento/ — a página standalone e a seção da home
        não são cópias, dividem css e js. -->
@@ -222,7 +222,28 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
        velocidade do statement v2 (01/09). Antes eram duas taglines
        empilhadas ("fala a sua língua" logo abaixo de "sem dor de cabeça"):
        bonito e sem promessa de produto nenhuma. -->
-      <p class="hero-sub reveal d1">Uma contabilidade 100% humana e 100% digital. O que tomava semanas de papelada, você resolve pelo celular.</p>
+    <!-- ✂️ 09/10: o subtítulo ("Uma contabilidade 100% humana e 100% digital. O
+         que tomava semanas de papelada, você resolve pelo celular.") saiu a
+         pedido do Pedro, em desktop e celular. O lugar dele virou da contagem
+         do lançamento, que agora faz dupla com o título. -->
+
+    <!-- ⏳ CONTAGEM PRO LANÇAMENTO DO APP (09/10). A data NÃO está aqui: mora em
+         /_lab/lancamento.js, o mesmo arquivo que o /em-breve usa. Nasce
+         `hidden` (sem JS não aparece relógio zerado) e é `.so-espera`: some
+         sozinha quando o site virar pro modo app. Fica logo abaixo do título e
+         antes dos botões porque é o motivo pra entrar na lista AGORA.
+         O relógio é aria-hidden: o leitor de tela lê a frase com a data, e não
+         os números mudando a cada segundo. -->
+    <div class="contagem so-espera reveal d2" data-contagem hidden>
+      <p class="contagem-rotulo">O app chega às lojas em <strong><span data-contagem-dia></span>!</strong></p>
+      <div class="contagem-relogio" data-contagem-relogio aria-hidden="true">
+        <span class="contagem-bloco"><b data-contagem-num="d">00</b><small data-contagem-un="d">dias</small></span>
+        <span class="contagem-bloco"><b data-contagem-num="h">00</b><small data-contagem-un="h">horas</small></span>
+        <span class="contagem-bloco"><b data-contagem-num="m">00</b><small>min</small></span>
+        <span class="contagem-bloco"><b data-contagem-num="s">00</b><small>seg</small></span>
+      </div>
+      <p class="contagem-chegou" data-contagem-chegou hidden></p>
+    </div>
 
     <!-- 🔀 MODO LANÇAMENTO. Os badges das lojas FICAM nos dois modos: o que
          muda é a linha de cima deles ("Baixar na" vira "Em breve na") e o
@@ -1675,6 +1696,9 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
      `initLotties()` e não encontrava um único elemento pra animar.
      Nada visual se perdeu aqui: não havia nada acontecendo. -->
 <script src="/_lab/origem.js?v=1" defer></script>
+<!-- contagem do lançamento ANTES do script.js: ela tira o `hidden` do bloco, e
+     o scroll reveal do script.js precisa encontrá-lo já visível -->
+<script src="/_lab/lancamento.js?v=1" defer></script>
 <script src="/_lab/script.js?v=67" defer></script>
 <!-- banner + painel de cookies (LGPD). O default negado já rodou no <head>. -->
 <script src="/_lab/consentimento.js?v=4" defer></script>

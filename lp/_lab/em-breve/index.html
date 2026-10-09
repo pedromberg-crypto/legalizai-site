@@ -53,7 +53,7 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Sora:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 
-  <link rel="stylesheet" href="/_lab/em-breve/styles.css?v=4">
+  <link rel="stylesheet" href="/_lab/em-breve/styles.css?v=7">
 </head>
 <body class="soon-body">
 
@@ -86,6 +86,27 @@
     </svg>
 
     <h1>Está chegando, a contabilidade que fala a sua língua. <span class="h1-muted">Sem contabilês.</span></h1>
+
+    <!-- ⏳ CONTAGEM PRO LANÇAMENTO DO APP (09/10). A data NÃO está aqui: mora
+         em /_lab/lancamento.js, o mesmo arquivo da home. Nasce
+         `hidden` (sem JS não aparece relógio zerado).
+         No desktop ela faz o mesmo que o h1 aqui de cima: some por clip (segue
+         na árvore de acessibilidade) e reaparece decorativa DENTRO da tela do
+         celular do mockup, no lugar do aviãozinho. Motivo medido: esta coluna já
+         estoura a 1280x600 (28px) e a 1024x700 (25px) SEM a contagem, então
+         ela não tem altura pra receber mais nada.
+         O relógio é aria-hidden: o leitor de tela lê a frase com a data, e não
+         os números mudando a cada segundo. -->
+    <div class="contagem" data-contagem hidden>
+      <p class="contagem-rotulo">O app chega às lojas em <strong><span data-contagem-dia></span>!</strong></p>
+      <div class="contagem-relogio" data-contagem-relogio aria-hidden="true">
+        <span class="contagem-bloco"><b data-contagem-num="d">00</b><small data-contagem-un="d">dias</small></span>
+        <span class="contagem-bloco"><b data-contagem-num="h">00</b><small data-contagem-un="h">horas</small></span>
+        <span class="contagem-bloco"><b data-contagem-num="m">00</b><small>min</small></span>
+        <span class="contagem-bloco"><b data-contagem-num="s">00</b><small>seg</small></span>
+      </div>
+      <p class="contagem-chegou" data-contagem-chegou hidden></p>
+    </div>
 
     <div class="soon-form">
       <!-- autocomplete="off" desliga o histórico de campo (aquela lista com o
@@ -229,8 +250,23 @@
               <path fill="#fff" d="M121.43,18.95l-60.67,60.67-19.33-19.33c-7.6-7.6-19.93-7.6-27.54,0h0s34.97,34.97,34.97,34.97c6.56,6.56,17.21,6.56,23.77,0l48.79-48.79v-27.54Z"/>
             </svg>
 
+            <!-- no desktop o aviãozinho sai e a contagem do lançamento ocupa o
+                 lugar dele na tela do app (pedido do Pedro, 09/10). No celular
+                 continua o aviãozinho: lá a contagem já está embaixo do título.
+                 Decorativa (a seção inteira é aria-hidden); a versão acessível
+                 é a do card. phone-lottie.js não carrega o Lottie no desktop. -->
             <div class="phone-illustration">
               <div class="phone-lottie" data-lottie-path="/_lab/em-breve/assets/paperplane-legalizei.json" data-lottie-fps="50" aria-hidden="true"></div>
+              <div class="contagem contagem-tela" data-contagem hidden>
+                <p class="contagem-rotulo">O app chega às lojas em <strong><span data-contagem-dia></span>!</strong></p>
+                <div class="contagem-relogio" data-contagem-relogio>
+                  <span class="contagem-bloco"><b data-contagem-num="d">00</b><small data-contagem-un="d">dias</small></span>
+                  <span class="contagem-bloco"><b data-contagem-num="h">00</b><small data-contagem-un="h">horas</small></span>
+                  <span class="contagem-bloco"><b data-contagem-num="m">00</b><small>min</small></span>
+                  <span class="contagem-bloco"><b data-contagem-num="s">00</b><small>seg</small></span>
+                </div>
+                <p class="contagem-chegou" data-contagem-chegou hidden></p>
+              </div>
             </div>
 
             <div class="phone-text-block">
@@ -362,10 +398,11 @@
 </main>
 
 <script src="/_lab/origem.js?v=1" defer></script>
+<script src="/_lab/lancamento.js?v=1" defer></script>
 <script src="/_lab/em-breve/script.js?v=8" defer></script>
 <script src="/consentimento.js?v=4" defer></script>
 <!-- chat.js (widget "Fale com o Léo") ocultado a pedido do Pedro — reversível, só descomentar -->
 <!-- <script src="/_lab/em-breve/chat.js" defer></script> -->
-<script src="/_lab/em-breve/assets/phone-lottie.js" defer></script>
+<script src="/_lab/em-breve/assets/phone-lottie.js?v=2" defer></script>
 </body>
 </html>
