@@ -44,8 +44,8 @@
 
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Legalizaí · Condição de lançamento até 31/12</title>
-  <meta name="description" content="O app da Legalizaí chegou. Entre na lista até 31/12/2026 e pague R$ 29/mês no MEI ou R$ 99/mês no ME nos 3 primeiros meses.">
+  <title>Legalizaí · Comece sua contabilidade</title>
+  <meta name="description" content="Contabilidade online em BH com preço fechado: MEI por R$ 49/mês e ME por R$ 139/mês. Deixe seus dados e a gente te ajuda a começar.">
 
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -116,7 +116,7 @@
            o envio é por fetch lendo os ids, e sem `name` o Firefox também não
            guarda histórico. -->
       <form class="wait-form bg-ink-50 border border-ink-100 rounded-[18px]" id="soon-form" autocomplete="off">
-        <p class="soon-form-title text-center"><strong><span class="soon-form-title-accent">Você não paga nada agora,</span><br>é só pra garantir sua condição de lançamento.</strong></p>
+        <p class="soon-form-title text-center"><strong><span class="soon-form-title-accent">Você não paga nada agora,</span><br>é só pra gente te ajudar a começar.</strong></p>
 
         <div class="soon-fields">
           <input class="rounded-[14px] bg-white outline-none transition-[border-color,box-shadow] duration-[180ms]" type="text" id="soon-nome" placeholder="Nome completo" required aria-label="Nome completo" autocomplete="off">
@@ -165,10 +165,9 @@
                 <span class="soon-price-plan-name">MEI</span>
               </div>
               <div class="soon-price-value-row">
-                <p class="soon-price-value">R$29<em>/mês</em></p>
-                <span class="soon-price-duration">3 primeiros meses</span>
+                <p class="soon-price-value">R$49<em>/mês</em></p>
+                <span class="soon-price-duration">preço fechado</span>
               </div>
-              <p class="soon-price-then"><span class="soon-price-then-label">depois</span> <strong>R$49</strong>/mês</p>
             </div>
             <div class="soon-price-plan-card" id="soon-price-me">
               <div class="soon-price-plan-head">
@@ -178,18 +177,17 @@
                 <span class="soon-price-plan-name">ME&nbsp;/&nbsp;Simples</span>
               </div>
               <div class="soon-price-value-row">
-                <p class="soon-price-value">R$99<em>/mês</em></p>
-                <span class="soon-price-duration">3 primeiros meses</span>
+                <p class="soon-price-value">R$139<em>/mês</em></p>
+                <span class="soon-price-duration">preço fechado</span>
               </div>
-              <p class="soon-price-then"><span class="soon-price-then-label">depois</span> <strong>R$139</strong>/mês</p>
             </div>
           </div>
-          <small class="soon-price-validity">Vale pra quem se cadastrar na lista até 31/12/2026.</small>
+          <small class="soon-price-validity">O valor da tela é o do boleto, sem taxa-surpresa.</small>
         </div>
 
         <!-- LGPD art. 8º: o consentimento tem que ser livre, informado e para
                finalidade ESPECÍFICA — por isso a finalidade ("receber contato
-               sobre a condição de lançamento") está escrita aqui, e não só "aceito os termos".
+               sobre a contratação do plano") está escrita aqui, e não só "aceito os termos".
                A caixa nasce desmarcada de propósito: consentimento pré-marcado
                não é consentimento válido (§ do art. 8º).
                Os links são <a> dentro do <label>: pela spec, o label não alterna
@@ -200,11 +198,11 @@
           <span class="soon-consent-text text-[0.62rem] leading-[1.5] text-ink-600">
             Li e concordo com os <a class="text-coral-700 font-semibold hover:no-underline" href="/termos" target="_blank" rel="noopener">Termos de uso</a>
             e com a <a class="text-coral-700 font-semibold hover:no-underline" href="/privacidade" target="_blank" rel="noopener">Política de Privacidade</a>,
-            e autorizo o uso dos meus dados para receber contato da Legalizaí sobre a minha condição de lançamento.
+            e autorizo o uso dos meus dados para receber contato da Legalizaí sobre a contratação do meu plano.
             <span class="text-coral-600 font-semibold">(É só pra gente falar com você sobre o seu plano)</span>
           </span>
         </label>
-        <button class="soon-submit inline-flex items-center justify-center gap-2 rounded-2xl border-0 no-underline font-bold text-[1.2rem] text-white bg-coral-600 shadow-[0_8px_24px_rgba(242,100,60,.28)] transition-[transform,box-shadow,background-color] duration-[160ms] ease-[cubic-bezier(.22,1,.36,1)] hover:bg-coral-700 hover:-translate-y-0.5 hover:shadow-[0_12px_30px_rgba(242,100,60,.36)] active:translate-y-0 active:scale-[0.99]" type="submit">Garantir minha condição de lançamento</button>
+        <button class="soon-submit inline-flex items-center justify-center gap-2 rounded-2xl border-0 no-underline font-bold text-[1.2rem] text-white bg-coral-600 shadow-[0_8px_24px_rgba(242,100,60,.28)] transition-[transform,box-shadow,background-color] duration-[160ms] ease-[cubic-bezier(.22,1,.36,1)] hover:bg-coral-700 hover:-translate-y-0.5 hover:shadow-[0_12px_30px_rgba(242,100,60,.36)] active:translate-y-0 active:scale-[0.99]" type="submit">Quero começar</button>
 
         <p class="hidden text-[0.9rem] font-semibold text-coral-700" id="soon-error">Não deu pra enviar agora. Tenta de novo em instantes.</p>
       </form>

@@ -23,11 +23,11 @@
 
   var PLANO_COPY = {
     mei: {
-      rotulo: 'MEI', valor: 'R$29', depois: 'R$49',
+      rotulo: 'MEI', valor: 'R$49',
       icone: '<svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 7h-9m0 0 3-3m-3 3 3 3M4 17h9m0 0-3-3m3 3-3 3"/></svg>'
     },
     me: {
-      rotulo: 'ME&nbsp;/&nbsp;Simples', valor: 'R$99', depois: 'R$139',
+      rotulo: 'ME&nbsp;/&nbsp;Simples', valor: 'R$139',
       icone: '<svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 21V5a1 1 0 0 1 1-1h9a1 1 0 0 1 1 1v16"/><path d="M15 9h4a1 1 0 0 1 1 1v11M9 8h2M9 12h2M9 16h2"/></svg>'
     }
   };
@@ -61,9 +61,8 @@
               '</div>' +
               '<div class="soon-price-value-row">' +
                 '<p class="soon-price-value">' + planoInfo.valor + '<em>/mês</em></p>' +
-                '<span class="soon-price-duration">3 primeiros meses</span>' +
+                '<span class="soon-price-duration">preço fechado</span>' +
               '</div>' +
-              '<p class="soon-price-then"><span class="soon-price-then-label">depois</span> <strong>' + planoInfo.depois + '</strong>/mês</p>' +
             '</div>' +
           '</div>' +
         '</div>';
@@ -127,7 +126,7 @@
      O texto fala só da contabilidade de todo mês, igual à home e ao
      /em-breve. */
   var shareUrl = window.location.origin + '/_lab/em-breve';
-  var waMsg = 'Contabilidade online com contador de verdade, em BH: nos 3 primeiros meses, a partir de R$29/mês. Entra na lista da Legalizaí até 31/12: ' + shareUrl;
+  var waMsg = 'Contabilidade online em BH com preço fechado: R$49/mês no MEI e R$139/mês no ME (com contador de verdade no WhatsApp). Conhece a Legalizaí: ' + shareUrl;
   var waLink = $('obrigado-whatsapp');
   if (waLink) waLink.href = 'https://wa.me/?text=' + encodeURIComponent(waMsg);
 

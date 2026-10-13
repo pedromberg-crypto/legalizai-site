@@ -232,18 +232,24 @@ const estado = Object.fromEntries(nomesEixos.map((n) => [n, lerEstado(html, n)])
 
 const [nomeEixo, alvoValor] = process.argv.slice(2);
 
+/* 🪦 Aposentado em 01/01/2027: a oferta de lançamento acabou (preço cheio,
+   MEI R$ 49 e ME R$ 139) e o app está nas lojas. Não existe mais "espera"
+   nem leva de preço pra onde voltar, e os pares abaixo descrevem textos que
+   saíram da página. Fica no repositório como registro de como as viradas
+   foram feitas; sem argumento, ele ainda diz o estado do <html>. */
+if (nomeEixo) {
+  console.error('✗ modo-copy.mjs foi aposentado em 01/01/2027 (fim da oferta de lançamento).');
+  console.error('  Texto da home agora se muda direto em lp/_lab/index.html. Ver lp/DEPLOY.md.');
+  process.exit(1);
+}
+
 /* ── sem argumento: só relata ──────────────────────────────────────────── */
 if (!nomeEixo) {
   console.log('estado do site:\n');
   for (const n of nomesEixos) {
     console.log(`   ${n.padEnd(6)} = ${estado[n].padEnd(7)} ${EIXOS[n].rotulos[estado[n]]}`);
   }
-  console.log('\npara trocar:');
-  for (const n of nomesEixos) {
-    for (const v of EIXOS[n].valores.filter((v) => v !== estado[n])) {
-      console.log(`   node lp/_lab/modo-copy.mjs ${n} ${v}   → ${EIXOS[n].rotulos[v]}`);
-    }
-  }
+  console.log('\n(aposentado em 01/01/2027: não troca mais nada, ver lp/DEPLOY.md)');
   process.exit(0);
 }
 
