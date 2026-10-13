@@ -157,8 +157,3 @@ Só com o app **publicado nas duas lojas** (a frase da contagem afirma isso):
    lp/atendimento/atendimento.css lp/blog/blog.css` devolve o minificado.
 4. Commit e push. O `/em-breve`, o obrigado e as páginas legais já vêm
    prontos na branch (não passam pelo build).
-- **01/01/2027 (fim da oferta):** preço cheio (MEI R$ 49, ME R$ 139) nos 5
-  lugares acima, mais a meta description da home, a linha de fidelidade do
-  cartão MEI ("Em troca: 3 meses a R$ 29"), o FAQ "E se eu não gostar?" e o
-  card do obrigado (`PLANO_COPY` em `em-breve/obrigado/script.js`). O JSON-LD
-  `Service` já tem só o preço cheio e não muda.
