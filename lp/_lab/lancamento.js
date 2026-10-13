@@ -14,10 +14,10 @@
    O bloco nasce `hidden` no HTML: sem JS, ninguém vê relógio zerado.
 
    No zero (pedido do Pedro, 09/10): os números saem e entra "Chegou o dia",
-   e fica assim até o site virar pro modo app (`modo-copy.mjs loja app`), que
-   esconde o bloco inteiro pela classe .so-espera na home. No /em-breve o bloco
-   fica: lá, a partir do dia 11, vira "O app chegou! Já está na App Store e no
-   Google Play.", porque "chega às lojas hoje" passaria a ser mentira.
+   no dia do lançamento. O bloco fica na home e no /em-breve mesmo depois do
+   modo app (13/10, pedido do Pedro): a partir do dia 11 vira "O app chegou!
+   Já está na App Store e no Google Play.", porque "chega às lojas hoje"
+   passaria a ser mentira.
 
    Movimento reduzido (prefers-reduced-motion): o bloco dos segundos some e o
    relógio só muda de minuto em minuto. Um número trocando a cada segundo é
