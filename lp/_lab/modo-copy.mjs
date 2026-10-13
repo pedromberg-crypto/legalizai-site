@@ -127,7 +127,7 @@ const EIXOS = {
         // A abertura da etiqueta e o destino do clique. O preço que vem logo
         // depois é do eixo `preco`: por isso este par termina no "R$".
         nome: 'Etiqueta acima do título (hero) · abertura + destino',
-        espera: '<a class="hero-eyebrow reveal" href="/em-breve">\n      Lista de espera aberta: R$',
+        espera: '<a class="hero-eyebrow reveal" href="/em-breve">\n      Lista de espera aberta até 31/12: R$',
         app: '<a class="hero-eyebrow reveal" href="#rodape">\n      Oferta de lançamento: R$',
       },
       {

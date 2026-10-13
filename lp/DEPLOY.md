@@ -107,3 +107,23 @@ build. O `/em-breve` usa o `/lancamento.js` gerado pelo build, igual ao
 No zero, os números viram "Chegou o dia!" e ficam assim até o site ir pro modo
 app (`node _lab/modo-copy.mjs loja app`), que esconde o bloco da home pela
 classe `.so-espera`. O `/em-breve` não tem modo: sai do ar no lançamento.
+
+## Oferta de lançamento
+
+Regra desde 13/10/2026: MEI a R$ 29 e ME a R$ 99 nos 3 primeiros meses valem
+pra quem **se cadastrar na lista de espera (form do `/em-breve`) até
+31/12/2026**. O 31/12 é prazo do cadastro, não do preço. Ela está escrita em
+5 lugares, e mudou a regra, muda nos 5:
+
+1. etiqueta do hero ("Lista de espera aberta até 31/12") — `_lab/index.html`
+   e o par `espera` dela no `_lab/modo-copy.mjs`;
+2. os 2 cartões de plano (`.plano-oferta`) — `_lab/index.html`;
+3. FAQ "Quanto custa?" e o espelho dele no JSON-LD — `_lab/index.html`;
+4. linha de validade do card de preço — `em-breve/index.html` e `_lab/em-breve/index.html`;
+5. mensagem de compartilhar do obrigado — `em-breve/obrigado/script.js` e a cópia no `_lab/`.
+
+⚠️ O app lança (10/11) antes de a oferta acabar (31/12). Enquanto o
+`/em-breve` sair do ar no lançamento, o cadastro que dá direito à oferta some
+40 dias antes do prazo. Decidir antes de 10/11. O modo app do `modo-copy.mjs`
+também troca a etiqueta do hero por "Oferta de lançamento", sem falar do
+cadastro.
