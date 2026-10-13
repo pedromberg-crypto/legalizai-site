@@ -176,9 +176,17 @@ input { font:inherit; color:var(--ink-900); }
 /* só o "R$49/mês" (texto solto + strong, sem span próprio) — "depois" tem
    classe própria (.soon-price-then-label) com tamanho fixo, não escala junto */
 #soon-price-mei .soon-price-then, #soon-price-me .soon-price-then { font-size:.8184rem; }
-/* idem: "R$19"/"R$79" é texto solto dentro de .soon-price-value — "/mês"
-   tem <em> com tamanho próprio, então só o número escala */
-#soon-price-mei .soon-price-value, #soon-price-me .soon-price-value { font-size:2.2176rem; }
+/* idem: "R$49"/"R$139" é texto solto dentro de .soon-price-value — "/mês"
+   tem <em> com tamanho próprio, então só o número escala.
+   01/01/2027: com o preço cheio o ME tem 3 dígitos, e "R$139/mês" (137px a
+   2.2176rem) não cabia no card do celular (110px por dentro a 375px de
+   largura, 82px a 320px). Medido: a largura interna do card é 50vw - 78px
+   até travar em 204px, e o número ocupa 3.04x o tamanho da fonte, mais 29px
+   do "/mês". Daí o 16.4vw - 36px: cabe numa linha só de 320px pra cima, e
+   chega ao teto antigo (2.2176rem) por volta de 436px. Os dois cards usam a
+   mesma regra pra o MEI e o ME terem o mesmo tamanho. O desktop tem a regra
+   própria dele (em vh) mais abaixo, e o obrigado também; nenhum dos dois muda. */
+#soon-price-mei .soon-price-value, #soon-price-me .soon-price-value { font-size:clamp(1rem, 16.4vw - 36px, 2.2176rem); }
 
 /* ============================================================ LAYOUT (coming soon) */
 /* html não tem class="soon-html" no markup (nunca teve) — o seletor com
