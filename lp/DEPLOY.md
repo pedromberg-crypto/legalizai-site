@@ -109,12 +109,17 @@ app (`node _lab/modo-copy.mjs loja app`), que esconde o bloco da home pela
 classe `.so-espera`. O `/em-breve` não tem modo e **continua no ar depois do
 lançamento**: a captação pelo formulário não para (decisão do Pedro, 13/10/2026).
 
-## Oferta de lançamento
+## Oferta de lançamento (encerrada em 31/12/2026)
 
-Regra desde 13/10/2026: MEI a R$ 29 e ME a R$ 99 nos 3 primeiros meses valem
-pra quem **se cadastrar na lista de espera (form do `/em-breve`) até
-31/12/2026**. O 31/12 é prazo do cadastro, não do preço. Ela está escrita em
-5 lugares, e mudou a regra, muda nos 5:
+Desde 01/01/2027 o site mostra só o preço cheio: MEI R$ 49 e ME R$ 139. A
+oferta ficou dita em UM lugar, no FAQ "Quanto custa?" (+ JSON-LD): quem se
+cadastrou até 31/12/2026 segue com os 3 primeiros meses a R$ 29 / R$ 99. O
+`modo-copy.mjs` foi aposentado. O histórico abaixo fica pra consulta.
+
+Regra de 13/10/2026: MEI a R$ 29 e ME a R$ 99 nos 3 primeiros meses valiam
+pra quem **se cadastrasse na lista de espera (form do `/em-breve`) até
+31/12/2026**. O 31/12 era prazo do cadastro, não do preço. Ela esteve escrita
+em 5 lugares:
 
 1. etiqueta do hero ("Lista aberta até 31/12", no modo app) — `_lab/index.html`
    e o par dela no `_lab/modo-copy.mjs`;
@@ -157,3 +162,14 @@ Só com o app **publicado nas duas lojas** (a frase da contagem afirma isso):
    lp/atendimento/atendimento.css lp/blog/blog.css` devolve o minificado.
 4. Commit e push. O `/em-breve`, o obrigado e as páginas legais já vêm
    prontos na branch (não passam pelo build).
+
+### Passo a passo do dia 01/01/2027
+
+1. `git rebase main` na `virada/01-01-preco-cheio`: o `main` terá os links
+   das lojas colados no dia 10/11, e a branch mexe nas linhas vizinhas do
+   rodapé (pode pedir pra resolver conflito na coluna "O app": fica o link de
+   verdade das lojas e o texto novo da branch).
+2. `git merge virada/01-01-preco-cheio` no `main`, `cd lp && node build-lp.mjs`
+   (mesmo cuidado com o CSS cru do passo 3 acima), commit e push.
+3. Fora do site: anúncios e sitelinks que falem em R$ 29 / R$ 99 ou "até
+   31/12" (Google Ads e Meta) saem no mesmo dia.
