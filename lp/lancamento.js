@@ -2,8 +2,10 @@
 (function () {
   'use strict';
   var LANCAMENTO = '2026-11-10T00:00:00-03:00';
+  var FORTE_NO_DIA = 'Chegou o dia!';
   var FRASE_NO_DIA = 'O app da Legalizaí chega às lojas hoje.';
-  var FRASE_DEPOIS = 'O app da Legalizaí já está chegando às lojas.';
+  var FORTE_DEPOIS = 'O app chegou!';
+  var FRASE_DEPOIS = 'Já está na App Store e no Google Play.';
   var alvo = Date.parse(LANCAMENTO);
   var blocos = document.querySelectorAll('[data-contagem]');
   if (!blocos.length || isNaN(alvo)) return;
@@ -21,13 +23,14 @@
   if (calmo) cada('[data-contagem-num="s"]', function (el) { el.parentNode.hidden = true; });
   var relogio;
   function chegou() {
-    var frase = diaIso.format(Date.now()) === diaDoLancamento ? FRASE_NO_DIA : FRASE_DEPOIS;
+    var noDia = diaIso.format(Date.now()) === diaDoLancamento;
+    var frase = noDia ? FRASE_NO_DIA : FRASE_DEPOIS;
     blocos.forEach(function (b) { b.classList.add('contagem-zerada'); });
     cada('[data-contagem-relogio]', function (el) { el.hidden = true; });
     cada('[data-contagem-chegou]', function (el) {
       el.innerHTML = '';
       var forte = document.createElement('strong');
-      forte.textContent = 'Chegou o dia!';
+      forte.textContent = noDia ? FORTE_NO_DIA : FORTE_DEPOIS;
       el.append(forte, ' ' + frase);
       el.hidden = false;
     });
