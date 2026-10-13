@@ -104,10 +104,11 @@ a virada do dia). Mudou a data ou fechou o horário: troca essa linha, sobe o
 build. O `/em-breve` usa o `/lancamento.js` gerado pelo build, igual ao
 `origem.js`.
 
-No zero, os números viram "Chegou o dia!" e ficam assim até o site ir pro modo
-app (`node _lab/modo-copy.mjs loja app`), que esconde o bloco da home pela
-classe `.so-espera`. O `/em-breve` não tem modo e **continua no ar depois do
-lançamento**: a captação pelo formulário não para (decisão do Pedro, 13/10/2026).
+No zero, os números viram "Chegou o dia!" no dia 10 e, do dia 11 em diante,
+"O app chegou! Já está na App Store e no Google Play.". O bloco fica na home
+mesmo no modo app (deixou de ser `.so-espera` em 13/10, pedido do Pedro). O
+`/em-breve` não tem modo e **continua no ar depois do lançamento**: a captação
+pelo formulário não para (decisão do Pedro, 13/10/2026).
 
 ## Oferta de lançamento
 

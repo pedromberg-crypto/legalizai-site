@@ -227,12 +227,14 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
 
     <!-- ⏳ CONTAGEM PRO LANÇAMENTO DO APP (09/10). A data NÃO está aqui: mora em
          /_lab/lancamento.js, o mesmo arquivo que o /em-breve usa. Nasce
-         `hidden` (sem JS não aparece relógio zerado) e é `.so-espera`: some
-         sozinha quando o site virar pro modo app. Fica logo abaixo do título e
-         antes dos botões porque é o motivo pra entrar na lista AGORA.
+         `hidden` (sem JS não aparece relógio zerado). Fica logo abaixo do
+         título e antes dos botões porque é o motivo pra entrar na lista AGORA.
+         🔄 13/10: deixou de ser `.so-espera` (pedido do Pedro). Fica nos dois
+         modos: no zero vira "Chegou o dia!" e, do dia 11 em diante, "O app
+         chegou! Já está na App Store e no Google Play." (lancamento.js).
          O relógio é aria-hidden: o leitor de tela lê a frase com a data, e não
          os números mudando a cada segundo. -->
-    <div class="contagem so-espera reveal d2" data-contagem hidden>
+    <div class="contagem reveal d2" data-contagem hidden>
       <p class="contagem-rotulo">O app chega às lojas em <strong><span data-contagem-dia></span>!</strong></p>
       <div class="contagem-relogio" data-contagem-relogio aria-hidden="true">
         <span class="contagem-bloco"><b data-contagem-num="d">00</b><small data-contagem-un="d">dias</small></span>
