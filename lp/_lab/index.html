@@ -225,25 +225,11 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
          pedido do Pedro, em desktop e celular. O lugar dele virou da contagem
          do lançamento, que agora faz dupla com o título. -->
 
-    <!-- ⏳ CONTAGEM PRO LANÇAMENTO DO APP (09/10). A data NÃO está aqui: mora em
-         /_lab/lancamento.js, o mesmo arquivo que o /em-breve usa. Nasce
-         `hidden` (sem JS não aparece relógio zerado). Fica logo abaixo do
-         título e antes dos botões porque é o motivo pra entrar na lista AGORA.
-         🔄 13/10: deixou de ser `.so-espera` (pedido do Pedro). Fica nos dois
-         modos: no zero vira "Chegou o dia!" e, do dia 11 em diante, "O app
-         chegou! Já está na App Store e no Google Play." (lancamento.js).
-         O relógio é aria-hidden: o leitor de tela lê a frase com a data, e não
-         os números mudando a cada segundo. -->
-    <div class="contagem reveal d2" data-contagem hidden>
-      <p class="contagem-rotulo">O app chega às lojas em <strong><span data-contagem-dia></span>!</strong></p>
-      <div class="contagem-relogio" data-contagem-relogio aria-hidden="true">
-        <span class="contagem-bloco"><b data-contagem-num="d">00</b><small data-contagem-un="d">dias</small></span>
-        <span class="contagem-bloco"><b data-contagem-num="h">00</b><small data-contagem-un="h">horas</small></span>
-        <span class="contagem-bloco"><b data-contagem-num="m">00</b><small>min</small></span>
-        <span class="contagem-bloco"><b data-contagem-num="s">00</b><small>seg</small></span>
-      </div>
-      <p class="contagem-chegou" data-contagem-chegou hidden></p>
-    </div>
+    <!-- ✂️ 01/01/2027: a contagem do lançamento saiu da home (pedido do Pedro).
+         Desde 11/11 ela dizia "O app chegou! Já está na App Store e no Google
+         Play."; em janeiro isso já não é notícia. O título volta a ficar
+         direto em cima dos badges. O markup está no git, e o /em-breve segue
+         com o bloco dele (lancamento.js). -->
 
     <!-- 🔀 MODO LANÇAMENTO. Os badges das lojas FICAM nos dois modos: o que
          muda é a linha de cima deles ("Baixar na" vira "Em breve na") e o
@@ -1642,9 +1628,6 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
      `initLotties()` e não encontrava um único elemento pra animar.
      Nada visual se perdeu aqui: não havia nada acontecendo. -->
 <script src="/_lab/origem.js?v=1" defer></script>
-<!-- contagem do lançamento ANTES do script.js: ela tira o `hidden` do bloco, e
-     o scroll reveal do script.js precisa encontrá-lo já visível -->
-<script src="/_lab/lancamento.js?v=2" defer></script>
 <script src="/_lab/script.js?v=68" defer></script>
 <!-- banner + painel de cookies (LGPD). O default negado já rodou no <head>. -->
 <script src="/_lab/consentimento.js?v=4" defer></script>
