@@ -227,6 +227,17 @@ function anda(rel) {
   writeFileSync(para, s, 'utf8');
 }
 
+/* trava dos links das lojas (13/10/2026): no modo app, os badges levam a
+   #LINK-APP-STORE-PENDENTE e #LINK-GOOGLE-PLAY-PENDENTE até alguém colar os
+   links de verdade. Publicar assim seria badge que não leva a loja nenhuma,
+   então o build para ANTES de escrever qualquer arquivo. */
+const pendentes = readFileSync(join(FONTE, 'index.html'), 'utf8').match(/#LINK-[A-Z-]+-PENDENTE/g);
+if (pendentes) {
+  console.error(`✗ ${FONTE}/index.html ainda tem link de loja pendente: ${[...new Set(pendentes)].join(', ')}`);
+  console.error('  Troque pelos links da App Store e do Google Play e rode de novo. Nada foi escrito.');
+  process.exit(1);
+}
+
 /* diretórios gerados somem antes, pra não deixar órfão de build velho */
 for (const d of ['blog']) {
   const alvo = join(DESTINO, d);

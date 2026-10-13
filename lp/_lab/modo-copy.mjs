@@ -117,18 +117,42 @@ const EIXOS = {
     attr: 'data-modo',
     valores: ['espera', 'app'],
     rotulos: { espera: 'fila de espera (app não publicado)', app: 'app publicado' },
+    /* 🔄 13/10/2026: o /em-breve NÃO sai do ar no lançamento, e a oferta vale
+       pra quem se cadastrar nele até 31/12. Então, no modo app, os badges
+       passam a levar pras lojas, mas todo CTA de oferta continua levando pro
+       formulário: quem baixasse o app direto perderia a condição. Saíram os
+       pares que trocavam "lista" por "Baixar o app" (topo, passo a passo e os
+       botões dos cartões); entraram os botões da lista, que deixam de ser
+       `.so-espera` e passam a dizer "Garantir minha condição".
+       Os links das lojas são marcadores (#LINK-…-PENDENTE) até o app ser
+       publicado: o build-lp.mjs se recusa a publicar enquanto eles existirem. */
     trocas: [
-      {
-        nome: 'CTA do topo',
-        espera: '<a class="header-cta" href="/em-breve">\n      Entrar na lista',
-        app: '<a class="header-cta" href="#rodape">\n      Baixar o app',
-      },
       {
         // A abertura da etiqueta e o destino do clique. O preço que vem logo
         // depois é do eixo `preco`: por isso este par termina no "R$".
         nome: 'Etiqueta acima do título (hero) · abertura + destino',
         espera: '<a class="hero-eyebrow reveal" href="/em-breve">\n      Lista de espera aberta até 31/12: R$',
-        app: '<a class="hero-eyebrow reveal" href="#rodape">\n      Oferta de lançamento: R$',
+        app: '<a class="hero-eyebrow reveal" href="/em-breve">\n      Lista aberta até 31/12: R$',
+      },
+      {
+        nome: 'Botão da lista no hero (fica visível no modo app)',
+        espera: '<a class="btn btn-primary hero-btn-espera so-espera" href="/em-breve">Entrar na lista de espera</a>',
+        app: '<a class="btn btn-primary hero-btn-espera" href="/em-breve">Garantir minha condição</a>',
+      },
+      {
+        nome: 'Botão da lista no rodapé (fica visível no modo app)',
+        espera: '<a class="btn btn-primary so-espera footer-btn-espera" href="/em-breve">Entrar na lista de espera</a>',
+        app: '<a class="btn btn-primary footer-btn-espera" href="/em-breve">Garantir minha condição</a>',
+      },
+      {
+        nome: 'Link da lista na coluna "O app" do rodapé',
+        espera: '<a class="so-espera" href="/em-breve">Entrar na lista de espera</a>',
+        app: '<a href="/em-breve">Garantir minha condição</a>',
+      },
+      {
+        nome: 'Links das lojas na coluna "O app" do rodapé',
+        espera: '<a class="so-app" href="#rodape">Baixar na App Store</a>\n      <a class="so-app" href="#rodape">Baixar no Google Play</a>',
+        app: '<a class="so-app" href="#LINK-APP-STORE-PENDENTE">Baixar na App Store</a>\n      <a class="so-app" href="#LINK-GOOGLE-PLAY-PENDENTE">Baixar no Google Play</a>',
       },
       {
         // 2 ocorrências: hero e rodapé. A troca é global de propósito: badge que
@@ -144,33 +168,21 @@ const EIXOS = {
         app: '<small>Disponível no</small><strong>Google Play</strong>',
       },
       {
-        // 4 ocorrências, todas trocadas juntas. Enquanto não há app, clicar num
-        // badge tem que levar pra fila, não pro rodapé.
-        nome: 'Badge · destino do clique (4 badges)',
-        espera: '<a class="store-badge store-badge-light" href="/em-breve">',
-        app: '<a class="store-badge store-badge-light" href="#rodape">',
+        // 2 ocorrências cada (hero e rodapé). Enquanto não há app, clicar num
+        // badge leva pra fila; com o app publicado, cada badge leva à sua loja
+        // (por isso o data-loja: antes os 4 badges tinham o mesmo destino).
+        nome: 'Badge da App Store · destino do clique (hero + rodapé)',
+        espera: '<a class="store-badge store-badge-light" data-loja="apple" href="/em-breve">',
+        app: '<a class="store-badge store-badge-light" data-loja="apple" href="#LINK-APP-STORE-PENDENTE">',
       },
       {
-        nome: 'CTA depois do passo a passo',
-        espera: '<a class="btn btn-primary" href="/em-breve">Quero entrar na lista</a>',
-        app: '<a class="btn btn-primary" href="#rodape">Começar pelo passo 1</a>',
+        nome: 'Badge do Google Play · destino do clique (hero + rodapé)',
+        espera: '<a class="store-badge store-badge-light" data-loja="google" href="/em-breve">',
+        app: '<a class="store-badge store-badge-light" data-loja="google" href="#LINK-GOOGLE-PLAY-PENDENTE">',
       },
       // ✂️ 09/10: saiu o par 'FAQ · "antes de baixar"'. A frase era o convite
       // pro validador, e o validador saiu da home (simulador de abertura, ver
       // a nota no index.html). A resposta nova do FAQ vale nos dois modos.
-      {
-        // 2 ocorrências: botão do cartão ME e o da dobra "crescer". Antes
-        // levavam ao validador ("Ver se a gente atende você").
-        nome: 'Botão do cartão ME + dobra "crescer"',
-        espera: '<a class="btn btn-primary" href="/em-breve">Garantir minha condição</a>',
-        app: '<a class="btn btn-primary" href="#rodape">Baixar o app</a>',
-      },
-      {
-        // era "Ver se eu sou MEI", que levava ao validador
-        nome: 'Botão do cartão MEI',
-        espera: '<a class="btn plano-btn-2" href="/em-breve">Garantir minha condição</a>',
-        app: '<a class="btn plano-btn-2" href="#rodape">Baixar o app</a>',
-      },
       {
         nome: 'Comentário de rastreio no topo do arquivo',
         espera: '<!-- modo: lançamento, lista de espera aberta -->',

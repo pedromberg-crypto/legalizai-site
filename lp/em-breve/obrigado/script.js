@@ -127,7 +127,7 @@
      O texto fala só da contabilidade de todo mês, igual à home e ao
      /em-breve. */
   var shareUrl = window.location.origin + '/em-breve';
-  var waMsg = 'Contabilidade online com contador de verdade, em BH: nos 3 primeiros meses, a partir de R$29/mês. Entra na lista de espera da Legalizaí até 31/12: ' + shareUrl;
+  var waMsg = 'Contabilidade online com contador de verdade, em BH: nos 3 primeiros meses, a partir de R$29/mês. Entra na lista da Legalizaí até 31/12: ' + shareUrl;
   var waLink = $('obrigado-whatsapp');
   if (waLink) waLink.href = 'https://wa.me/?text=' + encodeURIComponent(waMsg);
 

@@ -15,8 +15,9 @@
 
    No zero (pedido do Pedro, 09/10): os números saem e entra "Chegou o dia",
    e fica assim até o site virar pro modo app (`modo-copy.mjs loja app`), que
-   esconde o bloco inteiro pela classe .so-espera na home. A frase muda depois
-   do dia 10 porque "chega às lojas hoje" passaria a ser mentira no dia 11.
+   esconde o bloco inteiro pela classe .so-espera na home. No /em-breve o bloco
+   fica: lá, a partir do dia 11, vira "O app chegou! Já está na App Store e no
+   Google Play.", porque "chega às lojas hoje" passaria a ser mentira.
 
    Movimento reduzido (prefers-reduced-motion): o bloco dos segundos some e o
    relógio só muda de minuto em minuto. Um número trocando a cada segundo é
@@ -35,8 +36,14 @@
      horário fechar, troca só o "00:00:00" (ex.: '2026-11-10T10:00:00-03:00'). */
   var LANCAMENTO = '2026-11-10T00:00:00-03:00';
 
+  /* 🔄 versão do lançamento: o /em-breve fica no ar depois do dia 10 (a
+     captação continua), então a frase de depois passa a ser lida por semanas.
+     "Já está chegando às lojas" era a cautela de antes do app sair; esta
+     versão só entra no ar com o app publicado nas duas lojas. */
+  var FORTE_NO_DIA = 'Chegou o dia!';
   var FRASE_NO_DIA = 'O app da Legalizaí chega às lojas hoje.';
-  var FRASE_DEPOIS = 'O app da Legalizaí já está chegando às lojas.';
+  var FORTE_DEPOIS = 'O app chegou!';
+  var FRASE_DEPOIS = 'Já está na App Store e no Google Play.';
 
   var alvo = Date.parse(LANCAMENTO);
   var blocos = document.querySelectorAll('[data-contagem]');
@@ -64,13 +71,14 @@
   var relogio;
 
   function chegou() {
-    var frase = diaIso.format(Date.now()) === diaDoLancamento ? FRASE_NO_DIA : FRASE_DEPOIS;
+    var noDia = diaIso.format(Date.now()) === diaDoLancamento;
+    var frase = noDia ? FRASE_NO_DIA : FRASE_DEPOIS;
     blocos.forEach(function (b) { b.classList.add('contagem-zerada'); });
     cada('[data-contagem-relogio]', function (el) { el.hidden = true; });
     cada('[data-contagem-chegou]', function (el) {
       el.innerHTML = '';
       var forte = document.createElement('strong');
-      forte.textContent = 'Chegou o dia!';
+      forte.textContent = noDia ? FORTE_NO_DIA : FORTE_DEPOIS;
       el.append(forte, ' ' + frase);
       el.hidden = false;
     });

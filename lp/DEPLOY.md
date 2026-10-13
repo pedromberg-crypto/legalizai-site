@@ -106,7 +106,8 @@ build. O `/em-breve` usa o `/lancamento.js` gerado pelo build, igual ao
 
 No zero, os números viram "Chegou o dia!" e ficam assim até o site ir pro modo
 app (`node _lab/modo-copy.mjs loja app`), que esconde o bloco da home pela
-classe `.so-espera`. O `/em-breve` não tem modo: sai do ar no lançamento.
+classe `.so-espera`. O `/em-breve` não tem modo e **continua no ar depois do
+lançamento**: a captação pelo formulário não para (decisão do Pedro, 13/10/2026).
 
 ## Oferta de lançamento
 
@@ -115,15 +116,49 @@ pra quem **se cadastrar na lista de espera (form do `/em-breve`) até
 31/12/2026**. O 31/12 é prazo do cadastro, não do preço. Ela está escrita em
 5 lugares, e mudou a regra, muda nos 5:
 
-1. etiqueta do hero ("Lista de espera aberta até 31/12") — `_lab/index.html`
-   e o par `espera` dela no `_lab/modo-copy.mjs`;
+1. etiqueta do hero ("Lista aberta até 31/12", no modo app) — `_lab/index.html`
+   e o par dela no `_lab/modo-copy.mjs`;
 2. os 2 cartões de plano (`.plano-oferta`) — `_lab/index.html`;
 3. FAQ "Quanto custa?" e o espelho dele no JSON-LD — `_lab/index.html`;
 4. linha de validade do card de preço — `em-breve/index.html` e `_lab/em-breve/index.html`;
 5. mensagem de compartilhar do obrigado — `em-breve/obrigado/script.js` e a cópia no `_lab/`.
 
-⚠️ O app lança (10/11) antes de a oferta acabar (31/12). Enquanto o
-`/em-breve` sair do ar no lançamento, o cadastro que dá direito à oferta some
-40 dias antes do prazo. Decidir antes de 10/11. O modo app do `modo-copy.mjs`
-também troca a etiqueta do hero por "Oferta de lançamento", sem falar do
-cadastro.
+O `/em-breve` fica no ar depois do lançamento (10/11), então o cadastro que dá
+direito à oferta segue aberto até 31/12. Duas viradas de texto, na MESMA
+página (sem clonar: o `/em-breve` é `Disallow` no robots.txt e fica fora do
+sitemap, então clone não ganha nada em busca, e anúncios, sitelink, links
+compartilhados e a conversão do GTM apontam pra esta URL):
+
+- **10/11 (lançamento):** branch `virada/10-11-lancamento`. Sai o "está
+  chegando / te avisar no lançamento" do `/em-breve` (title, description, h1,
+  título do form, texto do consentimento, tagline do mockup) e do obrigado; a
+  home vai pro modo app (badges com "Baixar na" e o link de cada loja), mas
+  todo botão de oferta continua levando pro formulário, agora "Garantir minha
+  condição"; a contagem do `/em-breve` passa a dizer "O app chegou! Já está na
+  App Store e no Google Play." do dia 11 em diante.
+- **01/01/2027 (fim da oferta):** branch `virada/01-01-preco-cheio` (feita em
+  cima da de 10/11). Preço cheio (MEI R$ 49, ME R$ 139) nos 5 lugares acima,
+  mais a meta description da home, a linha de fidelidade do cartão MEI ("Em
+  troca: 3 meses a R$ 29"), o FAQ "E se eu não gostar?" e o card do obrigado
+  (`PLANO_COPY` em `em-breve/obrigado/script.js`). O JSON-LD `Service` já tem
+  só o preço cheio e não muda.
+
+### Passo a passo do dia 10/11
+
+Só com o app **publicado nas duas lojas** (a frase da contagem afirma isso):
+
+1. `git merge virada/10-11-lancamento` no `main`.
+2. Em `_lab/index.html`, trocar `#LINK-APP-STORE-PENDENTE` e
+   `#LINK-GOOGLE-PLAY-PENDENTE` (3 vezes cada: 2 badges e o link do rodapé)
+   pelos links das lojas. Enquanto eles estiverem lá, o `build-lp.mjs` se
+   recusa a rodar.
+3. `cd lp && node build-lp.mjs`. Sem o `lightningcss` instalado o CSS sai
+   cru: se nenhum `.css` do `_lab` mudou, `git checkout -- lp/styles.css
+   lp/atendimento/atendimento.css lp/blog/blog.css` devolve o minificado.
+4. Commit e push. O `/em-breve`, o obrigado e as páginas legais já vêm
+   prontos na branch (não passam pelo build).
+- **01/01/2027 (fim da oferta):** preço cheio (MEI R$ 49, ME R$ 139) nos 5
+  lugares acima, mais a meta description da home, a linha de fidelidade do
+  cartão MEI ("Em troca: 3 meses a R$ 29"), o FAQ "E se eu não gostar?" e o
+  card do obrigado (`PLANO_COPY` em `em-breve/obrigado/script.js`). O JSON-LD
+  `Service` já tem só o preço cheio e não muda.
