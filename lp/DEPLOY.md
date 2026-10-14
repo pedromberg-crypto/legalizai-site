@@ -107,8 +107,11 @@ build. O `/em-breve` usa o `/lancamento.js` gerado pelo build, igual ao
 No zero, os números viram "Chegou o dia!" no dia 10 e, do dia 11 em diante,
 "O app chegou! Já está na App Store e no Google Play.". O bloco ficou na home
 mesmo no modo app (deixou de ser `.so-espera` em 13/10, pedido do Pedro) e
-**saiu da home em 01/01/2027** (pedido do Pedro): hoje só o `/em-breve` carrega
-o `lancamento.js`. O `/em-breve` não tem modo e **continua no ar depois do
+**saiu da home e do `/em-breve` em 01/01/2027** (pedido do Pedro): nenhuma
+página carrega mais o `lancamento.js`, e no desktop do `/em-breve` o aviãozinho
+voltou pra tela do celular do mockup (o `phone-lottie.js` voltou a ser o de
+antes de 09/10). O arquivo e as regras de `.contagem` do `src.css` ficaram no
+repositório, sem uso. O `/em-breve` não tem modo e **continua no ar depois do
 lançamento**: a captação pelo formulário não para (decisão do Pedro, 13/10/2026).
 
 ## Oferta de lançamento (encerrada em 31/12/2026)
