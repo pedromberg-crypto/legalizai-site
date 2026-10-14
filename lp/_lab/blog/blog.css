@@ -72,6 +72,9 @@
 
 @media (max-width:719px) {
   .blog-hero-inner { flex-direction:column; }
+  /* em coluna, o flex-basis de 640px virava ALTURA (barra coral de ~640px
+     com vazio embaixo do texto no celular) */
+  .blog-hero-text { flex:none; }
   .blog-hero-social { margin-top:4px; }
 }
 
@@ -257,8 +260,8 @@
 .bp-link:hover, .bp-link:focus-visible { transform:translateY(-4px); box-shadow:var(--shadow-card-hover); }
 
 /* ---------- capa ----------
-   Foto placeholder (picsum.photos, seed fixo por post — estável no reload,
-   não sorteia de novo). O gradiente por categoria continua no `background`
+   Foto do post (.bp-media-img, opcional; desde 14/10/2026 nenhuma foto de
+   banco de imagem: sem foto própria, usa a capa tipográfica .bp-capa). O gradiente por categoria continua no `background`
    como fallback (imagem lenta/offline não deixa um retângulo vazio) e some
    visualmente atrás da foto no caso normal. Um véu coral por cima (::after)
    amarra fotos aleatórias de banco de imagem na paleta da marca — sem isso,
@@ -398,7 +401,7 @@
 }
 
 /* ============================================================
-   PÁGINA DE ARTIGO (post.html) — v6
+   PÁGINA DE ARTIGO (fator-r.html e próximos posts) — v6
    Tudo que É compartilhável com a listagem (grade .bp-*, newsletter,
    .site-header-blog, sprite de ícones) já está em cima, neste mesmo
    arquivo — não duplicar. Daqui pra baixo é só o que é exclusivo do
@@ -516,3 +519,56 @@
 
 /* ---------- relacionados ---------- */
 .post-related { padding-block:64px 8px; }
+
+/* ============================================================
+   14/10/2026 · BLOG SÓ COM POST REAL
+   A listagem tem hoje um post só. Numa grade de 3 colunas ele ficaria
+   espremido no canto esquerdo, então .is-unico vira um card largo:
+   capa à esquerda e texto à direita a partir de 720px, empilhado no
+   celular. Com 2+ posts, tirar .is-unico do <ul> e a grade volta.
+   ============================================================ */
+.blog-list-grid.is-unico { grid-template-columns:1fr; max-width:980px; margin-inline:auto; }
+.is-unico .bp-body { padding:24px 20px 20px; }
+.is-unico .bp-body h3 {
+  font-size:clamp(1.25rem, 1.1vw + 1rem, 1.6rem); line-height:1.25;
+  display:block; -webkit-line-clamp:unset; overflow:visible;
+}
+.is-unico .bp-body p { display:block; -webkit-line-clamp:unset; overflow:visible; font-size:1rem; }
+.is-unico .bp-meta { gap:8px 16px; }
+@media (min-width:720px) {
+  .is-unico .bp-link { flex-direction:row; }
+  .is-unico .bp-media { width:42%; height:auto; min-height:300px; }
+  .is-unico .bp-body { padding:36px 36px 32px; justify-content:center; }
+  .is-unico .bp-cta { width:auto; align-self:flex-start; padding-inline:28px; }
+}
+
+/* capa tipográfica: no lugar da foto de banco de imagem, o próprio número
+   que o post explica, em branco sobre o gradiente coral + véu da .bp-media */
+.bp-capa {
+  position:relative; z-index:2; padding:24px; text-align:center; color:#fff;
+  display:flex; flex-direction:column; align-items:center; gap:6px;
+}
+.bp-capa-rotulo {
+  font-size:.78rem; font-weight:700; letter-spacing:.08em; text-transform:uppercase;
+  padding:5px 12px; border-radius:999px; background:rgba(255,255,255,.18);
+}
+.bp-capa-num { font-size:clamp(2rem, 3vw + 1.2rem, 2.8rem); font-weight:800; line-height:1.1; letter-spacing:-.02em; }
+.bp-capa-num em { font-style:normal; font-weight:600; font-size:.55em; opacity:.85; }
+
+/* chamada no lugar da assinatura: mesma faixa escura, botões em vez de form */
+.blog-cta-acoes { display:flex; flex-wrap:wrap; align-items:center; gap:12px; flex:0 1 auto; }
+.blog-cta-acoes .blog-newsletter-btn { display:inline-flex; align-items:center; justify-content:center; text-decoration:none; }
+.blog-cta-link {
+  display:inline-flex; align-items:center; justify-content:center;
+  padding:13px 22px; border-radius:999px; border:1.5px solid rgba(255,255,255,.4);
+  color:#fff; font-weight:700; text-decoration:none;
+  transition:border-color .16s, background-color .16s;
+}
+.blog-cta-link:hover, .blog-cta-link:focus-visible { border-color:#fff; background:rgba(255,255,255,.08); }
+.blog-cta .blog-newsletter-text p { max-width:60ch; }
+@media (max-width:719px) {
+  .blog-cta-acoes { flex-direction:column; align-items:stretch; }
+}
+
+/* post: assinatura da equipe com o ícone da marca no lugar do avatar */
+.post-conclusion-sign img { background:#fff; }

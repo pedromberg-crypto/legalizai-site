@@ -528,6 +528,11 @@ body.soon-body { min-height:100dvh; display:flex; flex-direction:column; }
    navegador, e o preflight do Tailwind está desligado). O bloco dos segundos
    também usa: some no movimento reduzido. */
 .contagem[hidden], .contagem [hidden] { display:none !important; }
+/* CLS: no card (faixa mobile) o bloco ocupa a altura dele desde o primeiro
+   pixel, invisível, em vez de nascer display:none e empurrar o formulário
+   quando o lancamento.js tira o hidden. No desktop o bloco do card é
+   escondido por clip (ver @media), então isto não muda nada lá. */
+.soon-card .contagem[hidden] { display:flex !important; visibility:hidden; }
 .contagem { margin-top:20px; display:flex; flex-direction:column; align-items:center; gap:10px; }
 .contagem-rotulo { font-size:.9rem; font-weight:600; color:var(--ink-600); line-height:1.4; }
 .contagem-rotulo strong { font-weight:800; color:var(--coral-700); }
@@ -568,6 +573,21 @@ body.soon-body { min-height:100dvh; display:flex; flex-direction:column; }
 .phone-illustration .contagem-tela { display:none; }
 
 .soon-sub { margin-top:14px; color:var(--ink-500); font-size:1.02rem; line-height:1.6; }
+
+/* linha de preço logo acima do botão. !important no tamanho: o
+   ".wait-form p:not(...)" (0,4,1) travaria em .95rem. */
+.soon-submit-nota { margin-top:18px; text-align:center; font-size:.8rem !important; font-weight:600; line-height:1.45; color:var(--ink-600); }
+.soon-submit-nota + .soon-submit { margin-top:10px; }
+@media (min-width:900px) and (min-height:600px) {
+  /* a linha de apoio já aparece ao lado do celular (.phone-tagline):
+     sai do card por clip, igual ao h1 */
+  .soon-card .soon-sub {
+    position:absolute; width:1px; height:1px; padding:0; margin:-1px;
+    overflow:hidden; clip:rect(0,0,0,0); white-space:nowrap; border:0;
+  }
+  .soon-submit-nota { margin-top:clamp(5px, 1.1vh, 12px); font-size:clamp(.62rem, 1.15vh, .76rem) !important; }
+  .soon-submit-nota + .soon-submit { margin-top:clamp(4px, .7vh, 8px); }
+}
 
 .soon-form { margin-top:28px; text-align:left; }
 .soon-form .wait-form { background:var(--ink-100); }

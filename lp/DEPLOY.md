@@ -127,3 +127,19 @@ pra quem **se cadastrar na lista de espera (form do `/em-breve`) até
 40 dias antes do prazo. Decidir antes de 10/11. O modo app do `modo-copy.mjs`
 também troca a etiqueta do hero por "Oferta de lançamento", sem falar do
 cadastro.
+
+## Ajustes da auditoria do Google Ads (14/10/2026)
+
+- **Hero sem `.reveal`:** nada acima da dobra espera JS pra aparecer (o H1 é o
+  LCP). Não devolver `reveal` a eyebrow, H1, contagem, botões, provas nem ao
+  mockup do hero.
+- **Blog:** só posts reais. O post do Fator R mora em `/blog/fator-r`
+  (`_lab/blog/fator-r.html`); `/blog/post` e `/blog/post.html` fazem 301 pra lá
+  no `vercel.json`. Nada de card, autor ou contagem de exemplo no ar.
+- **`/em-breve`:** saiu do `robots.txt` e usa `noindex, follow` + canonical.
+- **Arquivos novos na raiz:** `404.html` (a Vercel serve sozinha) e `llms.txt`
+  (fatos conferidos no site; mudou preço ou regra, muda lá também).
+- **Minificador de CSS:** o build procura o `lightningcss`. O `npm install`
+  falha dentro do Google Drive (EBADF); instale numa pasta fora do Drive e rode
+  `NODE_PATH=<pasta>/node_modules node build-lp.mjs`. Sem ele, o CSS vai cru e
+  fica ~2× maior.

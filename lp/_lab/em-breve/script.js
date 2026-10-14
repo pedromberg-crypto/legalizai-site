@@ -92,19 +92,16 @@
      Não acontece hoje: o envio exige o tipo, e as 3 opções têm data-plan. */
   var OBRIGADO_SLUG = { mei: 'mei', me: 'me-simples' };
 
-  console.log('[waitlist-debug] script inicializado', { form: !!form, submitBtn: !!submitBtn });
-
   function irParaObrigado(primeiroNome, plano) {
     var slug = OBRIGADO_SLUG[plano];
     if (!slug) {
-      console.log('[waitlist-debug] plano desconhecido, voltando pro em-breve', plano);
       window.location.href = '/_lab/em-breve';
       return;
     }
     try {
       sessionStorage.setItem(THANKS_STORAGE_KEY, JSON.stringify({ nome: primeiroNome || '', plano: plano || '' }));
     } catch (e) {
-      console.log('[waitlist-debug] sessionStorage indisponível, seguindo sem salvar nome/plano', e);
+      /* sessionStorage indisponível: segue sem salvar nome/plano */
     }
     window.location.href = '/_lab/em-breve/obrigado/' + slug + queryDeClique();
   }
@@ -172,7 +169,6 @@
         if (document.activeElement === cidade) renderMatches(cidade.value);
       })
       .catch(function (err) {
-        console.log('[waitlist-debug] falha ao carregar municipios', err);
         municipiosPromise = null;
       });
     return municipiosPromise;
@@ -428,29 +424,18 @@
 
   form.addEventListener('submit', function (e) {
     e.preventDefault();
-    /* 🔒 07/10/2026: o log mostrava nome, e-mail, WhatsApp e cidade no console
-       de produção (dado pessoal, LGPD). Agora só diz SE cada campo veio. */
-    console.log('[waitlist-debug] submit handler disparado', {
-      temNome: !!nome.value.trim(), temCidade: !!cidade.value.trim(), tipo: tipo.value,
-      emailValid: email.validity && email.validity.valid,
-      whatsappDigits: digits(whatsapp.value).length,
-    });
     if (!nome.value.trim() || !cidade.value.trim()) {
-      console.log('[waitlist-debug] bloqueado: nome/cidade vazio');
       return;
     }
     if (!tipo.value) {
-      console.log('[waitlist-debug] bloqueado: tipo (MEI/ME) nao selecionado');
       tipoTrigger.classList.add('is-invalid');
       tipoTrigger.focus({ preventScroll: true });
       return;
     }
     if (!email.value || (email.validity && !email.validity.valid)) {
-      console.log('[waitlist-debug] bloqueado: email invalido');
       return;
     }
     if (digits(whatsapp.value).length < 10) {
-      console.log('[waitlist-debug] bloqueado: whatsapp com menos de 10 digitos');
       return;
     }
     /* guarda de consentimento LGPD. O `required` do HTML já barra o envio (a
@@ -459,11 +444,9 @@
        atributo cair num refactor: sem ela o formulário voltaria a mandar dado
        pessoal pro backend sem consentimento, e ninguém perceberia. */
     if (!consent.checked) {
-      console.log('[waitlist-debug] bloqueado: consentimento LGPD nao marcado');
       return;
     }
 
-    console.log('[waitlist-debug] validacao passou, enviando fetch...');
     error.classList.add('hidden');
     error.textContent = ERRO_PADRAO;
     submitBtn.disabled = true;
@@ -501,7 +484,6 @@
         });
       })
       .then(function (res) {
-        console.log('[waitlist-debug] resposta recebida', res.status);
         /* 409 = WhatsApp já cadastrado (backend recusa, não mescla) — lê a
            mensagem do corpo pra mostrar exatamente o motivo em vez do erro
            genérico de "não deu pra enviar". */
@@ -522,7 +504,6 @@
         irParaObrigado(partesNome.nome, planoEscolhido);
       })
       .catch(function (err) {
-        console.log('[waitlist-debug] erro no fetch', err);
         error.textContent = (err && err.duplicado) ? err.mensagem : ERRO_PADRAO;
         error.classList.remove('hidden');
       })

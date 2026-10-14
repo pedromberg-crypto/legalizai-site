@@ -151,7 +151,7 @@
     mostrarProxima();
   }
 
-  /* Variações da abertura pra não repetir a mesma frase pra todo visitante —
+  /* Variações da saudação pra não repetir a mesma frase pra todo visitante —
      um humano não abre a conversa com o texto idêntico toda vez. */
   var ABERTURAS = [
     'Léo aqui, da Legalizaí, de olho pra te ajudar com o que precisar.',
@@ -171,7 +171,7 @@
   function boasVindas() {
     var abertura = ABERTURAS[Math.floor(Math.random() * ABERTURAS.length)];
     var texto = saudacaoPorHorario() + ' 👋 ' + abertura +
-      ' Se quiser garantir o 1º mês grátis, o formulário está aqui na página. Vai, legaliza aí.';
+      ' Se quiser garantir a condição de lançamento (ME por R$ 99/mês e MEI por R$ 29/mês nos 3 primeiros meses, pra quem entrar na lista até 31/12/2026), o formulário está aqui na página. Vai, legaliza aí.';
     revelarResposta(texto);
   }
 

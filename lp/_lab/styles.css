@@ -637,6 +637,8 @@ h2 { font-size:clamp(1.5rem, 2vw + .8rem, 2.05rem); font-weight:800; line-height
    celular do mockup. Se não couber, ela desce inteira pra linha de baixo. */
 .contagem-rotulo { text-wrap:balance; }
 .contagem-rotulo strong { white-space:nowrap; }
+/* 14/10/2026: "sem dor de cabeça" não quebra; no celular o H1 fica em 3 linhas sem palavra sozinha */
+.h1-junto { white-space:nowrap; }
 .contagem-relogio { display:flex; gap:max(8px, calc(var(--cont-num) * .25)); }
 .contagem-bloco {
   display:flex; flex-direction:column; align-items:center;
