@@ -3758,6 +3758,22 @@ details[open] .faq-ico::after { opacity:0; transform:translate(-50%,-50%) rotate
 .legal .legal-empresa { background:var(--coral-50); border:1px solid var(--coral-100); border-radius:var(--r-card); padding:18px 20px; margin:20px 0 8px; font-size:.92rem; }
 .legal .legal-empresa p { color:var(--ink-700); }
 
+/* --------- excluir conta (22/10): o pedido fica no topo, em destaque (Google Play) */
+.exc-card { background:var(--ink-50); border:1px solid var(--ink-200); border-radius:var(--r-card); padding:22px 20px 24px; margin:24px 0 8px; }
+.exc-passo { display:flex; flex-direction:column; gap:10px; }
+.exc-passo[hidden], .exc-erro[hidden] { display:none; }
+.exc-passo h2 { margin-top:0; margin-bottom:2px; }
+.exc-label { font-size:.9rem; font-weight:600; color:var(--ink-900); }
+.exc-campo { width:100%; font:inherit; font-size:1rem; padding:14px 16px; border:1px solid var(--ink-300); border-radius:var(--r-field); background:#fff; color:var(--ink-900); }
+.exc-campo:focus { outline:2px solid var(--coral-500); outline-offset:1px; border-color:var(--coral-500); }
+.exc-codigo { letter-spacing:.4em; font-variant-numeric:tabular-nums; max-width:220px; }
+.exc-erro { color:var(--danger-700) !important; font-size:.88rem !important; }
+.exc-btn { align-self:flex-start; margin-top:6px; text-decoration:none !important; color:#fff !important; }
+.exc-btn:disabled { opacity:.45; cursor:not-allowed; transform:none; box-shadow:none; }
+.exc-link { align-self:flex-start; background:none; border:0; padding:0; font:inherit; font-size:.88rem; font-weight:600; color:var(--ink-600); text-decoration:underline; cursor:pointer; }
+.exc-copiavel { user-select:all; }
+@media (max-width:480px) { .exc-btn { align-self:stretch; text-align:center; justify-content:center; } }
+
 /* ============================================================ PRINT */
 @media print {
   .reveal { opacity:1 !important; transform:none !important; }
