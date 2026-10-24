@@ -3773,6 +3773,20 @@ details[open] .faq-ico::after { opacity:0; transform:translate(-50%,-50%) rotate
 .exc-link { align-self:flex-start; background:none; border:0; padding:0; font:inherit; font-size:.88rem; font-weight:600; color:var(--ink-600); text-decoration:underline; cursor:pointer; }
 .exc-copiavel { user-select:all; }
 @media (max-width:480px) { .exc-btn { align-self:stretch; text-align:center; justify-content:center; } }
+/* 24/10: as 4 opções no topo da página (exigência do Google: pedir a exclusão
+   da conta, de alguns dados ou dos dois, e atender quem não tem conta). */
+.exc-opcoes { display:grid; gap:10px; margin:0; padding:0; border:0; }
+.exc-opcoes legend { font-weight:700; color:var(--ink-900); margin-bottom:8px; padding:0; }
+.exc-opcao { display:flex; gap:12px; align-items:flex-start; background:#fff; border:1px solid var(--ink-200); border-radius:var(--r-field); padding:14px 16px; cursor:pointer; }
+.exc-opcao:hover { border-color:var(--ink-300); }
+.exc-opcao:has(input:checked) { border-color:var(--coral-500); box-shadow:0 0 0 1px var(--coral-500); }
+.exc-opcao input { margin-top:3px; accent-color:var(--coral-500); flex:none; }
+.exc-opcao strong { display:block; color:var(--ink-900); font-size:.98rem; }
+.exc-opcao span { display:block; color:var(--ink-600); font-size:.88rem; margin-top:2px; }
+.exc-dados { display:grid; gap:8px; margin:4px 0 0; padding:0; border:0; }
+.exc-dados label { display:flex; gap:10px; align-items:flex-start; font-size:.92rem; color:var(--ink-800); }
+.exc-dados input { margin-top:3px; accent-color:var(--coral-500); }
+.exc-dados[hidden] { display:none; }
 
 /* ============================================================ PRINT */
 @media print {
