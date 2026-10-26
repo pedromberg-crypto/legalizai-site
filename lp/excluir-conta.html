@@ -79,8 +79,10 @@
      24/10: 4 opções no topo (conta · alguns dados · sócio ou pagador · lista
      de espera), resposta neutra ao e-mail, prazos de guarda em número, aviso
      do registro público e o cartão na Pagar.me.
-     O envio chama a mesma API do app; enquanto EXCLUSAO_API estiver vazio, a
-     página cai no pedido por e-mail, que o Google também aceita. -->
+     26/10: "Excluir minha conta" chama a API do app (REQ-056; base em
+     /excluir-conta.js, EXCLUSAO_API). As outras 3 opções seguem por e-mail.
+     Qualquer falha (rede, CORS, erro) cai no pedido por e-mail, que o Google
+     também aceita. SPDD: spdd/prompt/GGQPA-XXX-202610261520-[Feat]-excluir-conta-pela-api.md -->
 <main>
 <section class="legal exc">
   <p class="legal-eyebrow">Legalizaí</p>
@@ -128,10 +130,12 @@
 
     <div class="exc-passo" data-passo="codigo" hidden>
       <h2>Confirme que é você</h2>
-      <p>Se houver um cadastro com <strong id="exc-email-mascara"></strong>, mandamos para ele um código de 6 dígitos, que vale por 10 minutos. Não chegou? Confira o spam ou use outro e-mail.</p>
+      <p>Se houver um cadastro com <strong id="exc-email-mascara"></strong>, mandamos para ele um código de 6 dígitos, que vale por 10 minutos.</p>
       <label class="exc-label" for="exc-codigo">Código</label>
       <input class="exc-campo exc-codigo" id="exc-codigo" name="codigo" type="text" inputmode="numeric" autocomplete="one-time-code" maxlength="6" pattern="[0-9]{6}" placeholder="000000">
       <p class="exc-erro" id="exc-erro-codigo" hidden></p>
+      <p id="exc-reenvio-espera"></p>
+      <button class="exc-link" type="button" id="exc-reenviar" hidden>Reenviar código</button>
       <button class="btn btn-primary exc-btn" type="submit" disabled id="exc-btn-confirmar">Confirmar o pedido</button>
       <button class="exc-link" type="button" data-acao="voltar">Usar outro e-mail</button>
     </div>
@@ -139,11 +143,13 @@
     <div class="exc-passo" data-passo="recebido" hidden>
       <h2>Pedido recebido</h2>
       <p id="exc-recebido-texto"></p>
-      <p id="exc-recebido-desfazer" hidden>Mudou de ideia? Entre de novo no app com seu e-mail em até <span data-prazo="desistir"></span> dias e tudo volta como estava.</p>
+      <p id="exc-recebido-confirmacao" hidden></p>
+      <p id="exc-recebido-desfazer" hidden></p>
     </div>
 
     <div class="exc-passo" data-passo="email-manual" hidden>
       <h2>Mande seu pedido por e-mail</h2>
+      <p id="exc-manual-motivo" hidden></p>
       <p>Escreva para <strong class="exc-copiavel">contato@legalizai.com.br</strong> a partir do e-mail <span id="exc-manual-qual">cadastrado</span>, com o assunto <strong id="exc-manual-assunto">Excluir minha conta</strong>. Respondemos em até <span data-prazo="resposta"></span> dias com um código para confirmar que é você. Depois da confirmação, o pedido segue os prazos abaixo.</p>
       <a class="btn btn-primary exc-btn" id="exc-mailto" href="mailto:contato@legalizai.com.br?subject=Excluir%20minha%20conta">Abrir meu e-mail</a>
       <button class="exc-link" type="button" data-acao="voltar">Voltar</button>
@@ -189,6 +195,7 @@
 </section>
 </main>
 
+<script src="/excluir-conta.js?v=1"></script>
 <script>
   (function () {
     'use strict';
@@ -203,39 +210,36 @@
       aceitesAnos: 5,     // prescrição (CDC art. 27): a validar
       logsMeses: 6        // Marco Civil art. 15
     };
-    /* Base da API de exclusão (a mesma do app). Vazio = cai no pedido por e-mail.
-       Contrato esperado do dev (24/10, com as 4 opções):
-       POST {base}/pedido {email, tipo, dados?} → envia o código, e responde SEMPRE
-         igual (não revela se o e-mail tem cadastro);
-       POST {base}/confirmar {email, codigo, tipo, dados?} → 200 {temEmpresa:boolean}.
-       tipo: "conta" | "alguns" | "terceiro" | "lista"; dados (só em "alguns"):
-       ["marketing","cartao","socio","outro"]. */
-    var EXCLUSAO_API = '';
+    /* A lógica (rotas, corpo, respostas, textos) e a base EXCLUSAO_API
+       moram em /excluir-conta.js. */
+    var X = window.LzExclusao || { usaApi: function () { return false; }, TEXTOS: { emailInvalido: 'Confira o e-mail.' } };
+    function buscar(url, opcoes) { return window.fetch(url, opcoes); }
 
     var MAPA_PRAZO = { link: 'linkDias', resposta: 'respostaDias', fiscalAnos: 'fiscalAnos', aceitesAnos: 'aceitesAnos', logsMeses: 'logsMeses' };
     document.querySelectorAll('[data-prazo]').forEach(function (el) {
       el.textContent = PRAZOS[MAPA_PRAZO[el.dataset.prazo] || 'desistirDias'];
     });
 
-    /* O que muda por opção: rótulo do e-mail, assunto do e-mail manual, botão
-       final e o texto do recebido. Só "conta" tem o "desfazer". */
+    /* O que muda por opção: rótulo do e-mail, assunto do e-mail manual e o
+       botão final. Só "conta" vai pela API e tem o "desfazer"; as outras três
+       seguem por e-mail porque a API ainda não as atende. */
     var TIPOS = {
-      conta: { rotulo: 'E-mail que você usa no Legalizaí', qual: 'cadastrado', assunto: 'Excluir minha conta', botao: 'Excluir minha conta',
-        recebido: function (r) { return 'Sua conta foi desativada agora. A exclusão termina em ' + PRAZOS.desistirDias + ' dias' + (r.temEmpresa ? ', e o link para baixar seus documentos chega no seu e-mail.' : '.'); } },
-      alguns: { rotulo: 'E-mail que você usa no Legalizaí', qual: 'cadastrado', assunto: 'Apagar alguns dados', botao: 'Apagar os dados marcados',
-        recebido: function () { return 'Recebemos o pedido. Os dados que você marcou saem em até ' + PRAZOS.desistirDias + ' dias, e sua conta continua funcionando.'; } },
-      terceiro: { rotulo: 'Seu e-mail (o que foi informado pra gente)', qual: 'que foi informado pra gente', assunto: 'Sou sócio ou pagador e quero meus dados fora', botao: 'Pedir a exclusão dos meus dados',
-        recebido: function () { return 'Recebemos o pedido. Seus dados saem em até ' + PRAZOS.desistirDias + ' dias, menos o que a lei manda guardar e o que já é registro público.'; } },
-      lista: { rotulo: 'E-mail que você usou na lista de espera', qual: 'que você usou na lista', assunto: 'Sair da lista de espera', botao: 'Sair da lista de espera',
-        recebido: function () { return 'Pronto. Seu cadastro sai da lista em até ' + PRAZOS.desistirDias + ' dias, e paramos de mandar mensagens.'; } }
+      conta: { rotulo: 'E-mail que você usa no Legalizaí', qual: 'cadastrado', assunto: 'Excluir minha conta', botao: 'Excluir minha conta' },
+      alguns: { rotulo: 'E-mail que você usa no Legalizaí', qual: 'cadastrado', assunto: 'Apagar alguns dados', botao: 'Apagar os dados marcados' },
+      terceiro: { rotulo: 'Seu e-mail (o que foi informado pra gente)', qual: 'que foi informado pra gente', assunto: 'Sou sócio ou pagador e quero meus dados fora', botao: 'Pedir a exclusão dos meus dados' },
+      lista: { rotulo: 'E-mail que você usou na lista de espera', qual: 'que você usou na lista', assunto: 'Sair da lista de espera', botao: 'Sair da lista de espera' }
     };
 
     var form = document.getElementById('exc-form');
     var email = document.getElementById('exc-email');
     var codigo = document.getElementById('exc-codigo');
+    var btnEnviar = form.querySelector('[data-passo="email"] button[type="submit"]');
     var btnExcluir = document.getElementById('exc-btn-confirmar');
+    var btnReenviar = document.getElementById('exc-reenviar');
+    var linhaEspera = document.getElementById('exc-reenvio-espera');
     var blocoDados = document.getElementById('exc-dados');
     var passo = 'email';
+    var relogio = null;
 
     function tipoAtual() { return (form.querySelector('input[name="tipo"]:checked') || {}).value || 'conta'; }
     function dadosMarcados() {
@@ -262,19 +266,31 @@
       el.textContent = msg || '';
       el.hidden = !msg;
     }
-    function mascarar(e) {
-      var p = e.split('@');
-      return p[0].slice(0, 2) + '•••@' + (p[1] || '');
+    function manual(motivo) {
+      pararContagem();
+      erro('exc-manual-motivo', motivo);
+      mostrar('email-manual');
     }
-    function enviar(rota, corpo) {
-      return fetch(EXCLUSAO_API + rota, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(corpo)
-      }).then(function (r) {
-        if (!r.ok) throw r;
-        return r.json().catch(function () { return {}; });
-      });
+
+    /* Reenvio: a linha conta 60 s; no zero, aparece "Reenviar código". */
+    function pararContagem() { if (relogio) { clearInterval(relogio); relogio = null; } }
+    function contar() {
+      var s = X.ESPERA_REENVIO_S;
+      pararContagem();
+      btnReenviar.hidden = true;
+      linhaEspera.hidden = false;
+      linhaEspera.textContent = X.textoReenvio(s);
+      relogio = setInterval(function () {
+        s -= 1;
+        if (s > 0) { linhaEspera.textContent = X.textoReenvio(s); return; }
+        pararContagem();
+        linhaEspera.hidden = true;
+        btnReenviar.hidden = false;
+      }, 1000);
+    }
+
+    function pedirCodigo() {
+      return X.postar(buscar, X.rota('codigo'), X.corpoDoCodigo(email.value)).then(X.lerCodigo);
     }
 
     codigo.addEventListener('input', function () {
@@ -284,16 +300,20 @@
     });
     form.querySelectorAll('[data-acao="voltar"]').forEach(function (b) {
       b.addEventListener('click', function () {
-        codigo.value = ''; btnExcluir.disabled = true; mostrar('email'); email.focus();
+        pararContagem();
+        codigo.value = ''; btnExcluir.disabled = true; erro('exc-erro-codigo'); mostrar('email'); email.focus();
       });
     });
 
-    function corpo(extra) {
-      var c = { email: email.value.trim(), tipo: tipoAtual() };
-      if (c.tipo === 'alguns') c.dados = dadosMarcados();
-      for (var k in extra) c[k] = extra[k];
-      return c;
-    }
+    btnReenviar.addEventListener('click', function () {
+      btnReenviar.disabled = true;
+      pedirCodigo().then(function (r) {
+        btnReenviar.disabled = false;
+        if (r.tipo === 'codigo') { erro('exc-erro-codigo'); contar(); }
+        else if (r.tipo === 'espera') erro('exc-erro-codigo', X.textoEspera(r.segundos));
+        else manual(X.TEXTOS.motivoFalha);
+      });
+    });
 
     form.addEventListener('submit', function (ev) {
       ev.preventDefault();
@@ -301,24 +321,42 @@
         var v = email.value.trim();
         if (tipoAtual() === 'alguns' && !dadosMarcados().length) { erro('exc-erro-dados', 'Marque pelo menos um dado.'); return; }
         erro('exc-erro-dados');
-        if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(v)) { erro('exc-erro-email', 'Confira o e-mail.'); return; }
+        if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(v)) { erro('exc-erro-email', X.TEXTOS.emailInvalido); return; }
         erro('exc-erro-email');
-        if (!EXCLUSAO_API) { mostrar('email-manual'); return; }
+        if (!X.usaApi(tipoAtual())) { manual(tipoAtual() === 'conta' ? '' : X.TEXTOS.motivoOutraOpcao); return; }
+        btnEnviar.disabled = true;
         /* Resposta neutra: a tela do código aparece igual, com ou sem cadastro. */
-        enviar('/pedido', corpo()).then(function () {
-          document.getElementById('exc-email-mascara').textContent = mascarar(v);
-          mostrar('codigo'); codigo.focus();
-        }).catch(function () { mostrar('email-manual'); });
-      } else if (passo === 'codigo') {
-        btnExcluir.disabled = true;
-        enviar('/confirmar', corpo({ codigo: codigo.value })).then(function (r) {
-          document.getElementById('exc-recebido-texto').textContent = TIPOS[tipoAtual()].recebido(r || {});
-          document.getElementById('exc-recebido-desfazer').hidden = tipoAtual() !== 'conta';
-          mostrar('recebido');
-        }).catch(function () {
-          erro('exc-erro-codigo', 'Código incorreto ou vencido. Confira ou peça outro.');
-          btnExcluir.disabled = false;
+        pedirCodigo().then(function (r) {
+          btnEnviar.disabled = false;
+          if (r.tipo === 'codigo') {
+            document.getElementById('exc-email-mascara').textContent = X.mascarar(v);
+            codigo.value = ''; btnExcluir.disabled = true; erro('exc-erro-codigo');
+            mostrar('codigo'); contar(); codigo.focus();
+          } else if (r.tipo === 'espera') erro('exc-erro-email', X.textoEspera(r.segundos));
+          else if (r.tipo === 'emailInvalido') erro('exc-erro-email', X.TEXTOS.emailInvalido);
+          else manual(X.TEXTOS.motivoFalha);
         });
+      } else if (passo === 'codigo') {
+        if (codigo.value.length !== 6) return;
+        btnExcluir.disabled = true;
+        X.postar(buscar, X.rota('confirmar'), X.corpoDaConfirmacao(email.value, codigo.value))
+          .then(X.lerConfirmacao)
+          .then(function (r) {
+            if (r.tipo === 'recebido') {
+              var t = X.textosRecebido(r.graceDays, email.value.trim());
+              pararContagem();
+              document.getElementById('exc-recebido-texto').textContent = t.principal;
+              erro('exc-recebido-confirmacao', t.confirmacao);
+              erro('exc-recebido-desfazer', t.desfazer);
+              mostrar('recebido');
+              return;
+            }
+            btnExcluir.disabled = false;
+            if (r.tipo === 'incorreto') erro('exc-erro-codigo', X.TEXTOS.incorreto);
+            else if (r.tipo === 'vencido') erro('exc-erro-codigo', X.TEXTOS.vencido);
+            else if (r.tipo === 'espera') erro('exc-erro-codigo', X.textoEspera(r.segundos));
+            else manual(X.TEXTOS.motivoFalha);
+          });
       }
     });
   })();

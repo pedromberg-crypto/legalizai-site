@@ -117,3 +117,7 @@ Sem mudança em `lp/vercel.json`, `.vercelignore` e `build-lp.mjs`.
 ## Decisões pendentes
 
 - **Infra (bloqueante para o AC1–AC5 no ar):** acrescentar `https://www.legalizai.com.br` (e `https://legalizai.com.br`, se servir a página) a `CORS_ALLOWED_ORIGINS` da Lambda `legalizai-backend-dev`. Recomendação: fazer junto com a publicação do Pedro. Até lá vale o S4.
+
+## Sync (26/10/2026, generate)
+
+Sem mudança de comportamento: `LzExclusao` também expõe `TEXTOS`, `textoReenvio` e `ESPERA_REENVIO_S` (os textos do S5 num lugar só); `postar` trata `fetch` que lança na hora (navegador sem `fetch`) como `{ rede: true }`; a página tem um substituto mínimo de `LzExclusao` (sempre e-mail) se `/excluir-conta.js` não carregar (S4). Verificação: `npm test` 9/9; `node build-lp.mjs` sem erro (os 3 CSS que o build regenerou crus, por falta do `lightningcss`, voltaram ao `HEAD`).
