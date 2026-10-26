@@ -9,7 +9,16 @@
 (function () {
   'use strict';
 
-  var API = 'https://wygqjkfsc7qzc3chhzwztorula0kuzbw.lambda-url.sa-east-1.on.aws/site-chat/messages';
+  /* DESLIGADO em 26/10/2026: o backend antigo do chat não existe mais.
+     SPDD: spdd/prompt/GGQPA-XXX-202610261605-[Fix]-lista-de-espera-na-api-e-chat-desligado.md
+     Desligado, este arquivo não toca o DOM nem a rede, mesmo se incluído.
+     Para reativar quando houver backend de chat:
+       1. API = a rota nova de mensagens;
+       2. CHAT_ATIVO = true;
+       3. descomentar a inclusão no index.html e subir o ?v=. */
+  var CHAT_ATIVO = false;
+  var API = '';
+  if (!CHAT_ATIVO || !API) return;
   var VISITOR_KEY = 'legalizai_chat_visitor';
 
   function visitorId() {

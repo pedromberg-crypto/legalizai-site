@@ -1,12 +1,13 @@
 /* ============================================================
    LEGALIZAI · Coming Soon
-   Envia os dados do formulário pro legalizai-backend, que grava
-   cada cadastro numa planilha do Google Sheets.
+   Envia o cadastro pra rota pública do REQ-032 da nossa API
+   (POST /api/v1/marketing/landing-leads). O corpo, o endereço e a
+   leitura da resposta ficam em lista-espera.js (LzListaEspera).
+   SPDD: spdd/prompt/GGQPA-XXX-202610261605-[Fix]-lista-de-espera-na-api-e-chat-desligado.md
    ============================================================ */
 (function () {
   'use strict';
 
-  var WAITLIST_ENDPOINT = 'https://wygqjkfsc7qzc3chhzwztorula0kuzbw.lambda-url.sa-east-1.on.aws/waitlist';
   var MUNICIPIOS_URL = '/_lab/em-breve/assets/municipios.json';
   var UTM_KEYS = ['utm_source', 'utm_medium', 'utm_campaign', 'utm_content', 'utm_term'];
   var UTM_STORAGE_KEY = 'legalizai_utm';
@@ -40,15 +41,9 @@
 
   var utms = captureUtms();
 
-  /* Origem da visita gravada pelo /origem.js, que roda antes deste script em
-     toda página: clique de anúncio (gclid/gbraid/wbraid/fbclid), página de
-     entrada e referrer. É o que liga o lead ao anúncio, já que o clique do
-     Google Ads cai na home e não aqui. Campo vazio não vai no payload. */
-  var ORIGEM_STORAGE_KEY = 'legalizai_origem';
-  var ORIGEM_CAMPOS = ['gclid', 'gbraid', 'wbraid', 'fbclid', 'landingPage', 'referrer'];
-  function lerOrigem() {
-    try { return JSON.parse(sessionStorage.getItem(ORIGEM_STORAGE_KEY)) || {}; } catch (e) { return {}; }
-  }
+  /* A origem da visita (/origem.js: gclid, fbclid, página de entrada,
+     referrer) não vai no cadastro: o contrato do REQ-032 ainda não aceita
+     esses campos e recusa campo extra (400). Pendência do backend. */
 
   /* Parâmetros de clique que o url_passthrough do Google põe na URL quando o
      consentimento está negado (sem cookie, é a URL que carrega o clique). O
@@ -74,8 +69,7 @@
   var consent = $('soon-consent');
   var error = $('soon-error');
   var submitBtn = form.querySelector('.soon-submit');
-  /* texto padrão do HTML — guardado pra restaurar depois de um 409 (que
-     troca a mensagem pra avisar sobre o WhatsApp já cadastrado) */
+  /* texto padrão do HTML: a mensagem de qualquer falha do envio */
   var ERRO_PADRAO = error.textContent;
 
   /* sessionStorage (não localStorage) de propósito: a chave só precisa
@@ -457,44 +451,24 @@
        nem ter sido baixada ainda — espera ela antes de resolver a UF */
     loadMunicipios()
       .then(function () {
-        var payload = {
-          nome: partesNome.nome,
-          sobrenome: partesNome.sobrenome,
-          email: email.value.trim(),
-          whatsapp: whatsapp.value.trim(),
-          cidade: cidade.value.trim(),
-          tipoNegocio: tipo.value,
-          origem: 'coming-soon',
-          utmSource: utms.utm_source || '',
-          utmMedium: utms.utm_medium || '',
-          utmCampaign: utms.utm_campaign || '',
-          utmContent: utms.utm_content || '',
-          utmTerm: utms.utm_term || ''
+        var cadastro = {
+          nomeCompleto: nome.value,
+          email: email.value,
+          whatsapp: whatsapp.value,
+          cidade: cidade.value,
+          uf: resolveUf(),
+          utms: utms,
+          /* o envio só chega aqui com o consentimento marcado */
+          aceiteEm: new Date().toISOString()
         };
-        var uf = resolveUf();
-        if (uf) payload.estado = uf;
-        /* o schema zod do backend descarta campo que ainda não declara (não
-           recusa), então mandar antes de o backend gravar não quebra nada */
-        var origem = lerOrigem();
-        ORIGEM_CAMPOS.forEach(function (k) { if (origem[k]) payload[k] = String(origem[k]).slice(0, 500); });
-        return fetch(WAITLIST_ENDPOINT, {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify(payload)
-        });
+        /* sem lista-espera.js (não carregou): cai na mensagem de erro */
+        var LE = window.LzListaEspera;
+        if (!LE) throw new Error('sem_lista_espera');
+        /* tipo de negócio não vai: o contrato ainda não aceita. Decide o obrigado. */
+        return LE.enviar(window.fetch.bind(window), LE.montarCorpo(cadastro));
       })
-      .then(function (res) {
-        /* 409 = WhatsApp já cadastrado (backend recusa, não mescla) — lê a
-           mensagem do corpo pra mostrar exatamente o motivo em vez do erro
-           genérico de "não deu pra enviar". */
-        if (res.status === 409) {
-          return res.json()
-            .catch(function () { return null; })
-            .then(function (body) {
-              throw { duplicado: true, mensagem: (body && body.error) || 'Esse número de WhatsApp já está cadastrado.' };
-            });
-        }
-        if (!res.ok) throw new Error('request_failed');
+      .then(function (resultado) {
+        if (resultado.tipo !== 'ok') throw new Error('request_failed');
 
         /* conversão pro GTM — sem PII, só o sinal do evento */
         window.dataLayer = window.dataLayer || [];
@@ -503,8 +477,8 @@
         var planoEscolhido = tipoIndex >= 0 ? tipoOptions[tipoIndex].getAttribute('data-plan') : null;
         irParaObrigado(partesNome.nome, planoEscolhido);
       })
-      .catch(function (err) {
-        error.textContent = (err && err.duplicado) ? err.mensagem : ERRO_PADRAO;
+      .catch(function () {
+        error.textContent = ERRO_PADRAO;
         error.classList.remove('hidden');
       })
       .finally(function () {
