@@ -4,6 +4,7 @@
    (POST /api/v1/marketing/landing-leads). O corpo, o endereço e a
    leitura da resposta ficam em lista-espera.js (LzListaEspera).
    SPDD: spdd/prompt/GGQPA-XXX-202610261605-[Fix]-lista-de-espera-na-api-e-chat-desligado.md
+         spdd/prompt/GGQPA-XXX-202610261900-[Feat]-tipo-de-negocio-e-clique-na-lista-de-espera.md (REQ-058)
    ============================================================ */
 (function () {
   'use strict';
@@ -41,9 +42,14 @@
 
   var utms = captureUtms();
 
-  /* A origem da visita (/origem.js: gclid, fbclid, página de entrada,
-     referrer) não vai no cadastro: o contrato do REQ-032 ainda não aceita
-     esses campos e recusa campo extra (400). Pendência do backend. */
+  /* Origem da visita gravada pelo /origem.js, que roda antes deste script em
+     toda página: clique de anúncio (gclid/gbraid/wbraid/fbclid), página de
+     entrada e referrer. Vai no cadastro (REQ-058); lista-espera.js tira query
+     e descarta o que a API não aceita. Sem sessionStorage: segue sem origem. */
+  var ORIGEM_STORAGE_KEY = 'legalizai_origem';
+  function lerOrigem() {
+    try { return JSON.parse(sessionStorage.getItem(ORIGEM_STORAGE_KEY)) || {}; } catch (e) { return {}; }
+  }
 
   /* Parâmetros de clique que o url_passthrough do Google põe na URL quando o
      consentimento está negado (sem cookie, é a URL que carrega o clique). O
@@ -458,13 +464,15 @@
           cidade: cidade.value,
           uf: resolveUf(),
           utms: utms,
+          /* REQ-058: o código da opção (data-business-type), não o rótulo */
+          tipoNegocio: tipoIndex >= 0 ? tipoOptions[tipoIndex].getAttribute('data-business-type') : '',
+          origem: lerOrigem(),
           /* o envio só chega aqui com o consentimento marcado */
           aceiteEm: new Date().toISOString()
         };
         /* sem lista-espera.js (não carregou): cai na mensagem de erro */
         var LE = window.LzListaEspera;
         if (!LE) throw new Error('sem_lista_espera');
-        /* tipo de negócio não vai: o contrato ainda não aceita. Decide o obrigado. */
         return LE.enviar(window.fetch.bind(window), LE.montarCorpo(cadastro));
       })
       .then(function (resultado) {

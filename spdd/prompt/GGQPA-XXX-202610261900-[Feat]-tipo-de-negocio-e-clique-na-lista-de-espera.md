@@ -49,3 +49,7 @@ classDiagram
 ## Decisões pendentes
 
 - Políticas (`lp/privacidade.html`, `lp/excluir-conta.html:164`, `lp/cookies.html:101`): conferir se a redação bate com o que é gravado (tipo, ids de clique, página de entrada e referrer sem query).
+
+## Sync (26/10/2026, generate)
+
+Sem mudança de comportamento: no `_lab` o rótulo da 1ª opção já é "Empresa nova, ainda sem CNPJ (ME/Simples)", então o `data-business-type` e o teste se guiam pelo `id` da opção (`soon-tipo-opt-0..2`), não pelo rótulo. Verificação: `npm test` 20/20 (4 novos, 1 ajustado para `?v=2`/`?v=11`); `node build-lp.mjs` sem erro (os 3 CSS que o build regenerou crus, por falta do `lightningcss`, voltaram ao `HEAD`).

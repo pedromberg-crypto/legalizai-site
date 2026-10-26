@@ -79,7 +79,7 @@ test('chat.js desligado não toca DOM nem rede', () => {
   for (const pag of ['../lp/em-breve/index.html', '../lp/_lab/em-breve/index.html']) {
     const html = readFileSync(new URL(pag, import.meta.url), 'utf8');
     assert.doesNotMatch(html.replace(/<!--[\s\S]*?-->/g, ''), /chat\.js/);
-    assert.match(html, /em-breve\/lista-espera\.js\?v=1" defer><\/script>\n<script src="(\/_lab)?\/em-breve\/script\.js\?v=10"/);
+    assert.match(html, /em-breve\/lista-espera\.js\?v=2" defer><\/script>\n<script src="(\/_lab)?\/em-breve\/script\.js\?v=11"/);
   }
 });
 
@@ -97,3 +97,93 @@ test('nenhuma referência ao backend antigo em lp/', () => {
   anda(raiz);
   assert.deepEqual(achados, []);
 });
+
+// STORY-003-001 · GGQPA-XXX-202610261900 — tipo de negócio e clique do anúncio (REQ-058).
+const CAMPOS_REQ058 = ['businessType', 'gclid', 'gbraid', 'wbraid', 'fbclid', 'landingPage', 'referrer'];
+const BASE = { nomeCompleto: 'Ana', email: 'a@x.com', whatsapp: '31999990001', cidade: 'BH', aceiteEm: ACEITE };
+
+test('REQ-058 AC1: tipo de negócio e origem do clique no corpo, só campos do DTO', () => {
+  for (const M of [L, LAB]) {
+    const corpo = M.montarCorpo({
+      ...BASE, tipoNegocio: 'MIGRATE_MEI',
+      origem: { gclid: 'Cj0_a-1', fbclid: 'IwAR.x~y', landingPage: '/em-breve', referrer: 'https://www.google.com/search?q=abrir+empresa' }
+    });
+    assert.equal(corpo.businessType, 'MIGRATE_MEI');
+    assert.equal(corpo.gclid, 'Cj0_a-1');
+    assert.equal(corpo.fbclid, 'IwAR.x~y');
+    assert.equal(corpo.landingPage, '/em-breve');
+    assert.equal(corpo.referrer, 'https://www.google.com/search');
+    assert.ok(!('gbraid' in corpo) && !('wbraid' in corpo));
+    for (const k of Object.keys(corpo)) assert.ok(CAMPOS_DO_DTO.includes(k) || CAMPOS_REQ058.includes(k), k);
+  }
+});
+
+test('REQ-058 AC2: query, id inválido, URL estranha e tipo fora do enum não vão', () => {
+  const corpo = L.montarCorpo({
+    ...BASE, tipoNegocio: 'mei',
+    origem: {
+      landingPage: '/em-breve?email=a@b.com#x', gclid: 'abc def', gbraid: 'a'.repeat(501), wbraid: 'ok_1',
+      fbclid: 'ana@x.com', referrer: 'javascript:alert(1)'
+    }
+  });
+  assert.equal(corpo.landingPage, '/em-breve');
+  assert.equal(corpo.wbraid, 'ok_1');
+  for (const k of ['businessType', 'gclid', 'gbraid', 'fbclid', 'referrer']) assert.ok(!(k in corpo), k);
+  assert.doesNotMatch(JSON.stringify(corpo), /\?|#|a@b\.com/);
+
+  const semOrigem = L.montarCorpo({ ...BASE, origem: null, tipoNegocio: '' });
+  for (const k of CAMPOS_REQ058) assert.ok(!(k in semOrigem), k);
+  assert.equal(L.montarCorpo({ ...BASE, origem: { landingPage: 'em-breve', referrer: 'https://exemplo.com#a' } }).landingPage, undefined);
+  assert.equal(L.montarCorpo({ ...BASE, origem: { referrer: 'https://exemplo.com#a' } }).referrer, 'https://exemplo.com');
+  for (const t of L.TIPOS_NEGOCIO) assert.equal(L.montarCorpo({ ...BASE, tipoNegocio: t }).businessType, t);
+});
+
+test('REQ-058 AC3: 400 reenvia sem os campos novos (com o aceite); 400 de novo, sem o aceite', async () => {
+  const corpo = L.montarCorpo({ ...BASE, tipoNegocio: 'NEW_COMPANY', origem: { gclid: 'g1', landingPage: '/em-breve' } });
+  const rodar = async (resp) => {
+    const corpos = [];
+    const f = async (url, op) => { corpos.push(JSON.parse(op.body)); return { status: resp.shift() }; };
+    return { r: await L.enviar(f, corpo), corpos };
+  };
+
+  let { r, corpos } = await rodar([400, 201]);
+  assert.equal(r.tipo, 'ok');
+  assert.equal(corpos.length, 2);
+  assert.equal(corpos[0].businessType, 'NEW_COMPANY');
+  for (const k of CAMPOS_REQ058) assert.ok(!(k in corpos[1]), k);
+  assert.equal(corpos[1].privacyAcceptedAt, ACEITE);
+
+  ({ r, corpos } = await rodar([400, 400, 201]));
+  assert.equal(r.tipo, 'ok');
+  assert.equal(corpos.length, 3);
+  assert.ok(!('privacyAcceptedAt' in corpos[2]) && !('gclid' in corpos[2]));
+  assert.equal(corpos[2].email, 'a@x.com');
+
+  ({ r, corpos } = await rodar([400, 400, 400]));
+  assert.equal(r.tipo, 'erro');
+  assert.equal(corpos.length, 3);
+
+  ({ r, corpos } = await rodar([429]));
+  assert.equal(r.tipo, 'erro');
+  assert.equal(corpos.length, 1);
+});
+
+test('REQ-058: cada opção do formulário tem o código da API', () => {
+  // pelo id da opção: o rótulo do _lab já mudou ("Empresa nova, ainda sem CNPJ")
+  const esperado = ['NEW_COMPANY', 'MIGRATE_MEI', 'MIGRATE_ME'];
+  for (const pag of ['../lp/em-breve/index.html', '../lp/_lab/em-breve/index.html']) {
+    const html = readFileSync(new URL(pag, import.meta.url), 'utf8');
+    const opcoes = [...html.matchAll(/<li class="soon-ac-option" id="soon-tipo-opt-(\d)"[^>]*>/g)];
+    assert.equal(opcoes.length, 3, pag);
+    for (const [li, i] of opcoes) {
+      assert.match(li, new RegExp('data-business-type="' + esperado[Number(i)] + '"'), pag + ' opção ' + i);
+    }
+  }
+  for (const arq of ['../lp/em-breve/script.js', '../lp/_lab/em-breve/script.js']) {
+    const js = readFileSync(new URL(arq, import.meta.url), 'utf8');
+    assert.match(js, /data-business-type/);
+    assert.match(js, /tipoNegocio:/);
+    assert.match(js, /origem: lerOrigem\(\)/);
+  }
+});
+
