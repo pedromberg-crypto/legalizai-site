@@ -4,7 +4,7 @@
   "description": "Site institucional da Legalizai — estático (HTML/CSS/JS puro, sem build), deploy único na Vercel (`legalizei-lp`, domínio `www.legalizai.com.br`). Root do deploy: `lp/`.",
   "main": "index.js",
   "scripts": {
-    "test": "node --test testes/",
+    "test": "node --test testes/*.test.mjs",
     "build:css": "tailwindcss -i lp/em-breve/src.css -o lp/em-breve/styles.css --minify"
   },
   "repository": {
