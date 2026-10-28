@@ -1,0 +1,4 @@
+Contact: mailto:contato@legalizai.com.br
+Expires: 2027-06-30T23:59:59.000Z
+Preferred-Languages: pt-BR, en
+Canonical: https://www.legalizai.com.br/.well-known/security.txt
