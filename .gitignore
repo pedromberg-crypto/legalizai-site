@@ -1,3 +1,10 @@
 .vercel
 .DS_Store
 node_modules/
+
+# Segredos: nunca versionar (análise passiva 30/10/2026)
+.env
+.env.*
+!.env.example
+*.pem
+*.key
