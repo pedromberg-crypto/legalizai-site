@@ -29,11 +29,10 @@
 (function () {
   'use strict';
 
-  /* 10/11/2026, 00:00 em Brasília. O -03:00 é fixo de propósito: o Brasil não
-     tem horário de verão desde 2019, então o fuso não muda até lá.
-     Sem horário definido ainda, a contagem vai até a virada do dia. Quando o
-     horário fechar, troca só o "00:00:00" (ex.: '2026-11-10T10:00:00-03:00'). */
-  var LANCAMENTO = '2026-11-10T00:00:00-03:00';
+  /* 10/11/2026, 20:00 em Brasília (horário fechado pelo Pedro em 09/11). O
+     -03:00 é fixo de propósito: o Brasil não tem horário de verão desde 2019,
+     então o fuso não muda até lá. Mudou o horário: troca só o "20:00:00". */
+  var LANCAMENTO = '2026-11-10T20:00:00-03:00';
 
   var FRASE_NO_DIA = 'O app da Legalizaí chega às lojas hoje.';
   var FRASE_DEPOIS = 'O app da Legalizaí já está chegando às lojas.';

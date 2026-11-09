@@ -1,7 +1,7 @@
 
 (function () {
   'use strict';
-  var LANCAMENTO = '2026-11-10T00:00:00-03:00';
+  var LANCAMENTO = '2026-11-10T20:00:00-03:00';
   var FRASE_NO_DIA = 'O app da Legalizaí chega às lojas hoje.';
   var FRASE_DEPOIS = 'O app da Legalizaí já está chegando às lojas.';
   var alvo = Date.parse(LANCAMENTO);
