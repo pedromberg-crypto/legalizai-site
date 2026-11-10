@@ -98,8 +98,8 @@ se perder no caminho:
 Home (hero, logo abaixo do título; o subtítulo saiu em 09/10) e `/em-breve`
 (embaixo do título no celular; no desktop, dentro da tela do celular do mockup,
 no lugar do aviãozinho) contam até o lançamento. A data mora **só** em `_lab/lancamento.js`, na constante
-`LANCAMENTO`: hoje `2026-11-10T20:00:00-03:00` (20h de Brasília, horário
-fechado em 09/11). Mudou a data ou fechou o horário: troca essa linha, sobe o
+`LANCAMENTO`: hoje `2026-11-11T20:00:00-03:00` (20h de Brasília; era 10/11
+no mesmo horário, adiado em 10/11 à noite). Mudou a data ou fechou o horário: troca essa linha, sobe o
 `?v=` do `lancamento.js` na home, no `/em-breve` e no `_lab/em-breve`, e roda o
 build. O `/em-breve` usa o `/lancamento.js` gerado pelo build, igual ao
 `origem.js`.

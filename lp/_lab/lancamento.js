@@ -6,7 +6,7 @@
    com o origem.js), então mudar a data é mudar UMA linha e rodar o build.
 
    Marcação: qualquer elemento com [data-contagem]. Dentro dele:
-     [data-contagem-dia]      recebe a data por extenso ("10 de novembro")
+     [data-contagem-dia]      recebe a data por extenso ("11 de novembro")
      [data-contagem-num="d"]  dias   (idem "h", "m", "s")
      [data-contagem-un="d"]   rótulo que flexiona ("dia" / "dias"; idem "h")
      [data-contagem-relogio]  o bloco dos números (some no zero)
@@ -16,7 +16,7 @@
    No zero (pedido do Pedro, 09/10): os números saem e entra "Chegou o dia",
    e fica assim até o site virar pro modo app (`modo-copy.mjs loja app`), que
    esconde o bloco inteiro pela classe .so-espera na home. A frase muda depois
-   do dia 10 porque "chega às lojas hoje" passaria a ser mentira no dia 11.
+   do dia do lançamento porque "chega às lojas hoje" passaria a ser mentira.
 
    Movimento reduzido (prefers-reduced-motion): o bloco dos segundos some e o
    relógio só muda de minuto em minuto. Um número trocando a cada segundo é
@@ -29,10 +29,12 @@
 (function () {
   'use strict';
 
-  /* 10/11/2026, 20:00 em Brasília (horário fechado pelo Pedro em 09/11). O
-     -03:00 é fixo de propósito: o Brasil não tem horário de verão desde 2019,
-     então o fuso não muda até lá. Mudou o horário: troca só o "20:00:00". */
-  var LANCAMENTO = '2026-11-10T20:00:00-03:00';
+  /* 11/11/2026, 20:00 em Brasília. Era 10/11 às 20h (fechado em 09/11); o
+     lançamento atrasou e o Pedro pediu, em 10/11 à noite, a contagem de volta
+     até o dia seguinte no mesmo horário. O -03:00 é fixo de propósito: o
+     Brasil não tem horário de verão desde 2019, então o fuso não muda até lá.
+     Mudou o horário: troca só o "20:00:00". */
+  var LANCAMENTO = '2026-11-11T20:00:00-03:00';
 
   var FRASE_NO_DIA = 'O app da Legalizaí chega às lojas hoje.';
   var FRASE_DEPOIS = 'O app da Legalizaí já está chegando às lojas.';
@@ -44,7 +46,7 @@
   var FUSO = 'America/Sao_Paulo';
   var calmo = window.matchMedia && matchMedia('(prefers-reduced-motion: reduce)').matches;
 
-  /* "10 de novembro" e "2026-11-10", os dois no fuso de Brasília: quem abre o
+  /* "11 de novembro" e "2026-11-11", os dois no fuso de Brasília: quem abre o
      site de outro fuso continua vendo o dia do lançamento daqui. */
   var porExtenso = new Intl.DateTimeFormat('pt-BR', { day: 'numeric', month: 'long', timeZone: FUSO });
   var diaIso = new Intl.DateTimeFormat('en-CA', { year: 'numeric', month: '2-digit', day: '2-digit', timeZone: FUSO });
