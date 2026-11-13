@@ -1,6 +1,6 @@
 # Legalizaí
 
-> Contabilidade online para MEI e ME do Simples Nacional, com app, agente contábil no WhatsApp e, no plano ME, contador registrado no CRC-MG atendendo pelo WhatsApp. Sede em Belo Horizonte (MG). Empresa privada de contabilidade, sem vínculo com órgãos do governo. O app chega às lojas em 10/11/2026; hoje há lista de espera.
+> Contabilidade online para MEI e ME do Simples Nacional, com app, agente contábil no WhatsApp e, no plano ME, contador registrado no CRC-MG atendendo pelo WhatsApp. Sede em Belo Horizonte (MG). Empresa privada de contabilidade, sem vínculo com órgãos do governo. O app já está no Google Play (Android); na App Store (iPhone), chega em breve. A lista segue aberta até 31/12/2026 para a oferta de lançamento.
 
 ## Fatos
 - Operadora: Legalizai Tecnologia Ltda, CNPJ 41.569.345/0001-48, R. Satélite, 328, sala 411, Caiçara-Adelaide, Belo Horizonte/MG, CEP 30.770-380. Contato: contato@legalizai.com.br.
@@ -13,7 +13,8 @@
 
 ## Páginas
 - [Início, planos e perguntas frequentes](https://www.legalizai.com.br/)
-- [Lista de espera](https://www.legalizai.com.br/em-breve)
+- [Lista da oferta de lançamento](https://www.legalizai.com.br/em-breve)
+- [App no Google Play](https://play.google.com/store/apps/details?id=br.com.legalizai.app)
 - [Blog](https://www.legalizai.com.br/blog)
 - [Fator R: o que é e como calcular](https://www.legalizai.com.br/blog/fator-r)
 - [Termos de uso](https://www.legalizai.com.br/termos)
