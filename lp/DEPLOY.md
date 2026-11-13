@@ -143,3 +143,22 @@ cadastro.
   falha dentro do Google Drive (EBADF); instale numa pasta fora do Drive e rode
   `NODE_PATH=<pasta>/node_modules node build-lp.mjs`. Sem ele, o CSS vai cru e
   fica ~2× maior.
+
+---
+
+## Google Ads, suspensão por phishing (13/11/2026)
+
+A conta do Google Ads foi suspensa por "práticas comerciais inaceitáveis: phishing".
+Três correções no site, para a contestação:
+
+1. **`legalizei-lp.vercel.app` redireciona (308) para o www**, mantendo o caminho
+   (`redirects` com `has: host` no `vercel.json`). É o domínio `.vercel.app` de
+   produção do próprio projeto: servia o site inteiro, inclusive o formulário,
+   com outra grafia. Não remover essa regra. Previews ficam atrás do login da Vercel.
+2. **Formulários postam no nosso domínio.** `lista-espera.js` e `excluir-conta.js`
+   chamam `/api/v1/...` (URL relativa) e a Vercel repassa para a Lambda
+   (`rewrites` no `vercel.json`). Nenhum `on.aws` no HTML ou JS público. Ao trocar a
+   API (dev → produção), muda só o `destination` do rewrite.
+3. **Sem links "Baixar na App Store / no Google Play" enquanto o app não estiver
+   nas lojas.** Os dois links `.so-app` do rodapé saíram do `_lab/index.html`.
+   No lançamento, voltam já com as URLs reais das lojas (nunca `#rodape`).

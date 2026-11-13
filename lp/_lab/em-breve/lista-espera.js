@@ -9,8 +9,9 @@
 })(this, function () {
   'use strict';
 
-  /* Rota da API (a mesma Lambda do app). Único ponto de configuração. */
-  var LISTA_ESPERA_API = 'https://cu2viedkfvwuiuauvvi4guzdnm0ktprm.lambda-url.sa-east-1.on.aws/api/v1/marketing/landing-leads';
+  /* Rota da API, relativa: a Vercel repassa /api/v1/* para a Lambda (rewrite no
+     vercel.json), então o dado sai pelo nosso domínio. Único ponto de configuração. */
+  var LISTA_ESPERA_API = '/api/v1/marketing/landing-leads';
 
   /* `origin` é obrigatório no contrato e o formulário não o coleta:
      o mesmo valor que o site sempre mandou. */

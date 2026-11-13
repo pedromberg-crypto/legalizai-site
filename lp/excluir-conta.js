@@ -8,9 +8,10 @@
 })(this, function () {
   'use strict';
 
-  /* Base da API, a mesma do app. Único ponto de configuração.
+  /* Base da API, relativa: a Vercel repassa /api/v1/* para a API (rewrite no
+     vercel.json). Único ponto de configuração.
      Vazio = a página manda sempre o pedido por e-mail. */
-  var EXCLUSAO_API = 'https://cu2viedkfvwuiuauvvi4guzdnm0ktprm.lambda-url.sa-east-1.on.aws/api/v1/';
+  var EXCLUSAO_API = '/api/v1/';
 
   var PRAZO_PADRAO_DIAS = 30;
   var ESPERA_PADRAO_S = 60;

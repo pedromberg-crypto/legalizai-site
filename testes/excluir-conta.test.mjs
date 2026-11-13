@@ -25,7 +25,7 @@ test('só "conta" usa a API; base vazia manda tudo ao e-mail', () => {
 test('rotas públicas do REQ-056', () => {
   assert.equal(X.rota('codigo', 'https://api/x/api/v1'), 'https://api/x/api/v1/account-deletion/code');
   assert.equal(X.rota('confirmar', 'https://api/x/api/v1/'), 'https://api/x/api/v1/account-deletion');
-  assert.match(X.EXCLUSAO_API, /^https:\/\/.+\/api\/v1\/$/);
+  assert.equal(X.EXCLUSAO_API, '/api/v1/');
 });
 
 test('pedido do código: neutro, espera, e-mail inválido e fallback', () => {

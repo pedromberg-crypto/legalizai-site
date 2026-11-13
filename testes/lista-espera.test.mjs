@@ -44,7 +44,7 @@ test('enviar: POST JSON na rota nova, sem PII na URL', async () => {
   const corpo = L.montarCorpo({ nomeCompleto: 'Ana', email: 'ana@x.com', whatsapp: '31999990001', cidade: 'BH', aceiteEm: ACEITE });
   assert.deepEqual(await L.enviar(f, corpo), { tipo: 'ok' });
   assert.equal(vistos.length, 1);
-  assert.equal(vistos[0].url, 'https://cu2viedkfvwuiuauvvi4guzdnm0ktprm.lambda-url.sa-east-1.on.aws/api/v1/marketing/landing-leads');
+  assert.equal(vistos[0].url, '/api/v1/marketing/landing-leads');
   assert.equal(vistos[0].op.method, 'POST');
   assert.deepEqual(Object.keys(vistos[0].op.headers), ['Content-Type']);
   assert.deepEqual(JSON.parse(vistos[0].op.body), corpo);
