@@ -227,6 +227,19 @@ function anda(rel) {
   writeFileSync(para, s, 'utf8');
 }
 
+/* trava dos links das lojas (13/10/2026; 16/11 passou a olhar o vercel.json):
+   os badges da home levam a /app-store e /google-play, e quem manda essas
+   rotas pra loja é o vercel.json. Enquanto o destino lá for o marcador
+   LINK-…-PENDENTE, o badge não leva a loja nenhuma: o build para ANTES de
+   escrever qualquer arquivo. Vale também pra marcador esquecido no HTML. */
+const pendentes = ['vercel.json', join(FONTE, 'index.html')]
+  .flatMap((f) => readFileSync(f, 'utf8').match(/LINK-[A-Z-]+-PENDENTE/g) || []);
+if (pendentes.length) {
+  console.error(`✗ ainda tem link de loja pendente: ${[...new Set(pendentes)].join(', ')}`);
+  console.error('  Cole os links da App Store e do Google Play no vercel.json (redirects /app-store e /google-play) e rode de novo. Nada foi escrito.');
+  process.exit(1);
+}
+
 /* diretórios gerados somem antes, pra não deixar órfão de build velho */
 for (const d of ['blog']) {
   const alvo = join(DESTINO, d);
