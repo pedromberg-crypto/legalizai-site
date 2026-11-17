@@ -3808,6 +3808,8 @@ details[open] .faq-ico::after { opacity:0; transform:translate(-50%,-50%) rotate
 .exc-btn:disabled { opacity:.45; cursor:not-allowed; transform:none; box-shadow:none; }
 .exc-link { align-self:flex-start; background:none; border:0; padding:0; font:inherit; font-size:.88rem; font-weight:600; color:var(--ink-600); text-decoration:underline; cursor:pointer; }
 .exc-copiavel { user-select:all; }
+/* 17/11: aviso "não é login" (contestação do Google Ads por phishing). */
+.legal .exc-aviso { background:var(--coral-50); border:1px solid var(--coral-100); border-radius:var(--r-card); padding:14px 18px; margin:16px 0 0; font-size:.92rem; color:var(--ink-700); }
 @media (max-width:480px) { .exc-btn { align-self:stretch; text-align:center; justify-content:center; } }
 /* 24/10: as 4 opções no topo da página (exigência do Google: pedir a exclusão
    da conta, de alguns dados ou dos dois, e atender quem não tem conta). */

@@ -6,6 +6,7 @@ import { readFileSync, readdirSync, statSync } from 'node:fs';
 import { join } from 'node:path';
 import { runInNewContext } from 'node:vm';
 import { createRequire } from 'node:module';
+import { fileURLToPath } from 'node:url';
 
 const require = createRequire(import.meta.url);
 const L = require('../lp/em-breve/lista-espera.js');
@@ -84,7 +85,7 @@ test('chat.js desligado não toca DOM nem rede', () => {
 });
 
 test('nenhuma referência ao backend antigo em lp/', () => {
-  const raiz = new URL('../lp/', import.meta.url).pathname;
+  const raiz = fileURLToPath(new URL('../lp/', import.meta.url)); // .pathname quebra no Windows ("/C:/...")
   const achados = [];
   const anda = (d) => {
     for (const n of readdirSync(d)) {
