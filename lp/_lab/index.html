@@ -236,7 +236,15 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
       var planoB = function () {
         var f = hero.querySelector('.hero-video');
         f.preload = 'auto';
+        entrada(f);
         var q = f.play(); if (q && q.catch) q.catch(function () {});
+      };
+      /* 17/11 (Pedro): no celular só aparece a faixa do meio do vídeo (39% a 61% da largura) e o Léo só chega nela
+         aos 2,2 s. A 1ª volta começa em 2,25 s: ele já entra na tela assim que carrega. As voltas seguintes são normais. */
+      var entrada = function (video) {
+        if (!celular) return;
+        var pular = function () { try { video.currentTime = 2.25; } catch (e) {} };
+        if (video.readyState >= 1) pular(); else video.addEventListener('loadedmetadata', pular, { once: true });
       };
       if (calmo) return;
       if (!semAlfa) {
@@ -245,6 +253,7 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
         var v = hero.querySelector('.hero-leo-frente');
         v.src = celular ? '/_lab/assets/hero-leo-frente-720.webm?v=1' : '/_lab/assets/hero-leo-frente.webm?v=4';
         v.preload = 'auto';
+        entrada(v);
         var p = v.play(); if (p && p.catch) p.catch(function () {});
         return;
       }
@@ -291,6 +300,7 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
         hero.classList.add('leo-na-frente');
         desenhar();
       });
+      entrada(vid);
       var p2 = vid.play(); if (p2 && p2.catch) p2.catch(planoB);
     })();
   </script>
