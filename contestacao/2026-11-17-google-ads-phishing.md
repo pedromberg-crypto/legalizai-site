@@ -12,8 +12,11 @@ Esta pasta fica fora do `lp/`: não vai para o site.
 
 - [ ] **Push do commit `0dc66dd`** (aviso "Esta página não é login" no
       /excluir-conta). Conferir no ar: https://www.legalizai.com.br/excluir-conta
-- [ ] Nome "Legalizei" fora do que é público (seção 5): no mínimo o projeto da
-      Vercel renomeado, porque o texto da contestação diz que está sendo feito.
+- [ ] Nome "Legalizei" fora do que é público (seção 5). **Depende da aprovação
+      do Pedro Maia** ("Legalizei" foi o primeiro nome do projeto; mudança
+      considerável passa por ele). Se ele não aprovar renomear o projeto da
+      Vercel, tirar do texto (seção 2, item 4) o trecho "e está sendo
+      renomeado".
 - [ ] Prints salvos para anexar, se o formulário aceitar anexo (seção 3).
 - [ ] Ler o texto da 1ª contestação (de 14/11), se ainda existir cópia, para
       não repetir frases: o Google pede "informações adicionais que não
