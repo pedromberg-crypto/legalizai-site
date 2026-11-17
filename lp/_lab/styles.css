@@ -451,6 +451,42 @@ h2 { font-size:clamp(1.5rem, 2vw + .8rem, 2.05rem); font-weight:800; line-height
   color:#fff;
 }
 
+/* ---------- vídeo de fundo (17/11, Pedro) ----------
+   O Léo atravessando o fundo coral, no lugar do céu. Cobre o hero inteiro
+   (object-fit:cover) e dissolve na base, para casar com o campo embaixo.
+   O céu de nuvens fica desligado (display:none) para não brigar com o vídeo. */
+.hero-video {
+  position:absolute; inset:0; z-index:0; pointer-events:none;
+  width:100%; height:100%; object-fit:cover; object-position:50% 50%;
+  -webkit-mask-image:linear-gradient(180deg, #000 0%, #000 82%, transparent 100%);
+  mask-image:linear-gradient(180deg, #000 0%, #000 82%, transparent 100%);
+}
+.hero .hero-sky { display:none; }
+/* Léo na frente do texto (17/11): fundo parado + Léo recortado por cima (z 3 > .hero-copy 2) */
+.hero-fundo, .hero-leo-frente {
+  position:absolute; inset:0; width:100%; height:100%; object-fit:cover; object-position:50% 50%;
+  pointer-events:none; display:none;
+  -webkit-mask-image:linear-gradient(180deg, #000 0%, #000 82%, transparent 100%);
+  mask-image:linear-gradient(180deg, #000 0%, #000 82%, transparent 100%);
+}
+.hero-fundo { z-index:0; }
+.hero-leo-frente { z-index:3; }
+.hero.leo-na-frente .hero-video { display:none; }
+.hero.leo-na-frente .hero-fundo, .hero.leo-na-frente .hero-leo-frente { display:block; }
+/* o card da contagem fica invisível, mas segura o espaço que tinha (Pedro, 17/11) */
+/* o respiro ocupa o lugar do card que saiu; as lojas ficam onde estavam (acima do celular)
+   e a margem de baixo repõe a altura das provas que saíram: o hero mantém a altura */
+.hero-respiro { height:197px; }
+.hero .store-row { margin-bottom:-17px; }
+@media (max-width: 900px) { .hero-respiro { height:0; } }
+/* camadas com o Léo na frente: ele passa SÓ na frente do título; lojas, demais textos e o card do celular ficam na frente dele */
+.hero.leo-na-frente .hero-copy { z-index:auto; }
+.hero.leo-na-frente .hero-copy > * { z-index:4; }
+.hero.leo-na-frente .hero-copy > h1 { z-index:2; }
+.hero.leo-na-frente .hero-showcase { z-index:4; }
+.hero.leo-na-frente .hero-fundo { z-index:-2; }
+@media (prefers-reduced-motion: reduce) { .hero-video { display:none; } .hero-fundo { display:block; } }
+
 /* ---------- céu ---------- */
 .hero-sky {
   position:absolute; inset:0; z-index:0; pointer-events:none; overflow:hidden;
@@ -4350,3 +4386,20 @@ details[open] .faq-ico::after { opacity:0; transform:translate(-50%,-50%) rotate
    que e o que de fato fazia a diferenca parecer de tamanho. */
 .plano-conta .vs-conta em,
 .plano-conta-total strong{font-variant-numeric:tabular-nums}
+
+/* 17/11 (Pedro) — MOBILE: os 3 CTAs do hero numa linha só, menores, para o Léo aparecer melhor.
+   Vem no fim do arquivo para vencer a regra de 11/09 (botão da fila em linha própria). */
+@media (max-width:719px){
+  /* 17/11 (Pedro): CTAs e aparelho descem (linha vermelha do print) para o Léo aparecer mais; os CTAs colam no topo do aparelho */
+  /* título em 2 linhas no celular ("Contabilidade online" / "em BH, sem dor de cabeça."): a fonte encolhe até a 2ª linha caber.
+     A linha que o título perdeu (3 → 2) volta por cima dos CTAs, para o aparelho e os ícones não subirem. */
+  .hero h1{font-size:min(30px, 6.8vw)}
+  .hero h1, .hero h1 .h1-junto{white-space:nowrap}
+  .hero .store-row{flex-wrap:nowrap; gap:6px; align-items:stretch; margin-top:calc(275px + 95.4px - 2 * 1.06 * min(30px, 6.8vw))}
+  .hero .store-row .store-badge{flex:1 1 0; min-width:0; gap:5px; padding:6px 8px; border-radius:10px; justify-content:center}
+  .hero .store-row .store-badge svg{width:16px; height:16px}
+  .hero .store-row .store-badge small{font-size:.5rem}
+  .hero .store-row .store-badge strong{font-size:.7rem; white-space:nowrap}
+  .hero .store-row .hero-btn-espera{order:0; flex:1.15 1 0; min-width:0; min-height:0; align-self:stretch;
+    padding:4px 8px; font-size:.7rem; line-height:1.15; white-space:normal; text-align:center; border-radius:10px}
+}

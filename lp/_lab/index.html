@@ -100,7 +100,7 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
   <link rel="preload" href="/assets/fonts/sora-latin.woff2" as="font" type="font/woff2" crossorigin>
 
   <!-- LAB: ?v muda a cada rodada de ajuste; sem isso o Chrome serve o css antigo -->
-  <link rel="stylesheet" href="/_lab/styles.css?v=301">
+  <link rel="stylesheet" href="/_lab/styles.css?v=311">
   <!-- ✂️ 09/10: atendimento.css saiu junto com o validador (ver a nota onde a
        seção ficava). Os ícones de /atendimento/icones/ continuam: os planos e
        a régua de faixas usam. -->
@@ -212,7 +212,88 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
        diferentes. Cada instância já anima borda→centro + fade; variar o frame
        inicial evita que todas nasçam juntas. Máscara vertical deixa o topo mais
        denso e dissolve na base, como na referência. -->
+  <!-- 17/11 (Pedro): o fundo do hero virou o vídeo do Léo (loop de 10 s, sem som).
+       O céu de nuvens fica escondido pelo CSS (.hero-sky), não apagado. -->
+  <!-- 17/11 (velocidade): o vídeo inteiro é só o plano B (navegador sem transparência nem WebGL). Sem autoplay e
+       com preload="none" ele não baixa nada; o script abaixo só o toca quando precisa. -->
+  <video class="hero-video" muted loop playsinline preload="none" poster="/_lab/assets/hero-leo-poster.jpg" aria-hidden="true">
+    <source src="/_lab/assets/hero-leo-1080.webm" type="video/webm">
+    <source src="/_lab/assets/hero-leo-720.mp4" type="video/mp4">
+  </video>
   <div class="hero-sky" id="hero-sky" aria-hidden="true"></div>
+  <!-- 17/11 (Pedro): o Léo passa NA FRENTE do texto. Fundo = cenário parado (imagem) e,
+       por cima do texto, um vídeo só com o Léo recortado (VP9 com transparência).
+       Safari/iOS não toca VP9 com alfa: lá fica o vídeo inteiro de fundo (atrás do texto). -->
+  <img class="hero-fundo" src="/_lab/assets/hero-leo-fundo.jpg" alt="" aria-hidden="true">
+  <video class="hero-leo-frente" muted loop playsinline preload="none" aria-hidden="true"></video>
+  <script>
+    (function () {
+      var hero = document.currentScript.closest('.hero');
+      var ua = navigator.userAgent;
+      var semAlfa = /^((?!chrome|android|crios|fxios|edg).)*safari/i.test(ua) || /iP(hone|ad|od)/.test(ua);
+      var calmo = window.matchMedia && matchMedia('(prefers-reduced-motion: reduce)').matches;
+      var celular = window.matchMedia && matchMedia('(max-width: 900px)').matches;
+      var planoB = function () {
+        var f = hero.querySelector('.hero-video');
+        f.preload = 'auto';
+        var q = f.play(); if (q && q.catch) q.catch(function () {});
+      };
+      if (calmo) return;
+      if (!semAlfa) {
+        /* Chrome/Android/desktop: o Léo recortado em VP9 com transparência; no celular, a versão de 1280 (590 KB) */
+        hero.classList.add('leo-na-frente');
+        var v = hero.querySelector('.hero-leo-frente');
+        v.src = celular ? '/_lab/assets/hero-leo-frente-720.webm?v=1' : '/_lab/assets/hero-leo-frente.webm?v=4';
+        v.preload = 'auto';
+        var p = v.play(); if (p && p.catch) p.catch(function () {});
+        return;
+      }
+      /* 17/11 (Pedro): Safari/iPhone não toca VP9 com transparência. Lá o Léo vem de um MP4 comum com a cor em
+         cima e o recorte embaixo (hero-leo-frente-alfa.mp4), e um WebGL junta os dois num canvas transparente.
+         Se algo falhar (sem WebGL, autoplay bloqueado no modo economia), fica o vídeo inteiro atrás do texto. */
+      var cv = document.createElement('canvas');
+      var gl = cv.getContext('webgl', { premultipliedAlpha: true, alpha: true });
+      if (!gl) return planoB();
+      var vid = document.createElement('video');
+      vid.muted = true; vid.loop = true; vid.playsInline = true; vid.setAttribute('playsinline', ''); vid.preload = 'auto';
+      vid.src = '/_lab/assets/hero-leo-frente-alfa.mp4?v=2';
+      var sh = function (tipo, src) { var s = gl.createShader(tipo); gl.shaderSource(s, src); gl.compileShader(s); return s; };
+      var prog = gl.createProgram();
+      gl.attachShader(prog, sh(gl.VERTEX_SHADER, 'attribute vec2 p;varying vec2 u;void main(){u=vec2((p.x+1.)/2.,(1.-p.y)/2.);gl_Position=vec4(p,0.,1.);}'));
+      gl.attachShader(prog, sh(gl.FRAGMENT_SHADER, 'precision mediump float;varying vec2 u;uniform sampler2D t;void main(){vec3 c=texture2D(t,vec2(u.x,u.y*.5)).rgb;float a=texture2D(t,vec2(u.x,.5+u.y*.5)).r;gl_FragColor=vec4(c*a,a);}'));
+      gl.linkProgram(prog); gl.useProgram(prog);
+      var buf = gl.createBuffer(); gl.bindBuffer(gl.ARRAY_BUFFER, buf);
+      gl.bufferData(gl.ARRAY_BUFFER, new Float32Array([-1,-1, 1,-1, -1,1, 1,1]), gl.STATIC_DRAW);
+      var loc = gl.getAttribLocation(prog, 'p'); gl.enableVertexAttribArray(loc); gl.vertexAttribPointer(loc, 2, gl.FLOAT, false, 0, 0);
+      var tex = gl.createTexture(); gl.bindTexture(gl.TEXTURE_2D, tex);
+      gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.LINEAR); gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, gl.LINEAR);
+      gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_S, gl.CLAMP_TO_EDGE); gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_T, gl.CLAMP_TO_EDGE);
+      gl.clearColor(0, 0, 0, 0);
+      /* o "object-fit: cover" do canvas: a área do vídeo (16:9) cobre a caixa e sobra para os lados, como no WebM */
+      var desenhar = function () {
+        var dpr = Math.min(window.devicePixelRatio || 1, 2);
+        var w = cv.clientWidth, h = cv.clientHeight;
+        if (cv.width !== Math.round(w * dpr) || cv.height !== Math.round(h * dpr)) { cv.width = Math.round(w * dpr); cv.height = Math.round(h * dpr); }
+        var esc = Math.max(cv.width / 16, cv.height / 9), vw = 16 * esc, vh = 9 * esc;
+        gl.viewport(Math.round((cv.width - vw) / 2), Math.round((cv.height - vh) / 2), Math.round(vw), Math.round(vh));
+        gl.clear(gl.COLOR_BUFFER_BIT);
+        if (vid.readyState >= 2) {
+          gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGB, gl.RGB, gl.UNSIGNED_BYTE, vid);
+          gl.drawArrays(gl.TRIANGLE_STRIP, 0, 4);
+        }
+        if (vid.requestVideoFrameCallback) vid.requestVideoFrameCallback(desenhar); else requestAnimationFrame(desenhar);
+      };
+      vid.addEventListener('playing', function () {
+        if (hero.classList.contains('leo-na-frente')) return;
+        cv.className = 'hero-leo-frente'; cv.setAttribute('aria-hidden', 'true');
+        var antigo = hero.querySelector('video.hero-leo-frente');
+        antigo.parentNode.replaceChild(cv, antigo);
+        hero.classList.add('leo-na-frente');
+        desenhar();
+      });
+      var p2 = vid.play(); if (p2 && p2.catch) p2.catch(planoB);
+    })();
+  </script>
 
   <div class="container hero-copy">
     <a class="hero-eyebrow" href="/em-breve">
@@ -244,17 +325,10 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
          chegou! Já está na App Store e no Google Play." (lancamento.js).
          O relógio é aria-hidden: o leitor de tela lê a frase com a data, e não
          os números mudando a cada segundo. -->
-    <div class="contagem" data-contagem hidden>
-      <p class="contagem-rotulo">O app chega às lojas em <strong><span data-contagem-dia>11 de novembro</span>!</strong></p>
-      <div class="contagem-relogio" data-contagem-relogio aria-hidden="true">
-        <span class="contagem-bloco"><b data-contagem-num="d">00</b><small data-contagem-un="d">dias</small></span>
-        <span class="contagem-bloco"><b data-contagem-num="h">00</b><small data-contagem-un="h">horas</small></span>
-        <span class="contagem-bloco"><b data-contagem-num="m">00</b><small>min</small></span>
-        <span class="contagem-bloco"><b data-contagem-num="s">00</b><small>seg</small></span>
-      </div>
-      <p class="contagem-chegou" data-contagem-chegou hidden></p>
-    </div>
-
+    <!-- 17/11 (Pedro): o card "O app chegou!" e as duas provas ("Contador de verdade" e
+         "Zero contabilês") saíram. O .hero-respiro ocupa o lugar do card, e a linha das lojas
+         fica onde sempre esteve, logo acima do celular; a altura do hero não muda. -->
+    <div class="hero-respiro" aria-hidden="true"></div>
     <!-- 🔀 MODO LANÇAMENTO. Os badges das lojas FICAM nos dois modos: o que
          muda é a linha de cima deles ("Em breve na" vira "Baixar na") e o
          destino do clique (no modo app, o link direto de cada loja: quem passa
@@ -281,21 +355,12 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
       </a>
       <a class="btn btn-primary hero-btn-espera" href="/em-breve">Garantir minha condição</a>
     </div>
+
     <!-- ✂️ 11/09: a linha "Leva 1 minuto / condição garantida" saiu daqui. Ela
          repetia a etiqueta do topo do hero, que já diz o preço e o prazo da
          oferta, e virava o sexto bloco de texto da mesma tela. A etiqueta faz
          a oferta, o botão faz a ação. -->
 
-    <div class="hero-proofs">
-      <p class="hero-proof">
-        <svg viewBox="0 0 24 24" aria-hidden="true"><path fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" d="m5 12 5 5L20 7"/></svg>
-        <strong>Contador de verdade</strong> no WhatsApp, no plano ME
-      </p>
-      <p class="hero-proof">
-        <svg viewBox="0 0 24 24" aria-hidden="true"><path fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" d="m5 12 5 5L20 7"/></svg>
-        <strong>Zero contabilês.</strong> A gente traduz tudo
-      </p>
-    </div>
   </div>
 
   <!-- painel glass: o recorte do topo é uma máscara (mask-composite) com raio
