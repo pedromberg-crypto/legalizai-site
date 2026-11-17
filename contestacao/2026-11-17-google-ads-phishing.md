@@ -12,8 +12,8 @@ Esta pasta fica fora do `lp/`: não vai para o site.
 
 - [ ] **Push do commit `0dc66dd`** (aviso "Esta página não é login" no
       /excluir-conta). Conferir no ar: https://www.legalizai.com.br/excluir-conta
-- [ ] Site do Grupo AndMend atualizado (mensagem pronta na seção 5). Se não der
-      tempo, enviar mesmo assim: o texto da contestação já explica a relação.
+- [ ] Nome "Legalizei" fora do que é público (seção 5): no mínimo o projeto da
+      Vercel renomeado, porque o texto da contestação diz que está sendo feito.
 - [ ] Prints salvos para anexar, se o formulário aceitar anexo (seção 3).
 - [ ] Ler o texto da 1ª contestação (de 14/11), se ainda existir cópia, para
       não repetir frases: o Google pede "informações adicionais que não
@@ -68,11 +68,15 @@ suspensa na hora).
 > CPF nem login de outro serviço. Os dados para a contabilidade e para a
 > abertura de empresa ficam no app, sob contrato, como a política descreve.
 >
-> 4. Marcas parecidas: "Legalize" é o escritório contábil parceiro
-> (responsável técnico) e "Legalizei" foi o nome provisório do nosso produto
-> dentro do mesmo grupo empresarial (Grupo AndMend). Não usamos marca de
-> terceiros: as três são do mesmo grupo, e o rodapé do site identifica as duas
-> empresas com CNPJ e CRC.
+> 4. Nomes parecidos: "Legalize" é o escritório contábil parceiro, que assina
+> a responsabilidade técnica e aparece com CNPJ e CRC no rodapé do site.
+> "Legalizei" foi só o nome de trabalho do projeto antes do lançamento; nunca
+> foi usado em anúncio. Quando soubemos que outra empresa, sem nenhuma relação
+> conosco, usa esse nome, trocamos para Legalizaí. O que sobrou do nome antigo
+> eram identificadores técnicos da hospedagem: o endereço
+> legalizei-lp.vercel.app já redireciona para www.legalizai.com.br desde 13/11
+> e está sendo renomeado. Não usamos nem sugerimos vínculo com nenhuma outra
+> marca.
 >
 > 5. Search Console sem problemas de segurança nem ações manuais para
 > legalizai.com.br, e a Navegação segura do Google não aponta conteúdo
@@ -102,10 +106,14 @@ suspensa na hora).
 | legalizei-lp.vercel.app → 308 para o www | qualquer navegador | conferido em 17/11 |
 | Anunciante verificado (LEGALIZAI TECNOLOGIA LTDA) | Google Ads → Adm. → Política → Conta | desde 13/10 |
 
-Documentos que só vocês têm: cartões CNPJ em PDF, contrato ou carta de parceria
-entre a Legalizai Tecnologia e a Legalize Auditoria, e o que provar que a
-"Legalizei" é do Grupo AndMend (a página https://grupoandmend.com.br/legalizei/
-já diz "Legalizei é uma empresa do Grupo AndMend").
+Documentos que só vocês têm: cartões CNPJ em PDF e o contrato ou carta de
+parceria entre a Legalizai Tecnologia e a Legalize Auditoria.
+
+**Atenção (corrigido em 17/11):** a Legalizaí **não tem nenhum vínculo** com o
+Grupo AndMend. A marca "Legalizei" e o domínio legalizei.com.br são deles
+(https://grupoandmend.com.br/legalizei/ diz "Legalizei é uma empresa do Grupo
+AndMend", com menu "Abrir Empresa"). Nunca dizer ao Google que a Legalizei é
+nossa nem do nosso grupo.
 
 ---
 
@@ -126,15 +134,18 @@ já diz "Legalizei é uma empresa do Grupo AndMend").
 
 ---
 
-## 5. Mensagem para quem cuida do site do Grupo AndMend
+## 5. Tirar o nome "Legalizei" do que é público
 
-> Oi! A Legalizei agora se chama **Legalizaí**, e o app já está no Google Play
-> e na App Store. Vocês podem atualizar duas coisas?
->
-> 1. Na página https://grupoandmend.com.br/legalizei/, dizer que a marca agora é
-> Legalizaí e colocar um link para https://www.legalizai.com.br.
-> 2. Fazer o domínio legalizei.com.br apontar para https://www.legalizai.com.br
-> (hoje ele leva para grupoandmend.com.br).
->
-> É para o Google conseguir ligar o nome antigo ao novo: a conta de anúncios da
-> Legalizaí está em revisão e as marcas parecidas atrapalham. Obrigado!
+A Legalizei é de outra empresa (Grupo AndMend). Para o Google, um site nosso
+servido também em `legalizei-lp.vercel.app` pode parecer que estamos nos
+passando por essa marca, que é exatamente o que a política de phishing pune.
+O que ainda carrega o nome:
+
+| Onde | Situação | O que fazer | Quem |
+|---|---|---|---|
+| Projeto `legalizei-lp` na Vercel → `legalizei-lp.vercel.app` | redireciona (308) para o www desde 13/11 | Renomear o projeto (ex.: `legalizai-site`) em Settings → General → Project Name. O endereço antigo deixa de existir. Depois, trocar o host na regra do `lp/vercel.json` | dono da Vercel |
+| Time `legalizeiofc` na Vercel → endereços de prévia `…-legalizeiofc.vercel.app` | prévias pedem login | Renomear o slug do time em Settings → General → Team URL | dono da Vercel |
+| Animações do /em-breve: `paperplane-legalizei.json` e `success-confetti-legalizei.json` | só o nome do arquivo (dentro não há a marca) | Renomear para `-legalizai` e trocar as 2 referências | Claude, no repo |
+| `package.json` e `README` (descrição citam `legalizei-lp`) | não vão ao ar | Atualizar junto com a renomeação da Vercel | Claude, no repo |
+
+Não pedir nada ao Grupo AndMend: não temos relação com eles.
