@@ -116,7 +116,7 @@
         renderer: 'svg',
         loop: false,
         autoplay: true,
-        path: '/_lab/em-breve/assets/success-confetti-legalizei.json'
+        path: '/_lab/em-breve/assets/success-confetti-legalizai.json'
       });
     }).catch(function (err) {
       console.log('[obrigado-debug] confete falhou ao carregar', err);
