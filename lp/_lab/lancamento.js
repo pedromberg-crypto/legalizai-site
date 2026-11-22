@@ -46,6 +46,25 @@
   var FORTE_DEPOIS = 'O app chegou!';
   var FRASE_DEPOIS = 'Já está na App Store e no Google Play.';
 
+  /* 22/11: no /em-breve esta frase era o único lugar que dizia "já está nas
+     lojas" sem link. Os dois nomes viram link direto da loja (a mesma URL dos
+     selos, que é o que o acionador de clique de loja do GTM procura). Estilo
+     inline: assim não precisa recompilar o Tailwind do /em-breve. */
+  var LOJAS = {
+    'App Store': { loja: 'apple', href: 'https://apps.apple.com/br/app/id6830729265' },
+    'Google Play': { loja: 'google', href: 'https://play.google.com/store/apps/details?id=br.com.legalizai.app' },
+  };
+  var linkDaLoja = function (nome) {
+    var a = document.createElement('a');
+    a.href = LOJAS[nome].href;
+    a.dataset.loja = LOJAS[nome].loja;
+    a.textContent = nome;
+    a.style.color = 'inherit';
+    a.style.textDecoration = 'underline';
+    a.style.textUnderlineOffset = '.15em';
+    return a;
+  };
+
   var alvo = Date.parse(LANCAMENTO);
   var blocos = document.querySelectorAll('[data-contagem]');
   if (!blocos.length || isNaN(alvo)) return;
@@ -80,7 +99,11 @@
       el.innerHTML = '';
       var forte = document.createElement('strong');
       forte.textContent = noDia ? FORTE_NO_DIA : FORTE_DEPOIS;
-      el.append(forte, ' ' + frase);
+      if (noDia) {
+        el.append(forte, ' ' + frase);
+      } else {
+        el.append(forte, ' Já está na ', linkDaLoja('App Store'), ' e no ', linkDaLoja('Google Play'), '.');
+      }
       el.hidden = false;
     });
   }
