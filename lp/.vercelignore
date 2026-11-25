@@ -16,3 +16,9 @@ _lab
 # a home usa os ícones. No lançamento, apagar estas duas linhas.
 /atendimento/index.html
 /atendimento/atendimento.js
+
+# App lançado (11/11/2026): a lista de espera e a contagem saíram do site em
+# 25/11. O /em-breve redireciona (308) pra home no vercel.json; a pasta e o
+# lancamento.js ficam no git (testes e histórico), mas fora do deploy.
+/em-breve
+/lancamento.js
