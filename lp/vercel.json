@@ -42,7 +42,9 @@
     { "source": "/(baixar|app|download)", "destination": "/#rodape", "permanent": false },
     { "source": "/(ios|iphone)", "destination": "/app-store", "permanent": false },
     { "source": "/android", "destination": "/google-play", "permanent": false },
-    { "source": "/coming-soon/:path*", "destination": "/em-breve/:path*", "permanent": true },
+    { "source": "/coming-soon/:path*", "destination": "/", "permanent": true },
+    { "source": "/em-breve/:path*", "destination": "/", "permanent": true },
+    { "source": "/em-breve", "destination": "/", "permanent": true },
     { "source": "/atendimento/:path*", "destination": "/", "permanent": true },
     { "source": "/atendimento", "destination": "/", "permanent": true },
     { "source": "/blog/post", "destination": "/blog/fator-r", "statusCode": 301 },
@@ -53,8 +55,6 @@
       "source": "/api/v1/:path*",
       "destination": "https://cu2viedkfvwuiuauvvi4guzdnm0ktprm.lambda-url.sa-east-1.on.aws/api/v1/:path*"
     },
-    { "source": "/home", "destination": "/" },
-    { "source": "/em-breve/obrigado/mei", "destination": "/em-breve/obrigado" },
-    { "source": "/em-breve/obrigado/me-simples", "destination": "/em-breve/obrigado" }
+    { "source": "/home", "destination": "/" }
   ]
 }
